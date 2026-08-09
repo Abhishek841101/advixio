@@ -28,8 +28,6 @@
 //   );
 // }
 
-
-
 import "./globals.css";
 
 export const metadata = {
@@ -38,7 +36,11 @@ export const metadata = {
     "Connect with verified manufacturers, suppliers and businesses across India.",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
       <body>{children}</body>
