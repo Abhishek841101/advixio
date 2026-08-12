@@ -1,4 +1,4 @@
-import { industries } from "../data/industries";
+import { industries } from "@/data/industries";
 
 export default function IndustrySection() {
   return (
