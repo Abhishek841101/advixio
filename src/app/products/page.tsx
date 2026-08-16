@@ -8,7 +8,8 @@ import Footer from "@/components/layout/Footer";
 import ProductGrid from "@/components/products/ProductGrid";
 import { categories } from "@/data/categories";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 const banners = [
   {
