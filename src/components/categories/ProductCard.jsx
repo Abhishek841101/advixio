@@ -1,85 +1,96 @@
 import Link from "next/link";
+import { MapPin, ArrowUpRight } from "lucide-react";
 
 export default function ProductCard({ product }) {
   const image =
     product.images?.length > 0
       ? product.images[0]
-      : null;
+      : "/product-placeholder.jpg";
 
   const price =
-    product.price !== undefined &&
-    product.price !== null
-      ? `₹${Number(product.price).toLocaleString(
-          "en-IN"
-        )}`
+    product.price !== undefined && product.price !== null
+      ? `₹${Number(product.price).toLocaleString("en-IN")}`
       : "Price on request";
 
   return (
     <article className="product-card">
 
-      {/* Image */}
-      <div className="product-image">
+      {/* Product Image */}
+      <Link
+        href={`/products/${product.slug}`}
+        className="product-image"
+      >
+        <img
+          src={image}
+          alt={product.name || "Product"}
+          loading="lazy"
+        />
 
-        {image ? (
-          <img
-            src={image}
-            alt={product.name}
-            loading="lazy"
-          />
-        ) : (
-          <span>
-            No Image
+        {product.isFeatured && (
+          <span className="product-featured">
+            Featured
           </span>
         )}
+      </Link>
 
-      </div>
-
-      {/* Product Info */}
+      {/* Product Details */}
       <div className="product-card-content">
 
-        <h3>
+        <Link
+          href={`/products/${product.slug}`}
+          className="product-title"
+        >
           {product.name}
-        </h3>
+        </Link>
 
         {product.shortDescription && (
-          <p>
+          <p className="product-description">
             {product.shortDescription}
           </p>
         )}
 
         {product.companyName && (
-          <span className="product-company">
+          <p className="product-company">
             {product.companyName}
-          </span>
+          </p>
         )}
 
         {product.location?.city && (
-          <span className="product-location">
-            📍 {product.location.city}
-            {product.location.state
-              ? `, ${product.location.state}`
-              : ""}
-          </span>
+          <div className="product-location">
+            <MapPin size={14} />
+
+            <span>
+              {product.location.city}
+              {product.location.state
+                ? `, ${product.location.state}`
+                : ""}
+            </span>
+          </div>
         )}
 
-        <strong>
-          {price}
-          {product.unit && (
-            <small>
-              / {product.unit}
-            </small>
-          )}
-        </strong>
+        <div className="product-bottom">
 
-        <Link
-          href={`/products/${product.slug}`}
-          className="product-view-button"
-        >
-          View Product
-        </Link>
+          <div className="product-price">
+            {price}
+
+            {product.unit && (
+              <span>
+                / {product.unit}
+              </span>
+            )}
+          </div>
+
+          <Link
+            href={`/products/${product.slug}`}
+            className="product-view-button"
+          >
+            View
+            <ArrowUpRight size={15} />
+          </Link>
+
+        </div>
 
       </div>
-
     </article>
   );
 }
