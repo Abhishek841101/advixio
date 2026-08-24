@@ -6,6 +6,8 @@ import TrendingProducts from "@/components/home/TrendingProducts";
 import HowItWorks from "@/components/home/HowItWorks";
 import WhyChoose from "@/components/home/WhyChoose";
 import CTASection from "@/components/home/CTASection";
+import ScrollAnimation from "@/components/home/ScrollAnimation";
+
 
 import Footer from "@/components/layout/Footer";
 
@@ -14,20 +16,36 @@ export default function Home() {
     <>
       <Navbar />
 
-      <main>
+      <main className="page-scroll">
+
+        <ScrollAnimation />
+
         <Hero />
 
-        <IndustrySection />
+        <section className="scroll-section">
+          <IndustrySection />
+        </section>
 
-        <TopSuppliers />
+        <section className="scroll-section">
+          <TopSuppliers />
+        </section>
 
-        <TrendingProducts />
+        <section className="scroll-section">
+          <TrendingProducts />
+        </section>
 
-        <HowItWorks />
+        <section className="scroll-section">
+          <HowItWorks />
+        </section>
 
-        <WhyChoose />
+        <section className="scroll-section">
+          <WhyChoose />
+        </section>
 
-        <CTASection />
+        <section className="scroll-section">
+          <CTASection />
+        </section>
+
       </main>
 
       <Footer />

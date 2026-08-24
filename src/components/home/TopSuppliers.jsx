@@ -74,23 +74,28 @@ export default function TopSuppliers() {
 
         <div className="products-section-header">
           <div>
-            <h2>Top rated suppliers</h2>
+            <span className="section-label">
+              VERIFIED SUPPLIERS
+            </span>
+
+            <h2>Top Rated Suppliers</h2>
 
             <p>
-              Partner with India&apos;s most trusted manufacturers
+              Partner with India's most trusted manufacturers
             </p>
           </div>
 
-          <button className="view-all-button">
-            View All
+          <button className="view-all-button desktop-supplier-view-all">
+            View All Suppliers →
           </button>
         </div>
 
         <div className="supplier-grid">
           {suppliers.map((supplier) => (
-            <div className="supplier-card" key={supplier.name}>
-
-              {/* Image */}
+            <div
+              className="supplier-card"
+              key={supplier.name}
+            >
               <div className="supplier-image-wrapper">
                 <img
                   src={supplier.image}
@@ -107,9 +112,7 @@ export default function TopSuppliers() {
                 </span>
               </div>
 
-              {/* Content */}
               <div className="supplier-content">
-
                 <h3>{supplier.name}</h3>
 
                 <span className="supplier-type">
@@ -118,7 +121,7 @@ export default function TopSuppliers() {
 
                 <div className="supplier-info">
                   <span>⌖</span>
-                  {supplier.location}
+                  <span>{supplier.location}</span>
                 </div>
 
                 <div className="supplier-info rating">
@@ -133,16 +136,21 @@ export default function TopSuppliers() {
 
                 <div className="supplier-info">
                   <span>♙</span>
-                  {supplier.years}
+                  <span>{supplier.years}</span>
                 </div>
 
                 <button className="profile-button">
                   View Profile
                 </button>
-
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mobile-supplier-view-all">
+          <button className="view-all-button">
+            View All Suppliers →
+          </button>
         </div>
 
       </div>

@@ -34,23 +34,49 @@ export default function WhyChoose() {
     <section className="why-choose">
       <div className="container">
 
+        {/* Header */}
         <div className="why-header">
-          <h2>Why Choose Advixio?</h2>
+          <span className="section-label">
+            WHY ADVIXIO
+          </span>
+
+          <h2>
+            Why Choose Advixio?
+          </h2>
+
+          <p>
+            Everything you need to source smarter,
+            faster and better.
+          </p>
         </div>
 
+
+        {/* Features */}
         <div className="why-grid">
+
           {features.map((feature) => (
-            <div className="why-card" key={feature.title}>
-              
-              <div className={`why-icon ${feature.type}`}>
+            <div
+              className="why-card"
+              key={feature.title}
+            >
+
+              <div
+                className={`why-icon ${feature.type}`}
+              >
                 {feature.icon}
               </div>
 
-              <h3>{feature.title}</h3>
+              <h3>
+                {feature.title}
+              </h3>
 
-              <p>{feature.description}</p>
+              <p>
+                {feature.description}
+              </p>
+
             </div>
           ))}
+
         </div>
 
       </div>

@@ -39,14 +39,6 @@ const products = [
     image:
       "https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=800&q=80",
   },
-  {
-    name: "Ayurvedic Herb Powder",
-    price: "₹800 - ₹2,200 / kg",
-    moq: "100 kg",
-    supplier: "Nature Biotech",
-    image:
-      "https://images.unsplash.com/photo-1515586000433-45406d8e6662?auto=format&fit=crop&w=800&q=80",
-  },
 ];
 
 export default function TrendingProducts() {
@@ -54,25 +46,39 @@ export default function TrendingProducts() {
     <section className="trending-section">
       <div className="container">
 
+        {/* Header */}
         <div className="products-section-header">
           <div>
-            <h2>Trending in B2B</h2>
+            <span className="section-label">
+              TRENDING PRODUCTS
+            </span>
+
+            <h2>
+              Trending in B2B
+            </h2>
 
             <p>
               Most requested products right now
             </p>
           </div>
 
-          <button className="view-all-button">
-            View All
+          {/* Desktop */}
+          <button className="view-all-button desktop-product-view-all">
+            View All Products →
           </button>
         </div>
 
+
+        {/* Product Cards */}
         <div className="trending-grid">
 
           {products.map((product) => (
-            <div className="product-card" key={product.name}>
+            <div
+              className="product-card"
+              key={product.name}
+            >
 
+              {/* Image */}
               <div className="product-image-wrapper">
                 <img
                   src={product.image}
@@ -81,9 +87,13 @@ export default function TrendingProducts() {
                 />
               </div>
 
+
+              {/* Content */}
               <div className="product-content">
 
-                <h3>{product.name}</h3>
+                <h3>
+                  {product.name}
+                </h3>
 
                 <div className="product-price">
                   {product.price}
@@ -106,9 +116,18 @@ export default function TrendingProducts() {
                 </div>
 
               </div>
+
             </div>
           ))}
 
+        </div>
+
+
+        {/* Mobile */}
+        <div className="mobile-product-view-all">
+          <button className="view-all-button">
+            View All Products →
+          </button>
         </div>
 
       </div>
