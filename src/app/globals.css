@@ -8977,3 +8977,130 @@ padding: 20px;
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================
+   EDIT PRODUCT IMAGES
+========================================== */
+
+.product-image-help {
+  margin: 0 0 20px;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.edit-product-images {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.edit-product-image-item {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.edit-product-image-preview-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f9f9fb;
+  border: 1px solid #e5e7eb;
+}
+
+.edit-product-image-preview {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.edit-product-image-empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.remove-image-button {
+  width: 100%;
+  min-height: 38px;
+  margin-top: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.remove-image-button:hover {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.add-image-button {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid #4f46e5;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #4f46e5;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-image-button:hover {
+  background: #eef0ff;
+}
+
+.product-no-images {
+  margin-top: 12px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+  .edit-product-images {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .edit-product-image-item {
+    padding: 12px;
+  }
+}
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 480px) {
+  .product-image-help {
+    font-size: 13px;
+  }
+
+  .edit-product-image-preview-wrapper {
+    aspect-ratio: 16 / 9;
+  }
+
+  .add-image-button {
+    width: 100%;
+  }
+}
