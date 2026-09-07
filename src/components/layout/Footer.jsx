@@ -46,9 +46,9 @@ export default function Footer() {
             support@advixio.com
           </a>
 
-          <a href="tel:+911234567890">
+          <a href="tel:+917385370283">
             
-            +91 9955607199
+            +91 7385370283
           </a>
 
           <div className="social-links">
