@@ -1,6 +1,4 @@
 
-
-
 "use client";
 
 import {
@@ -33,11 +31,265 @@ type Category = {
   slug: string;
 };
 
+const CATEGORIES: Category[] = [
+  {
+    _id: "1",
+    name: "Industrial Machinery",
+    slug: "industrial-machinery",
+  },
+  {
+    _id: "2",
+    name: "Automobile & Auto Parts",
+    slug: "automobile-auto-parts",
+  },
+  {
+    _id: "3",
+    name: "Electrical & Electronics",
+    slug: "electrical-electronics",
+  },
+  {
+    _id: "4",
+    name: "Construction & Building Materials",
+    slug: "construction-building-materials",
+  },
+  {
+    _id: "5",
+    name: "Tools & Hardware",
+    slug: "tools-hardware",
+  },
+  {
+    _id: "6",
+    name: "Safety & Security",
+    slug: "safety-security",
+  },
+  {
+    _id: "7",
+    name: "Agriculture & Farming",
+    slug: "agriculture-farming",
+  },
+  {
+    _id: "8",
+    name: "Food Processing Machinery",
+    slug: "food-processing-machinery",
+  },
+  {
+    _id: "9",
+    name: "Packaging & Printing",
+    slug: "packaging-printing",
+  },
+  {
+    _id: "10",
+    name: "Chemicals",
+    slug: "chemicals",
+  },
+  {
+    _id: "11",
+    name: "Pharmaceuticals & Medical",
+    slug: "pharmaceuticals-medical",
+  },
+  {
+    _id: "12",
+    name: "Textiles & Garments",
+    slug: "textiles-garments",
+  },
+  {
+    _id: "13",
+    name: "Plastic & Rubber",
+    slug: "plastic-rubber",
+  },
+  {
+    _id: "14",
+    name: "Metals & Metal Products",
+    slug: "metals-metal-products",
+  },
+  {
+    _id: "15",
+    name: "Welding & Fabrication",
+    slug: "welding-fabrication",
+  },
+  {
+    _id: "16",
+    name: "Pumps & Motors",
+    slug: "pumps-motors",
+  },
+  {
+    _id: "17",
+    name: "Valves & Pipes",
+    slug: "valves-pipes",
+  },
+  {
+    _id: "18",
+    name: "HVAC & Refrigeration",
+    slug: "hvac-refrigeration",
+  },
+  {
+    _id: "19",
+    name: "Material Handling",
+    slug: "material-handling",
+  },
+  {
+    _id: "20",
+    name: "Laboratory Equipment",
+    slug: "laboratory-equipment",
+  },
+  {
+    _id: "21",
+    name: "Renewable Energy",
+    slug: "renewable-energy",
+  },
+  {
+    _id: "22",
+    name: "Batteries & Power Solutions",
+    slug: "batteries-power-solutions",
+  },
+  {
+    _id: "23",
+    name: "IT & Computer Hardware",
+    slug: "it-computer-hardware",
+  },
+  {
+    _id: "24",
+    name: "Telecommunication",
+    slug: "telecommunication",
+  },
+  {
+    _id: "25",
+    name: "Office Supplies & Equipment",
+    slug: "office-supplies-equipment",
+  },
+  {
+    _id: "26",
+    name: "Furniture",
+    slug: "furniture",
+  },
+  {
+    _id: "27",
+    name: "Home Appliances",
+    slug: "home-appliances",
+  },
+  {
+    _id: "28",
+    name: "Industrial Automation",
+    slug: "industrial-automation",
+  },
+  {
+    _id: "29",
+    name: "Robotics",
+    slug: "robotics",
+  },
+  {
+    _id: "30",
+    name: "Instrumentation & Control",
+    slug: "instrumentation-control",
+  },
+  {
+    _id: "31",
+    name: "Material & Handling Equipment",
+    slug: "material-handling-equipment",
+  },
+  {
+    _id: "32",
+    name: "Cleaning & Maintenance",
+    slug: "cleaning-maintenance",
+  },
+  {
+    _id: "33",
+    name: "Water Treatment & Waste Management",
+    slug: "water-treatment-waste-management",
+  },
+  {
+    _id: "34",
+    name: "Mining & Quarrying",
+    slug: "mining-quarrying",
+  },
+  {
+    _id: "35",
+    name: "Petroleum & Oil Equipment",
+    slug: "petroleum-oil-equipment",
+  },
+  {
+    _id: "36",
+    name: "Renewable & Environmental Solutions",
+    slug: "renewable-environmental-solutions",
+  },
+  {
+    _id: "37",
+    name: "Woodworking Machinery",
+    slug: "woodworking-machinery",
+  },
+  {
+    _id: "38",
+    name: "Glass & Ceramics",
+    slug: "glass-ceramics",
+  },
+  {
+    _id: "39",
+    name: "Leather & Footwear",
+    slug: "leather-footwear",
+  },
+  {
+    _id: "40",
+    name: "Paper & Pulp",
+    slug: "paper-pulp",
+  },
+  {
+    _id: "41",
+    name: "Hospitality & Hotel Supplies",
+    slug: "hospitality-hotel-supplies",
+  },
+  {
+    _id: "42",
+    name: "Restaurant & Commercial Kitchen",
+    slug: "restaurant-commercial-kitchen",
+  },
+  {
+    _id: "43",
+    name: "Medical & Hospital Equipment",
+    slug: "medical-hospital-equipment",
+  },
+  {
+    _id: "44",
+    name: "Beauty & Personal Care",
+    slug: "beauty-personal-care",
+  },
+  {
+    _id: "45",
+    name: "Gems, Jewellery & Handicrafts",
+    slug: "gems-jewellery-handicrafts",
+  },
+  {
+    _id: "46",
+    name: "Apparel & Fashion",
+    slug: "apparel-fashion",
+  },
+  {
+    _id: "47",
+    name: "Sports & Fitness",
+    slug: "sports-fitness",
+  },
+  {
+    _id: "48",
+    name: "Toys & Games",
+    slug: "toys-games",
+  },
+  {
+    _id: "49",
+    name: "Electrical Cables & Wires",
+    slug: "electrical-cables-wires",
+  },
+  {
+    _id: "50",
+    name: "Industrial Supplies",
+    slug: "industrial-supplies",
+  }
+];
+
 export default function AddProductPage() {
   const router = useRouter();
 
-  const [categories, setCategories] =
-    useState<Category[]>([]);
+  // Categories are intentionally hardcoded so all 50 Advixio
+  // categories are always available in the Add Product dropdown.
+  const categories = CATEGORIES;
 
   const [name, setName] = useState("");
   const [shortDescription, setShortDescription] =
@@ -76,9 +328,6 @@ export default function AddProductPage() {
   const [loading, setLoading] =
     useState(false);
 
-  const [categoryLoading, setCategoryLoading] =
-    useState(true);
-
   const [error, setError] = useState("");
 
   // =========================================================
@@ -87,7 +336,6 @@ export default function AddProductPage() {
 
   useEffect(() => {
     loadUser();
-    loadCategories();
 
     return () => {
       imagePreviews.forEach((preview) => {
@@ -120,56 +368,6 @@ export default function AddProductPage() {
         "Invalid user data:",
         error
       );
-    }
-  };
-
-  // =========================================================
-  // CATEGORIES
-  // =========================================================
-
-  const loadCategories = async () => {
-    try {
-      setCategoryLoading(true);
-      setError("");
-
-      const response = await fetch(
-        `${API_URL}/categories`,
-        {
-          cache: "no-store",
-        }
-      );
-
-      const result =
-        await response.json();
-
-      if (
-        !response.ok ||
-        !result.success
-      ) {
-        throw new Error(
-          result.message ||
-            "Failed to load categories"
-        );
-      }
-
-      setCategories(
-        Array.isArray(result.data)
-          ? result.data
-          : []
-      );
-    } catch (error) {
-      console.error(
-        "Category loading error:",
-        error
-      );
-
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Failed to load categories"
-      );
-    } finally {
-      setCategoryLoading(false);
     }
   };
 
@@ -1381,16 +1579,11 @@ export default function AddProductPage() {
                         event.target.value
                       )
                     }
-                    disabled={
-                      loading ||
-                      categoryLoading
-                    }
+                    disabled={loading}
                     required
                   >
                     <option value="">
-                      {categoryLoading
-                        ? "Loading categories..."
-                        : "Select category"}
+                      Select category
                     </option>
 
                     {categories.map(
