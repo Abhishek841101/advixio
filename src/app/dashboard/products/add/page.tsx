@@ -1,6 +1,3 @@
-
-
-
 "use client";
 
 import {
@@ -28,7 +25,6 @@ type CustomField = {
 };
 
 type Category = {
-  _id: string;
   name: string;
   slug: string;
 };
@@ -36,74 +32,245 @@ type Category = {
 export default function AddProductPage() {
   const router = useRouter();
 
+  // =========================================================
+  // HARD-CODED CATEGORIES
+  // Backend se category fetch nahi hogi.
+  // Frontend slug bhejega.
+  // Backend slug ko MongoDB ObjectId me resolve karega.
+  // =========================================================
+
   const categories: Category[] = [
-  { _id: "1", name: "Industrial Machinery", slug: "industrial-machinery" },
-  { _id: "2", name: "Automobile & Auto Parts", slug: "automobile-auto-parts" },
-  { _id: "3", name: "Electrical & Electronics", slug: "electrical-electronics" },
-  { _id: "4", name: "Construction & Building Materials", slug: "construction-building-materials" },
-  { _id: "5", name: "Tools & Hardware", slug: "tools-hardware" },
-  { _id: "6", name: "Safety & Security", slug: "safety-security" },
-  { _id: "7", name: "Agriculture & Farming", slug: "agriculture-farming" },
-  { _id: "8", name: "Food Processing Machinery", slug: "food-processing-machinery" },
-  { _id: "9", name: "Packaging & Printing", slug: "packaging-printing" },
-  { _id: "10", name: "Chemicals", slug: "chemicals" },
-  { _id: "11", name: "Pharmaceuticals & Medical", slug: "pharmaceuticals-medical" },
-  { _id: "12", name: "Textiles & Garments", slug: "textiles-garments" },
-  { _id: "13", name: "Plastic & Rubber", slug: "plastic-rubber" },
-  { _id: "14", name: "Metals & Metal Products", slug: "metals-metal-products" },
-  { _id: "15", name: "Welding & Fabrication", slug: "welding-fabrication" },
-  { _id: "16", name: "Pumps & Motors", slug: "pumps-motors" },
-  { _id: "17", name: "Valves & Pipes", slug: "valves-pipes" },
-  { _id: "18", name: "HVAC & Refrigeration", slug: "hvac-refrigeration" },
-  { _id: "19", name: "Material Handling", slug: "material-handling" },
-  { _id: "20", name: "Laboratory Equipment", slug: "laboratory-equipment" },
-  { _id: "21", name: "Renewable Energy", slug: "renewable-energy" },
-  { _id: "22", name: "Batteries & Power Solutions", slug: "batteries-power-solutions" },
-  { _id: "23", name: "IT & Computer Hardware", slug: "it-computer-hardware" },
-  { _id: "24", name: "Telecommunication", slug: "telecommunication" },
-  { _id: "25", name: "Office Supplies & Equipment", slug: "office-supplies-equipment" },
-  { _id: "26", name: "Furniture", slug: "furniture" },
-  { _id: "27", name: "Home Appliances", slug: "home-appliances" },
-  { _id: "28", name: "Industrial Automation", slug: "industrial-automation" },
-  { _id: "29", name: "Robotics", slug: "robotics" },
-  { _id: "30", name: "Instrumentation & Control", slug: "instrumentation-control" },
-  { _id: "31", name: "Material & Handling Equipment", slug: "material-handling-equipment" },
-  { _id: "32", name: "Cleaning & Maintenance", slug: "cleaning-maintenance" },
-  { _id: "33", name: "Water Treatment & Waste Management", slug: "water-treatment-waste-management" },
-  { _id: "34", name: "Mining & Quarrying", slug: "mining-quarrying" },
-  { _id: "35", name: "Petroleum & Oil Equipment", slug: "petroleum-oil-equipment" },
-  { _id: "36", name: "Renewable & Environmental Solutions", slug: "renewable-environmental-solutions" },
-  { _id: "37", name: "Woodworking Machinery", slug: "woodworking-machinery" },
-  { _id: "38", name: "Glass & Ceramics", slug: "glass-ceramics" },
-  { _id: "39", name: "Leather & Footwear", slug: "leather-footwear" },
-  { _id: "40", name: "Paper & Pulp", slug: "paper-pulp" },
-  { _id: "41", name: "Hospitality & Hotel Supplies", slug: "hospitality-hotel-supplies" },
-  { _id: "42", name: "Restaurant & Commercial Kitchen", slug: "restaurant-commercial-kitchen" },
-  { _id: "43", name: "Medical & Hospital Equipment", slug: "medical-hospital-equipment" },
-  { _id: "44", name: "Beauty & Personal Care", slug: "beauty-personal-care" },
-  { _id: "45", name: "Gems, Jewellery & Handicrafts", slug: "gems-jewellery-handicrafts" },
-  { _id: "46", name: "Apparel & Fashion", slug: "apparel-fashion" },
-  { _id: "47", name: "Sports & Fitness", slug: "sports-fitness" },
-  { _id: "48", name: "Toys & Games", slug: "toys-games" },
-  { _id: "49", name: "Electrical Cables & Wires", slug: "electrical-cables-wires" },
-  { _id: "50", name: "Industrial Supplies", slug: "industrial-supplies" },
-];
+    {
+      name: "Industrial Machinery",
+      slug: "industrial-machinery",
+    },
+    {
+      name: "Automobile & Auto Parts",
+      slug: "automobile-auto-parts",
+    },
+    {
+      name: "Electrical & Electronics",
+      slug: "electrical-electronics",
+    },
+    {
+      name: "Construction & Building Materials",
+      slug: "construction-building-materials",
+    },
+    {
+      name: "Tools & Hardware",
+      slug: "tools-hardware",
+    },
+    {
+      name: "Safety & Security",
+      slug: "safety-security",
+    },
+    {
+      name: "Agriculture & Farming",
+      slug: "agriculture-farming",
+    },
+    {
+      name: "Food Processing Machinery",
+      slug: "food-processing-machinery",
+    },
+    {
+      name: "Packaging & Printing",
+      slug: "packaging-printing",
+    },
+    {
+      name: "Chemicals",
+      slug: "chemicals",
+    },
+    {
+      name: "Pharmaceuticals & Medical",
+      slug: "pharmaceuticals-medical",
+    },
+    {
+      name: "Textiles & Garments",
+      slug: "textiles-garments",
+    },
+    {
+      name: "Plastic & Rubber",
+      slug: "plastic-rubber",
+    },
+    {
+      name: "Metals & Metal Products",
+      slug: "metals-metal-products",
+    },
+    {
+      name: "Welding & Fabrication",
+      slug: "welding-fabrication",
+    },
+    {
+      name: "Pumps & Motors",
+      slug: "pumps-motors",
+    },
+    {
+      name: "Valves & Pipes",
+      slug: "valves-pipes",
+    },
+    {
+      name: "HVAC & Refrigeration",
+      slug: "hvac-refrigeration",
+    },
+    {
+      name: "Material Handling",
+      slug: "material-handling",
+    },
+    {
+      name: "Laboratory Equipment",
+      slug: "laboratory-equipment",
+    },
+    {
+      name: "Renewable Energy",
+      slug: "renewable-energy",
+    },
+    {
+      name: "Batteries & Power Solutions",
+      slug: "batteries-power-solutions",
+    },
+    {
+      name: "IT & Computer Hardware",
+      slug: "it-computer-hardware",
+    },
+    {
+      name: "Telecommunication",
+      slug: "telecommunication",
+    },
+    {
+      name: "Office Supplies & Equipment",
+      slug: "office-supplies-equipment",
+    },
+    {
+      name: "Furniture",
+      slug: "furniture",
+    },
+    {
+      name: "Home Appliances",
+      slug: "home-appliances",
+    },
+    {
+      name: "Industrial Automation",
+      slug: "industrial-automation",
+    },
+    {
+      name: "Robotics",
+      slug: "robotics",
+    },
+    {
+      name: "Instrumentation & Control",
+      slug: "instrumentation-control",
+    },
+    {
+      name: "Material & Handling Equipment",
+      slug: "material-handling-equipment",
+    },
+    {
+      name: "Cleaning & Maintenance",
+      slug: "cleaning-maintenance",
+    },
+    {
+      name: "Water Treatment & Waste Management",
+      slug: "water-treatment-waste-management",
+    },
+    {
+      name: "Mining & Quarrying",
+      slug: "mining-quarrying",
+    },
+    {
+      name: "Petroleum & Oil Equipment",
+      slug: "petroleum-oil-equipment",
+    },
+    {
+      name: "Renewable & Environmental Solutions",
+      slug: "renewable-environmental-solutions",
+    },
+    {
+      name: "Woodworking Machinery",
+      slug: "woodworking-machinery",
+    },
+    {
+      name: "Glass & Ceramics",
+      slug: "glass-ceramics",
+    },
+    {
+      name: "Leather & Footwear",
+      slug: "leather-footwear",
+    },
+    {
+      name: "Paper & Pulp",
+      slug: "paper-pulp",
+    },
+    {
+      name: "Hospitality & Hotel Supplies",
+      slug: "hospitality-hotel-supplies",
+    },
+    {
+      name: "Restaurant & Commercial Kitchen",
+      slug: "restaurant-commercial-kitchen",
+    },
+    {
+      name: "Medical & Hospital Equipment",
+      slug: "medical-hospital-equipment",
+    },
+    {
+      name: "Beauty & Personal Care",
+      slug: "beauty-personal-care",
+    },
+    {
+      name: "Gems, Jewellery & Handicrafts",
+      slug: "gems-jewellery-handicrafts",
+    },
+    {
+      name: "Apparel & Fashion",
+      slug: "apparel-fashion",
+    },
+    {
+      name: "Sports & Fitness",
+      slug: "sports-fitness",
+    },
+    {
+      name: "Toys & Games",
+      slug: "toys-games",
+    },
+    {
+      name: "Electrical Cables & Wires",
+      slug: "electrical-cables-wires",
+    },
+    {
+      name: "Industrial Supplies",
+      slug: "industrial-supplies",
+    },
+  ];
+
+  // =========================================================
+  // STATE
+  // =========================================================
 
   const [name, setName] = useState("");
+
   const [shortDescription, setShortDescription] =
     useState("");
+
   const [description, setDescription] =
     useState("");
 
   const [category, setCategory] =
     useState("");
+
   const [subcategory, setSubcategory] =
     useState("");
 
-  const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
-  const [price, setPrice] = useState("");
-  const [unit, setUnit] = useState("Piece");
+  const [brand, setBrand] =
+    useState("");
+
+  const [model, setModel] =
+    useState("");
+
+  const [price, setPrice] =
+    useState("");
+
+  const [unit, setUnit] =
+    useState("Piece");
 
   const [specifications, setSpecifications] =
     useState<Specification[]>([]);
@@ -114,8 +281,11 @@ export default function AddProductPage() {
   const [companyName, setCompanyName] =
     useState("");
 
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
+  const [city, setCity] =
+    useState("");
+
+  const [state, setState] =
+    useState("");
 
   const [images, setImages] =
     useState<File[]>([]);
@@ -126,10 +296,11 @@ export default function AddProductPage() {
   const [loading, setLoading] =
     useState(false);
 
-  const [error, setError] = useState("");
+  const [error, setError] =
+    useState("");
 
   // =========================================================
-  // LOAD
+  // LOAD USER
   // =========================================================
 
   useEffect(() => {
@@ -159,8 +330,13 @@ export default function AddProductPage() {
         user.companyName || ""
       );
 
-      setCity(user.city || "");
-      setState(user.state || "");
+      setCity(
+        user.city || ""
+      );
+
+      setState(
+        user.state || ""
+      );
     } catch (error) {
       console.error(
         "Invalid user data:",
@@ -270,7 +446,9 @@ export default function AddProductPage() {
       setError(
         "You can upload maximum 3 images."
       );
+
       event.target.value = "";
+
       return;
     }
 
@@ -283,7 +461,9 @@ export default function AddProductPage() {
       setError(
         "Only image files are allowed."
       );
+
       event.target.value = "";
+
       return;
     }
 
@@ -296,7 +476,9 @@ export default function AddProductPage() {
       setError(
         "Each image must be less than 5MB."
       );
+
       event.target.value = "";
+
       return;
     }
 
@@ -309,6 +491,7 @@ export default function AddProductPage() {
     );
 
     setImages(files);
+
     setImagePreviews(previews);
   };
 
@@ -346,10 +529,15 @@ export default function AddProductPage() {
 
     setError("");
 
+    // -------------------------------------------------------
+    // VALIDATION
+    // -------------------------------------------------------
+
     if (!name.trim()) {
       setError(
         "Product name is required."
       );
+
       return;
     }
 
@@ -357,6 +545,7 @@ export default function AddProductPage() {
       setError(
         "Please select a category."
       );
+
       return;
     }
 
@@ -364,6 +553,7 @@ export default function AddProductPage() {
       setError(
         "Please upload at least one product image."
       );
+
       return;
     }
 
@@ -371,8 +561,13 @@ export default function AddProductPage() {
       setError(
         "You can upload maximum 3 images."
       );
+
       return;
     }
+
+    // -------------------------------------------------------
+    // TOKEN
+    // -------------------------------------------------------
 
     const token =
       localStorage.getItem(
@@ -380,7 +575,9 @@ export default function AddProductPage() {
       );
 
     if (!token) {
-      window.location.href = "/login";
+      window.location.href =
+        "/login";
+
       return;
     }
 
@@ -428,6 +625,11 @@ export default function AddProductPage() {
       );
 
       console.log(
+        "SELECTED CATEGORY SLUG:",
+        category
+      );
+
+      console.log(
         "SPECIFICATIONS PAYLOAD:",
         cleanedSpecifications
       );
@@ -467,6 +669,11 @@ export default function AddProductPage() {
         "description",
         description.trim()
       );
+
+      // IMPORTANT:
+      // category = slug
+      // Example:
+      // industrial-machinery
 
       formData.append(
         "category",
@@ -590,31 +797,44 @@ export default function AddProductPage() {
       // API
       // =====================================================
 
+      console.log(
+        "POST URL:",
+        `${API_URL}/products`
+      );
+
       const response =
         await fetch(
           `${API_URL}/products`,
           {
             method: "POST",
+
             headers: {
               Authorization:
                 `Bearer ${token}`,
             },
+
             body: formData,
           }
         );
 
+      // =====================================================
+      // RESPONSE
+      // =====================================================
+
       const result =
         await response.json();
-
-      // =====================================================
-      // RESPONSE DEBUG
-      // =====================================================
 
       console.log(
         "========== CREATE PRODUCT RESPONSE =========="
       );
 
-      console.log(result);
+      console.log(
+        result
+      );
+
+      // =====================================================
+      // UNAUTHORIZED
+      // =====================================================
 
       if (
         response.status === 401
@@ -632,6 +852,10 @@ export default function AddProductPage() {
 
         return;
       }
+
+      // =====================================================
+      // ERROR
+      // =====================================================
 
       if (
         !response.ok ||
@@ -658,6 +882,11 @@ export default function AddProductPage() {
       console.log(
         "PRODUCT:",
         result.data
+      );
+
+      console.log(
+        "CATEGORY:",
+        result.data?.category
       );
 
       console.log(
@@ -799,7 +1028,8 @@ export default function AddProductPage() {
 
         .form-grid {
           display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-template-columns:
+            repeat(2, minmax(0, 1fr));
           gap: 18px;
         }
 
@@ -896,8 +1126,6 @@ export default function AddProductPage() {
           font-size: 14px;
         }
 
-        /* Desktop rows */
-
         .desktop-table {
           width: 100%;
           border: 1px solid #e5e7eb;
@@ -963,8 +1191,6 @@ export default function AddProductPage() {
           cursor: pointer;
           font-size: 13px;
         }
-
-        /* Mobile cards */
 
         .mobile-fields {
           display: none;
@@ -1099,10 +1325,6 @@ export default function AddProductPage() {
           cursor: pointer;
         }
 
-        /* =========================================
-           TABLET
-        ========================================= */
-
         @media (max-width: 768px) {
           .product-page {
             padding: 14px;
@@ -1146,10 +1368,6 @@ export default function AddProductPage() {
               repeat(2, minmax(0, 1fr));
           }
         }
-
-        /* =========================================
-           PHONE
-        ========================================= */
 
         @media (max-width: 600px) {
           .product-page {
@@ -1201,12 +1419,10 @@ export default function AddProductPage() {
             min-height: 120px;
           }
 
-          /* Hide desktop tables */
           .desktop-table {
             display: none;
           }
 
-          /* Show mobile cards */
           .mobile-fields {
             display: block;
           }
@@ -1239,7 +1455,6 @@ export default function AddProductPage() {
           ================================================= */}
 
           <div className="topbar">
-
             <div>
               <span className="eyebrow">
                 PRODUCT MANAGEMENT
@@ -1261,7 +1476,6 @@ export default function AddProductPage() {
             >
               My Products
             </Link>
-
           </div>
 
           {/* =================================================
@@ -1366,6 +1580,7 @@ export default function AddProductPage() {
               <div className="form-grid">
 
                 <div className="field">
+
                   <label>
                     Category *
                   </label>
@@ -1380,6 +1595,7 @@ export default function AddProductPage() {
                     disabled={loading}
                     required
                   >
+
                     <option value="">
                       Select category
                     </option>
@@ -1387,17 +1603,20 @@ export default function AddProductPage() {
                     {categories.map(
                       (item) => (
                         <option
-                          key={item._id}
-                          value={item._id}
+                          key={item.slug}
+                          value={item.slug}
                         >
                           {item.name}
                         </option>
                       )
                     )}
+
                   </select>
+
                 </div>
 
                 <div className="field">
+
                   <label>
                     Subcategory
                   </label>
@@ -1413,6 +1632,7 @@ export default function AddProductPage() {
                     placeholder="Enter subcategory"
                     disabled={loading}
                   />
+
                 </div>
 
               </div>
@@ -1431,6 +1651,7 @@ export default function AddProductPage() {
               <div className="form-grid">
 
                 <div className="field">
+
                   <label>
                     Brand
                   </label>
@@ -1446,9 +1667,11 @@ export default function AddProductPage() {
                     placeholder="Enter brand"
                     disabled={loading}
                   />
+
                 </div>
 
                 <div className="field">
+
                   <label>
                     Model
                   </label>
@@ -1464,9 +1687,11 @@ export default function AddProductPage() {
                     placeholder="Enter model"
                     disabled={loading}
                   />
+
                 </div>
 
                 <div className="field">
+
                   <label>
                     Price
                   </label>
@@ -1484,9 +1709,11 @@ export default function AddProductPage() {
                     step="any"
                     disabled={loading}
                   />
+
                 </div>
 
                 <div className="field">
+
                   <label>
                     Unit
                   </label>
@@ -1500,6 +1727,7 @@ export default function AddProductPage() {
                     }
                     disabled={loading}
                   >
+
                     <option value="Piece">
                       Piece
                     </option>
@@ -1531,7 +1759,9 @@ export default function AddProductPage() {
                     <option value="Pack">
                       Pack
                     </option>
+
                   </select>
+
                 </div>
 
               </div>
@@ -1546,6 +1776,7 @@ export default function AddProductPage() {
               <div className="section-head">
 
                 <div>
+
                   <h2>
                     Specifications
                   </h2>
@@ -1556,6 +1787,7 @@ export default function AddProductPage() {
                     Weight, Dimensions,
                     Material, Capacity, etc.
                   </p>
+
                 </div>
 
                 <button
@@ -1640,8 +1872,7 @@ export default function AddProductPage() {
                                 updateSpecification(
                                   index,
                                   "label",
-                                  event.target
-                                    .value
+                                  event.target.value
                                 )
                               }
                               placeholder="e.g. Voltage"
@@ -1663,8 +1894,7 @@ export default function AddProductPage() {
                                 updateSpecification(
                                   index,
                                   "value",
-                                  event.target
-                                    .value
+                                  event.target.value
                                 )
                               }
                               placeholder="e.g. 5V"
@@ -1726,8 +1956,7 @@ export default function AddProductPage() {
                               updateSpecification(
                                 index,
                                 "label",
-                                event.target
-                                  .value
+                                event.target.value
                               )
                             }
                             placeholder="e.g. Voltage"
@@ -1749,8 +1978,7 @@ export default function AddProductPage() {
                               updateSpecification(
                                 index,
                                 "value",
-                                event.target
-                                  .value
+                                event.target.value
                               )
                             }
                             placeholder="e.g. 5V"
@@ -1789,6 +2017,7 @@ export default function AddProductPage() {
               <div className="section-head">
 
                 <div>
+
                   <h2>
                     Product Details
                   </h2>
@@ -1799,9 +2028,8 @@ export default function AddProductPage() {
                     Warranty, Color, Size,
                     Capacity, Voltage, etc.
                   </p>
-                </div>
 
-                {/* ONLY ONE ADD ROW BUTTON */}
+                </div>
 
                 <button
                   type="button"
@@ -1885,8 +2113,7 @@ export default function AddProductPage() {
                                 updateCustomField(
                                   index,
                                   "name",
-                                  event.target
-                                    .value
+                                  event.target.value
                                 )
                               }
                               placeholder="e.g. Color"
@@ -1908,8 +2135,7 @@ export default function AddProductPage() {
                                 updateCustomField(
                                   index,
                                   "value",
-                                  event.target
-                                    .value
+                                  event.target.value
                                 )
                               }
                               placeholder="e.g. White"
@@ -1971,8 +2197,7 @@ export default function AddProductPage() {
                               updateCustomField(
                                 index,
                                 "name",
-                                event.target
-                                  .value
+                                event.target.value
                               )
                             }
                             placeholder="e.g. Color"
@@ -1994,8 +2219,7 @@ export default function AddProductPage() {
                               updateCustomField(
                                 index,
                                 "value",
-                                event.target
-                                  .value
+                                event.target.value
                               )
                             }
                             placeholder="e.g. White"
@@ -2038,6 +2262,7 @@ export default function AddProductPage() {
               <div className="form-grid">
 
                 <div className="field full">
+
                   <label>
                     Company Name
                   </label>
@@ -2052,9 +2277,11 @@ export default function AddProductPage() {
                     }
                     disabled={loading}
                   />
+
                 </div>
 
                 <div className="field">
+
                   <label>
                     City
                   </label>
@@ -2070,9 +2297,11 @@ export default function AddProductPage() {
                     placeholder="Enter city"
                     disabled={loading}
                   />
+
                 </div>
 
                 <div className="field">
+
                   <label>
                     State
                   </label>
@@ -2088,6 +2317,7 @@ export default function AddProductPage() {
                     placeholder="Enter state"
                     disabled={loading}
                   />
+
                 </div>
 
               </div>
