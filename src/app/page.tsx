@@ -1,4 +1,5 @@
 import Navbar from "@/components/layout/Navbar";
+
 import IndustrySection from "@/components/home/IndustrySection";
 import Hero from "@/components/home/Hero";
 import TopSuppliers from "@/components/home/TopSuppliers";
