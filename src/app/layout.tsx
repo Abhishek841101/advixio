@@ -1,3 +1,4 @@
+
 import "./globals.css";
 
 export const metadata = {
@@ -10,6 +11,27 @@ export const metadata = {
   },
 };
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://advixio360.com/#organization",
+  name: "Advixio360",
+  url: "https://advixio360.com/",
+  description:
+    "Connect with verified manufacturers, suppliers and businesses across India.",
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://advixio360.com/#website",
+  name: "Advixio360",
+  url: "https://advixio360.com/",
+  publisher: {
+    "@id": "https://advixio360.com/#organization",
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -17,7 +39,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+      
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify(websiteSchema),
+  }}
+/>
+
+        {children}
+      </body>
     </html>
   );
 }

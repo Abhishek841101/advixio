@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Block internal/private areas
+Disallow: /admin/
+Disallow: /login/
+Disallow: /register/
+Disallow: /account/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /search
+
+# Block common parameter-based duplicate URLs
+Disallow: /*?search=
+Disallow: /*?sort=
+Disallow: /*?filter=
+Disallow: /*?page=
+
+# Sitemap
+Sitemap: https://advixio360.com/sitemap.xml
