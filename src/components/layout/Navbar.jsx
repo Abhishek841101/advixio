@@ -89,9 +89,23 @@ return ( <header className="navbar"> <div className="navbar-container">
       className="navbar-logo"
       onClick={closeMenu}
     >
-      <span className="logo-icon">
-        A
-      </span>
+      
+<img
+  src="/footerLogo.png"
+  alt="Advixio360 Logo"
+  className="footer-logo-icon"
+  width={42}
+  height={42}
+  style={{
+    display: "block",
+    width: "42px",
+    height: "42px",
+    marginRight: "5px",
+    objectFit: "contain",
+    borderRadius: "8px",
+  }}
+/>
+
 
       <span>
         Advixio

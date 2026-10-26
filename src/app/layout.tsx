@@ -1,7 +1,9 @@
 
+import type { Metadata } from "next";
 import "./globals.css";
+import ScrollReveal from "@/components/layout/ScrollReveal";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Advixio - B2B Sourcing & Trade",
   description:
     "Connect with verified manufacturers, suppliers and businesses across India.",
@@ -46,15 +48,15 @@ export default function RootLayout({
             __html: JSON.stringify(organizationSchema),
           }}
         />
-      
-<script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify(websiteSchema),
-  }}
-/>
 
-        {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
+
+        <ScrollReveal>{children}</ScrollReveal>
       </body>
     </html>
   );
