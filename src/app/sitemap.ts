@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://advixio.com"
+  process.env.NEXT_PUBLIC_SITE_URL || "https://advixio360.com"
 ).replace(/\/+$/, "");
 
 const API_URL = (
