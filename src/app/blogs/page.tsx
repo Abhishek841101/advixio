@@ -120,7 +120,7 @@ export default function Blogs() {
     maxWidth: "1200px",
     margin: "0 auto",
     padding: "0 24px",
-    boxSizing: "border-box",
+    boxSizing: "border-box" as const,
   };
 
   const buttonStyle = {
@@ -386,7 +386,7 @@ export default function Blogs() {
               style={{
                 width: "100%",
                 maxWidth: "300px",
-                boxSizing: "border-box",
+                boxSizing: "border-box" as const,
                 padding: "13px 17px",
                 border: "1px solid #cbd5e1",
                 borderRadius: "30px",
@@ -592,7 +592,7 @@ export default function Blogs() {
                   aria-label="Email address"
                   style={{
                     width: "100%",
-                    boxSizing: "border-box",
+                    boxSizing: "border-box" as const,
                     padding: "13px",
                     borderRadius: "9px",
                     border: "1px solid #cbd5e1",
