@@ -1,3 +1,4 @@
+
 import type { MetadataRoute } from "next";
 
 const SITE_URL = (
@@ -26,8 +27,6 @@ type SitemapItem = {
   status?: string;
   published?: boolean;
   isPublished?: boolean;
-
-  // Product ke supplier ki information
   supplier?: SupplierRef | string | null;
   seller?: SupplierRef | string | null;
   supplierSlug?: string;
@@ -68,16 +67,27 @@ function extractItems(result: unknown): SitemapItem[] {
 
   const data = result as Record<string, unknown>;
 
-  for (const key of ["products", "categories", "suppliers", "items"]) {
+  const keys = [
+    "products",
+    "categories",
+    "suppliers",
+    "blogs",
+    "services",
+    "items",
+  ];
+
+  for (const key of keys) {
     if (Array.isArray(data[key])) return data[key] as SitemapItem[];
   }
 
-  if (Array.isArray(data.data)) return data.data as SitemapItem[];
+  if (Array.isArray(data.data)) {
+    return data.data as SitemapItem[];
+  }
 
   if (data.data && typeof data.data === "object") {
     const nested = data.data as Record<string, unknown>;
 
-    for (const key of ["products", "categories", "suppliers", "items"]) {
+    for (const key of keys) {
       if (Array.isArray(nested[key])) {
         return nested[key] as SitemapItem[];
       }
@@ -114,7 +124,6 @@ async function fetchItems(endpoint: string): Promise<SitemapItem[]> {
   }
 }
 
-
 function makeSlug(value: string): string {
   return value
     .normalize("NFKD")
@@ -126,11 +135,11 @@ function makeSlug(value: string): string {
 }
 
 function getSupplierSlug(product: SitemapItem): string | undefined {
-  if (typeof product.supplierSlug === "string" && product.supplierSlug.trim()) {
+  if (product.supplierSlug?.trim()) {
     return product.supplierSlug.trim();
   }
 
-  if (typeof product.sellerSlug === "string" && product.sellerSlug.trim()) {
+  if (product.sellerSlug?.trim()) {
     return product.sellerSlug.trim();
   }
 
@@ -142,27 +151,31 @@ function getSupplierSlug(product: SitemapItem): string | undefined {
 
       if (seller.slug?.trim()) return seller.slug.trim();
 
-      const companyName = seller.companyName?.trim();
-      if (companyName) return makeSlug(companyName);
+      if (seller.companyName?.trim()) {
+        return makeSlug(seller.companyName);
+      }
 
-      if (seller.name?.trim()) return makeSlug(seller.name);
+      if (seller.name?.trim()) {
+        return makeSlug(seller.name);
+      }
     }
   }
 
   return undefined;
 }
 
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes = [
-    { route: "", priority: 1 },
+    { route: "", priority: 1.0 },
+    { route: "/about", priority: 0.6 },
+    { route: "/contact", priority: 0.7 },
     { route: "/products", priority: 0.9 },
     { route: "/categories", priority: 0.8 },
     { route: "/suppliers", priority: 0.8 },
-    { route: "/about", priority: 0.5 },
-    { route: "/contact", priority: 0.5 },
+    
+    { route: "/blogs", priority: 0.8 },
   ];
 
   const staticPages: MetadataRoute.Sitemap = staticRoutes.map(
@@ -174,11 +187,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   );
 
-  const [products, categories, suppliers] = await Promise.all([
-    fetchItems("/products"),
-    fetchItems("/categories"),
-    fetchItems("/suppliers"),
-  ]);
+  const [products, categories, suppliers, blogs] =
+    await Promise.all([
+      fetchItems("/products"),
+      fetchItems("/categories"),
+      fetchItems("/suppliers"),
+      fetchItems("/blogs"),
+      
+    ]);
 
   const productPages: MetadataRoute.Sitemap = products.map((product) => ({
     url: `${SITE_URL}/products/${encodeURIComponent(product.slug!)}`,
@@ -201,7 +217,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  // Product ke saath supplier slug available ho tabhi nested URL banao.
+  const blogPages: MetadataRoute.Sitemap = blogs.map((blog) => ({
+    url: `${SITE_URL}/blogs/${encodeURIComponent(blog.slug!)}`,
+    lastModified: getLastModified(blog),
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
+  
+
   const nestedSupplierPages: MetadataRoute.Sitemap = products.flatMap(
     (product) => {
       const supplierSlug = getSupplierSlug(product);
@@ -226,6 +250,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...productPages,
     ...categoryPages,
     ...supplierPages,
+    ...blogPages,
+    
     ...nestedSupplierPages,
   ];
 

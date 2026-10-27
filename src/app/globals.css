@@ -11388,3 +11388,126 @@ section {
     padding: 16px;
   }
 }
+
+.blog-article-content {
+  color: #334155;
+  font-size: 17px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.blog-article-content h1 {
+  margin: 36px 0 18px;
+  color: #0f172a;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.blog-article-content h2 {
+  margin: 32px 0 14px;
+  color: #111827;
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.blog-article-content h3 {
+  margin: 25px 0 12px;
+  color: #1e293b;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.blog-article-content p {
+  margin: 0 0 20px;
+}
+
+.blog-article-content strong,
+.blog-article-content b {
+  color: #111827;
+  font-weight: 750;
+}
+
+.blog-article-content ul,
+.blog-article-content ol {
+  margin: 18px 0 24px;
+  padding-left: 28px;
+}
+
+.blog-article-content ul {
+  list-style: disc;
+}
+
+.blog-article-content ol {
+  list-style: decimal;
+}
+
+.blog-article-content li {
+  margin: 8px 0;
+  padding-left: 4px;
+}
+
+.blog-article-content a {
+  color: #4f46e5;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.blog-article-content blockquote {
+  margin: 26px 0;
+  border-left: 4px solid #4f46e5;
+  border-radius: 0 10px 10px 0;
+  background: #f8fafc;
+  padding: 18px 22px;
+  color: #475569;
+}
+
+.blog-article-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 28px auto;
+  border-radius: 14px;
+}
+
+.blog-article-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+
+.blog-article-content th,
+.blog-article-content td {
+  border: 1px solid #e2e8f0;
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.blog-article-content th {
+  background: #f8fafc;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .blog-article-content {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .blog-article-content h1 {
+    font-size: 27px;
+  }
+
+  .blog-article-content h2 {
+    font-size: 23px;
+  }
+
+  .blog-article-content h3 {
+    font-size: 19px;
+  }
+}

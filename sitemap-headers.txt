@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Server: nginx/1.14.1
+Date: Tue, 27 Oct 2026 04:04:06 GMT
+Content-Type: application/xml
+Transfer-Encoding: chunked
+Connection: keep-alive
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+x-nextjs-cache: HIT
+cache-control: public, max-age=0, must-revalidate
+
