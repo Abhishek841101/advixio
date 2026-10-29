@@ -589,7 +589,7 @@ export default function CategoriesPage() {
         </section>
 
         {/* POPULAR CATEGORIES */}
-        <section className="popular-category-section">
+        {/* <section className="popular-category-section">
           <div className="category-section-header">
             <div>
               <span className="section-label">MOST SEARCHED</span>
@@ -627,7 +627,7 @@ export default function CategoriesPage() {
               </Link>
             ))}
           </div>
-        </section>
+        </section> */}
 
         {/* ALL CATEGORIES */}
         <section className="all-categories-section">

@@ -153,12 +153,12 @@ return ( <header className="navbar"> <div className="navbar-container">
             Dashboard
           </Link>
 
-          <Link
+          {/* <Link
             href="/requirements"
             className="post-button"
           >
             Post Buy Requirement
-          </Link>
+          </Link> */}
 
           <button
             type="button"
