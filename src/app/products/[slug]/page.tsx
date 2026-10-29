@@ -691,12 +691,11 @@ export default async function ProductDetailPage({ params }: Props) {
     </div>
   </div>
 
-  <Link
+ <Link
   href={`/products/${encodeURIComponent(product.slug)}/supplier/${encodeURIComponent(
     (
       product.seller?.companyName ||
       product.seller?.name ||
-      product.companyName ||
       supplierName ||
       "supplier"
     )
