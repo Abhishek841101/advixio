@@ -523,16 +523,9 @@ export default async function ProductDetailPage({ params }: Props) {
     Apne backend ke actual phone field ke according
     fields add/remove kar sakte ho.
   */}
+  
   {(() => {
-    const rawPhone =
-      product.seller?.phone ||
-      product.seller?.mobile ||
-      product.seller?.phoneNumber ||
-      product.seller?.contactNumber ||
-      product.sellerPhone ||
-      product.supplierPhone ||
-      product.phone ||
-      "";
+    const rawPhone = product.seller?.phone || "";
 
     let phone = String(rawPhone).replace(/\D/g, "");
 
@@ -556,7 +549,7 @@ export default async function ProductDetailPage({ params }: Props) {
           }`}
           aria-disabled={!validPhone}
         >
-          Call 
+          Call
         </a>
 
         <a
@@ -572,7 +565,7 @@ export default async function ProductDetailPage({ params }: Props) {
           }`}
           aria-disabled={!validPhone}
         >
-          WhatsApp 
+          WhatsApp
         </a>
 
         <Link
@@ -584,6 +577,7 @@ export default async function ProductDetailPage({ params }: Props) {
       </div>
     );
   })()}
+
 </div>
 
 
