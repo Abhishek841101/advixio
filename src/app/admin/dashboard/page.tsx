@@ -734,16 +734,10 @@ export default function AdminDashboard() {
                         </td>
 
                         <td className="px-5 py-4">
-                          <p className="text-sm text-slate-600">
-                            {product.category?.name || "Uncategorized"}
-                          </p>
-                          {product.subcategory && (
-                            <p className="mt-1 text-xs text-slate-400">
-                              {product.subcategory}
-                            </p>
-                          )}
-                        </td>
-
+  <p className="text-sm text-slate-600">
+    {product.category?.name || "Uncategorized"}
+  </p>
+</td>
                         <td className="whitespace-nowrap px-5 py-4 text-sm font-semibold text-slate-700">
                           {formatPrice(product.price, product.unit)}
                         </td>
