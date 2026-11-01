@@ -710,110 +710,116 @@ export default async function ProductDetailPage({ params }: Props) {
         {/* PRODUCT INFORMATION */}
         <section className="product-information-layout">
           <div className="product-information-main">
+            
             {/* 1. PRODUCT DESCRIPTION */}
-            <div className="product-information-card">
-              <h2>Product Description</h2>
+<div className="product-information-card min-w-0 max-w-full overflow-hidden">
+  <h2>Product Description</h2>
 
-              <ProductDescription
-                description={
-                  product.description?.trim() ||
-                  product.shortDescription?.trim() ||
-                  "No product description available."
-                }
-                maxLength={350}
-              />
-            </div>
+  <div className="product-description-responsive">
+    <ProductDescription
+      description={
+        product.description?.trim() ||
+        product.shortDescription?.trim() ||
+        "No product description available."
+      }
+      maxLength={350}
+    />
+  </div>
+</div>
 
             {/* 2. MORE PRODUCTS FROM THIS SUPPLIER */}
-            {supplierProducts.length > 0 && (
-              <section className="my-8 w-full min-w-0 sm:my-10">
-                <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">
-                      Supplier catalogue
-                    </p>
+{supplierProducts.length > 0 && (
+  <section className="my-8 w-full min-w-0 max-w-full overflow-hidden sm:my-10">
 
-                    <h2 className="mt-1 text-xl font-extrabold text-slate-900 sm:text-2xl">
-                      More Products From This Supplier
-                    </h2>
+    <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+      <div className="min-w-0">
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">
+          Supplier catalogue
+        </p>
 
-                    <p className="mt-1 text-sm text-slate-500">
-                      Explore other products offered by {supplierName}.
-                    </p>
-                  </div>
+        <h2 className="mt-1 text-xl font-extrabold text-slate-900 sm:text-2xl">
+          More Products From This Supplier
+        </h2>
 
-                  {supplierIdentifier && (
-                    <Link
-                      href={`/suppliers/${encodeURIComponent(
-                        supplierIdentifier
-                      )}`}
-                      className="shrink-0 text-sm font-bold text-violet-700 transition hover:text-violet-900"
-                    >
-                      View All →
-                    </Link>
+        <p className="mt-1 text-sm text-slate-500">
+          Explore other products offered by {supplierName}.
+        </p>
+      </div>
+
+      {supplierIdentifier && (
+        <Link
+          href={`/suppliers/${encodeURIComponent(supplierIdentifier)}`}
+          className="shrink-0 text-sm font-bold text-violet-700 hover:text-violet-900"
+        >
+          View All →
+        </Link>
+      )}
+    </div>
+
+    {/* HORIZONTAL PRODUCT SCROLL */}
+    <div className="supplier-products-scroll">
+
+      {supplierProducts.map((item) => {
+        const image = item.images?.find(
+          (url) => typeof url === "string" && url.trim() !== ""
+        );
+
+        return (
+          <article
+            key={item._id}
+            className="supplier-product-item"
+          >
+            <Link
+              href={`/products/${encodeURIComponent(item.slug)}`}
+              className="block h-full"
+            >
+              <div className="flex h-36 items-center justify-center overflow-hidden bg-slate-50 sm:h-40">
+                {image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={image}
+                    alt={item.name}
+                    loading="lazy"
+                    className="h-full w-full object-contain p-3 transition duration-300 hover:scale-105"
+                  />
+                ) : (
+                  <span className="px-4 text-center text-sm text-slate-400">
+                    Product image unavailable
+                  </span>
+                )}
+              </div>
+
+              <div className="p-3 sm:p-4">
+                <h3 className="line-clamp-2 min-h-10 text-sm font-bold leading-5 text-slate-800">
+                  {item.name}
+                </h3>
+
+                <p className="mt-2 text-base font-extrabold text-slate-900">
+                  {formatPrice(item.price)}
+                  {item.unit && (
+                    <span className="text-xs font-semibold text-slate-500">
+                      {" "}/ {item.unit}
+                    </span>
                   )}
-                </div>
+                </p>
 
-                <div className="flex gap-4 overflow-x-auto pb-4">
-                  {supplierProducts.map((item) => {
-                    const image = item.images?.find(
-                      (url) =>
-                        typeof url === "string" &&
-                        url.trim() !== ""
-                    );
+                <p className="mt-3 border-t border-slate-100 pt-3 text-xs font-bold text-violet-700">
+                  View product details →
+                </p>
+              </div>
+            </Link>
+          </article>
+        );
+      })}
 
-                    return (
-                      <article
-                        key={item._id}
-                        className="w-[220px] shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:w-[250px]"
-                      >
-                        <Link
-                          href={`/products/${encodeURIComponent(
-                            item.slug
-                          )}`}
-                          className="block h-full"
-                        >
-                          <div className="flex h-40 items-center justify-center overflow-hidden bg-slate-50">
-                            {image ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={image}
-                                alt={item.name}
-                                loading="lazy"
-                                className="h-full w-full object-contain p-3 transition duration-300 hover:scale-105"
-                              />
-                            ) : (
-                              <span className="px-4 text-center text-sm text-slate-400">
-                                Product image unavailable
-                              </span>
-                            )}
-                          </div>
+    </div>
 
-                          <div className="p-4">
-                            <h3 className="line-clamp-2 min-h-12 text-sm font-bold leading-6 text-slate-800">
-                              {item.name}
-                            </h3>
+    <p className="mt-2 text-center text-xs text-slate-400 sm:hidden">
+      ← Swipe to explore more products →
+    </p>
 
-                            <p className="mt-2 text-base font-extrabold text-slate-900">
-                              {formatPrice(item.price)}
-                              {item.unit && (
-                                <span className="text-xs font-semibold text-slate-500">
-                                  {" "}/ {item.unit}
-                                </span>
-                              )}
-                            </p>
-
-                            <p className="mt-3 border-t border-slate-100 pt-3 text-xs font-bold text-violet-700">
-                              View product details →
-                            </p>
-                          </div>
-                        </Link>
-                      </article>
-                    );
-                  })}
-                </div>
-              </section>
-            )}
+  </section>
+)}
 
             {/* 3. ADDITIONAL PRODUCT DETAILS */}
             <div className="product-information-card">

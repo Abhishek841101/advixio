@@ -12595,3 +12595,162 @@ section {
     transform: none;
   }
 }
+
+
+/* =========================================
+   PRODUCT DETAIL MOBILE RESPONSIVENESS
+========================================= */
+
+.product-detail-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.product-main-container,
+.product-information-layout,
+.product-information-main,
+.product-information-card {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* PRODUCT DESCRIPTION */
+
+.product-description-responsive {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  white-space: normal;
+  overflow: hidden;
+}
+
+.product-description-responsive * {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  white-space: normal;
+}
+
+.product-description-responsive img,
+.product-description-responsive video,
+.product-description-responsive iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* SUPPLIER PRODUCTS HORIZONTAL SCROLL */
+
+.supplier-products-scroll {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  gap: 14px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  padding: 4px 2px 14px;
+
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+}
+
+.supplier-products-scroll::-webkit-scrollbar {
+  height: 5px;
+}
+
+.supplier-products-scroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.supplier-products-scroll::-webkit-scrollbar-thumb {
+  background: #c4b5fd;
+  border-radius: 10px;
+}
+
+.supplier-product-item {
+  flex: 0 0 210px;
+  width: 210px;
+  min-width: 210px;
+  max-width: 210px;
+
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+
+  scroll-snap-align: start;
+
+  transition: box-shadow 0.2s ease;
+}
+
+.supplier-product-item:hover {
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .product-detail-page {
+    overflow-x: clip;
+  }
+
+  .product-main-container {
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .product-information-layout {
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .product-information-main {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .product-information-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+    overflow: hidden;
+  }
+
+  .product-description-responsive {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .supplier-products-scroll {
+    gap: 12px;
+  }
+
+  .supplier-product-item {
+    flex-basis: 185px;
+    width: 185px;
+    min-width: 185px;
+    max-width: 185px;
+  }
+}
+
+@media (max-width: 380px) {
+  .supplier-product-item {
+    flex-basis: 170px;
+    width: 170px;
+    min-width: 170px;
+    max-width: 170px;
+  }
+}
