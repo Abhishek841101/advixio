@@ -32,6 +32,7 @@ const API_URL =
 type Profile = {
   _id?: string;
   id?: string;
+  profileImage?: string;
   name: string;
   email: string;
   phone?: string;
@@ -73,6 +74,8 @@ export default function ProfilePage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+const [imagePreview, setImagePreview] = useState("");
   const [editing, setEditing] = useState<ProfileSection | null>(null);
 
   const [error, setError] = useState("");
@@ -139,6 +142,8 @@ export default function ProfilePage() {
       const user: Profile = result.data;
 
       setProfile(user);
+      setImagePreview(user.profileImage || "");
+setProfileImage(null);
       setForm({
         ...emptyProfile,
         ...user,
@@ -186,10 +191,12 @@ export default function ProfilePage() {
   };
 
   const cancelEditing = () => {
-    setForm({ ...profile });
-    setEditing(null);
-    setError("");
-  };
+  setForm({ ...profile });
+  setProfileImage(null);
+  setImagePreview(profile.profileImage || "");
+  setEditing(null);
+  setError("");
+};
 
   const saveProfile = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -218,12 +225,25 @@ export default function ProfilePage() {
         payload[field] = String(form[field] ?? "").trim();
       });
 
-      const response = await fetch(`${API_URL}/auth/profile`, {
-        method: "PUT",
-        headers: authHeaders(),
-        body: JSON.stringify(payload),
-      });
+      const formData = new FormData();
 
+// Existing section fields
+Object.entries(payload).forEach(([key, value]) => {
+  formData.append(key, value);
+});
+
+// Profile image
+if (profileImage) {
+  formData.append("profileImage", profileImage);
+}
+
+const response = await fetch(`${API_URL}/auth/profile`, {
+  method: "PUT",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("advixio_token")}`,
+  },
+  body: formData,
+});
       const result = await response.json();
 
       if (response.status === 401) {
@@ -238,10 +258,17 @@ export default function ProfilePage() {
       }
 
       setProfile(result.data);
-      setForm({
-        ...emptyProfile,
-        ...result.data,
-      });
+
+// Update profile image from server response
+setImagePreview(result.data.profileImage || "");
+
+// Clear selected image
+setProfileImage(null);
+
+setForm({
+  ...emptyProfile,
+  ...result.data,
+});
 
       localStorage.setItem(
         "advixio_user",
@@ -522,13 +549,61 @@ export default function ProfilePage() {
 
         {/* Profile Overview */}
         <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="h-28 bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-500" />
+         <div className="h-16 sm:h-24 bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-500" />
+          <div className="px-4 pb-4 sm:px-8 sm:pb-6">
+            <div className="-mt-9 sm:-mt-11 flex flex-wrap items-end gap-3 sm:gap-4">
+              </div><div className="-mt-11 flex flex-wrap items-end gap-4">
+              <div className="relative shrink-0">
+  <div className="flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-indigo-100 text-2xl sm:text-3xl font-extrabold text-indigo-700 shadow-sm">
+    {imagePreview ? (
+      <img
+        src={imagePreview}
+        alt="Profile"
+        className="h-full w-full object-cover"
+      />
+    ) : (
+      initials
+    )}
+  </div>
 
-          <div className="px-5 pb-6 sm:px-8">
-            <div className="-mt-11 flex flex-wrap items-end gap-4">
-              <div className="flex h-24 w-24 items-center justify-center rounded-2xl border-4 border-white bg-indigo-100 text-3xl font-extrabold text-indigo-700 shadow-sm">
-                {initials}
-              </div>
+  <label
+    htmlFor="profile-image"
+    className="absolute -bottom-2 -right-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-indigo-600 text-white shadow-md transition hover:bg-indigo-700"
+    title="Change profile photo"
+  >
+    <Pencil size={15} />
+  </label>
+
+  <input
+    id="profile-image"
+    type="file"
+    accept="image/png,image/jpeg,image/webp"
+    className="hidden"
+    onChange={(e) => {
+  const file = e.target.files?.[0];
+
+  if (!file) return;
+
+  if (file.size > 5 * 1024 * 1024) {
+    showMessage("Image size must be less than 5 MB.", true);
+    e.target.value = "";
+    return;
+  }
+
+  // Set selected image
+  setProfileImage(file);
+
+  // Show image preview
+  setImagePreview(URL.createObjectURL(file));
+
+  // Activate Personal Information editing
+  setEditing("personal");
+
+  setError("");
+  setSuccess("");
+}}
+  />
+</div>
 
               <div className="flex-1 pb-1">
                 <h2 className="text-xl font-extrabold text-slate-900">
@@ -553,8 +628,7 @@ export default function ProfilePage() {
                 </span>
               </div>
             </div>
-
-            <div className="mt-6 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-3">
+<div className="mt-4 sm:mt-6 grid gap-3 sm:gap-4 border-t border-slate-100 pt-4 sm:pt-5 sm:grid-cols-3">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
                   <Mail size={18} />
