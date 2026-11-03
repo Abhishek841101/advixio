@@ -848,25 +848,30 @@ export default async function ProductDetailPage({ params }: Props) {
             {/* COMBINED TABS: THREE SECTIONS IN ONE CARD */}
 
             <ProductDetailTabs
-              customFields={customFieldData}
-              specifications={specificationData}
-              companyName={
-                product.companyName ||
-                product.seller?.companyName ||
-                "Not provided"
-              }
-              city={
-                product.location?.city ||
-                product.seller?.city ||
-                "Not provided"
-              }
-              state={
-                product.location?.state ||
-                product.seller?.state ||
-                "Not provided"
-              }
-              country={product.location?.country || "India"}
-            />
+  description={
+    product.description?.trim() ||
+    product.shortDescription?.trim() ||
+    "No product description available."
+  }
+  customFields={customFieldData}
+  specifications={specificationData}
+  companyName={
+    product.companyName ||
+    product.seller?.companyName ||
+    "Not provided"
+  }
+  city={
+    product.location?.city ||
+    product.seller?.city ||
+    "Not provided"
+  }
+  state={
+    product.location?.state ||
+    product.seller?.state ||
+    "Not provided"
+  }
+  country={product.location?.country || "India"}
+/>
           </div>
 
           {/* SUPPLIER SIDEBAR */}
