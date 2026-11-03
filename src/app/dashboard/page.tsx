@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -10,12 +8,14 @@ const API_URL =
 
 type User = {
   id: string;
+  _id?: string;
   name: string;
   email: string;
   phone?: string;
   companyName?: string;
   city?: string;
   state?: string;
+  profileImage?: string;
 };
 
 type Product = {
@@ -40,20 +40,47 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("advixio_user");
+  // Load latest user profile from backend
+  const loadUserProfile = async () => {
+    try {
+      const token = localStorage.getItem("advixio_token");
 
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch {
+      if (!token) return;
+
+      const response = await fetch(`${API_URL}/auth/profile`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        cache: "no-store",
+      });
+
+      const result = await response.json();
+
+      if (response.status === 401) {
+        localStorage.removeItem("advixio_token");
         localStorage.removeItem("advixio_user");
+        window.location.href = "/login";
+        return;
       }
+
+      if (!response.ok || !result.success || !result.data) {
+        throw new Error(result.message || "Failed to load profile.");
+      }
+
+      setUser(result.data);
+
+      // Save latest profile including profile image
+      localStorage.setItem(
+        "advixio_user",
+        JSON.stringify(result.data)
+      );
+    } catch (error) {
+      console.error("Failed to load profile:", error);
     }
+  };
 
-    loadProducts();
-  }, []);
-
+  // Load supplier products
   const loadProducts = async () => {
     try {
       setLoading(true);
@@ -69,6 +96,7 @@ export default function DashboardPage() {
       const response = await fetch(
         `${API_URL}/products/my-listings`,
         {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -105,15 +133,34 @@ export default function DashboardPage() {
     }
   };
 
+  // Logout
   const logout = () => {
     localStorage.removeItem("advixio_token");
     localStorage.removeItem("advixio_user");
     window.location.href = "/";
   };
 
+  // Load cached user first, then fetch latest data
+  useEffect(() => {
+    const storedUser = localStorage.getItem("advixio_user");
+
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch {
+        localStorage.removeItem("advixio_user");
+      }
+    }
+
+    loadUserProfile();
+    loadProducts();
+  }, []);
+
+  // User initials fallback
   const initials = user?.name
     ? user.name
         .split(" ")
+        .filter(Boolean)
         .map((word) => word[0])
         .slice(0, 2)
         .join("")
@@ -163,7 +210,15 @@ export default function DashboardPage() {
             <div className="dashboard-profile-card">
 
               <div className="dashboard-avatar">
-                {initials}
+                {user?.profileImage ? (
+                  <img
+                    src={user.profileImage}
+                    alt={user.name || "Profile"}
+                    className="h-full w-full rounded-full object-cover"
+                  />
+                ) : (
+                  initials
+                )}
               </div>
 
               <h2>
