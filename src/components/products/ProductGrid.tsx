@@ -1,5 +1,3 @@
-
-
 import ProductCard from "./ProductCard";
 
 export type Product = {
@@ -67,17 +65,19 @@ export default function ProductGrid({
   }
 
   return (
-    <div className="product-grid">
+    <div className="product-grid grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-5 w-full">
       {products.map((product, index) => (
-        <ProductCard
+        <div
           key={
             product._id ||
             product.id ||
             product.slug ||
             `product-${index}`
           }
-          product={product}
-        />
+          className="min-w-0 w-full"
+        >
+          <ProductCard product={product} />
+        </div>
       ))}
     </div>
   );

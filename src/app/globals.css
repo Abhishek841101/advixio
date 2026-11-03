@@ -3418,6 +3418,7 @@ main:has(> h1) > section > a span {
 
 /* SMALL MOBILE */
 
+/* SMALL MOBILE */
 @media (max-width: 480px) {
   .products-page .products-hero-text {
     padding: 24px 18px;
@@ -3431,8 +3432,15 @@ main:has(> h1) > section > a span {
     height: 165px;
   }
 
+  /* MOBILE: 2 PRODUCT CARDS */
   .products-page .product-grid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px;
+  }
+
+  .products-page .product-grid > * {
+    min-width: 0;
+    width: 100%;
   }
 
   .products-page .products-sidebar {
@@ -4655,6 +4663,8 @@ main:has(> h1) > section > a span {
     font-size: 11px;
   }
 }
+
+
 
 /* =========================================================
    ADVIXIO360 PRODUCT DETAIL - UPDATED UI
