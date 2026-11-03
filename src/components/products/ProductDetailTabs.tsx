@@ -1,7 +1,7 @@
-
 "use client";
 
 import { useState } from "react";
+import ProductDescription from "@/components/products/ProductDescription";
 
 type DetailField = {
   name: string;
@@ -9,6 +9,7 @@ type DetailField = {
 };
 
 type Props = {
+  description: string;
   customFields: DetailField[];
   specifications: DetailField[];
   companyName: string;
@@ -18,6 +19,7 @@ type Props = {
 };
 
 const tabs = [
+  { id: "description", label: "Product Description" },
   { id: "additional", label: "Additional Details" },
   { id: "specifications", label: "Specifications" },
   { id: "business", label: "Business Information" },
@@ -55,6 +57,7 @@ function DetailsTable({ fields }: { fields: DetailField[] }) {
 }
 
 export default function ProductDetailTabs({
+  description,
   customFields,
   specifications,
   companyName,
@@ -62,7 +65,8 @@ export default function ProductDetailTabs({
   state,
   country,
 }: Props) {
-  const [activeTab, setActiveTab] = useState<TabId>("additional");
+  const [activeTab, setActiveTab] =
+    useState<TabId>("description");
 
   const businessFields: DetailField[] = [
     { name: "Company Name", value: companyName },
@@ -72,7 +76,10 @@ export default function ProductDetailTabs({
   ];
 
   return (
-    <section className="product-information-card product-tabs-card">
+    <section className="product-information-card product-tabs-card min-w-0 max-w-full overflow-hidden">
+
+      {/* MAIN HEADING */}
+
       <div className="product-tabs-heading">
         <span className="product-tabs-eyebrow">
           PRODUCT INFORMATION
@@ -80,6 +87,8 @@ export default function ProductDetailTabs({
 
         <h2>Product Details</h2>
       </div>
+
+      {/* HORIZONTAL TABS */}
 
       <div
         className="product-tabs-navigation"
@@ -93,6 +102,7 @@ export default function ProductDetailTabs({
             role="tab"
             aria-selected={activeTab === tab.id}
             aria-controls={`product-panel-${tab.id}`}
+            id={`product-tab-${tab.id}`}
             className={`product-tab-button ${
               activeTab === tab.id ? "active" : ""
             }`}
@@ -103,11 +113,23 @@ export default function ProductDetailTabs({
         ))}
       </div>
 
+      {/* ACTIVE TAB CONTENT */}
+
       <div
         className="product-tabs-content"
         role="tabpanel"
         id={`product-panel-${activeTab}`}
+        aria-labelledby={`product-tab-${activeTab}`}
       >
+        {activeTab === "description" && (
+          <div className="product-description-responsive">
+            <ProductDescription
+              description={description}
+              maxLength={350}
+            />
+          </div>
+        )}
+
         {activeTab === "additional" && (
           <DetailsTable fields={customFields} />
         )}

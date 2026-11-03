@@ -6,7 +6,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ProductImageGallery from "@/components/products/ProductImageGallery";
-import ProductDescription from "@/components/products/ProductDescription";
+// import ProductDescription from "@/components/products/ProductDescription";
 import ProductDetailTabs from "@/components/products/ProductDetailTabs";
 
 type Props = {
@@ -734,7 +734,7 @@ export default async function ProductDetailPage({ params }: Props) {
           <div className="product-information-main">
             {/* PRODUCT DESCRIPTION */}
 
-            <div className="product-information-card min-w-0 max-w-full overflow-hidden">
+            {/* <div className="product-information-card min-w-0 max-w-full overflow-hidden">
               <h2>Product Description</h2>
 
               <div className="product-description-responsive">
@@ -747,7 +747,7 @@ export default async function ProductDetailPage({ params }: Props) {
                   maxLength={350}
                 />
               </div>
-            </div>
+            </div> */}
 
             {/* MORE PRODUCTS FROM SUPPLIER */}
 
