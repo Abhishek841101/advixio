@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -10,6 +11,8 @@ import { categories } from "@/data/categories";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+
+const PRODUCTS_PER_PAGE = 12;
 
 const banners = [
   {
@@ -95,6 +98,9 @@ export default function ProductsPage() {
   const [selectedSuppliers, setSelectedSuppliers] = useState<string[]>([]);
   const [sort, setSort] = useState("relevance");
   const [showAllCategories, setShowAllCategories] = useState(false);
+
+  // PAGINATION
+  const [currentPage, setCurrentPage] = useState(1);
 
   /* =========================================
      FETCH PRODUCTS FROM BACKEND
@@ -191,6 +197,7 @@ export default function ProductsPage() {
     setSelectedSuppliers([]);
     setSearch("");
     setSort("relevance");
+    setCurrentPage(1);
   };
 
   /* =========================================
@@ -200,8 +207,7 @@ export default function ProductsPage() {
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    /* SEARCH */
-
+    // SEARCH
     if (search.trim()) {
       const query = search.toLowerCase().trim();
 
@@ -220,8 +226,7 @@ export default function ProductsPage() {
       });
     }
 
-    /* CATEGORY */
-
+    // CATEGORY
     if (selectedCategories.length > 0) {
       result = result.filter((product) => {
         return selectedCategories.some(
@@ -234,8 +239,7 @@ export default function ProductsPage() {
       });
     }
 
-    /* SUPPLER TYPE */
-
+    // SUPPLIER TYPE
     if (selectedSuppliers.length > 0) {
       result = result.filter((product) => {
         const supplierName =
@@ -255,8 +259,7 @@ export default function ProductsPage() {
       });
     }
 
-    /* SORT */
-
+    // SORT
     if (sort === "name") {
       result.sort((a, b) =>
         a.name.localeCompare(b.name)
@@ -284,9 +287,85 @@ export default function ProductsPage() {
     sort,
   ]);
 
+  /* =========================================
+     PAGINATION
+  ========================================= */
+
+  const totalPages = Math.ceil(
+    filteredProducts.length / PRODUCTS_PER_PAGE
+  );
+
+  const paginatedProducts = useMemo(() => {
+    const startIndex =
+      (currentPage - 1) * PRODUCTS_PER_PAGE;
+
+    return filteredProducts.slice(
+      startIndex,
+      startIndex + PRODUCTS_PER_PAGE
+    );
+  }, [filteredProducts, currentPage]);
+
+  // Reset to page 1 when filters or sorting change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, selectedCategories, selectedSuppliers, sort]);
+
+  // Keep page valid if products change
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const goToPage = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+
+    setCurrentPage(page);
+
+    // Scroll to products section
+    document
+      .querySelector(".products-section")
+      ?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+  };
+
   const visibleCategories = showAllCategories
     ? categories
     : categories.slice(0, 8);
+
+  const startProduct =
+    filteredProducts.length === 0
+      ? 0
+      : (currentPage - 1) * PRODUCTS_PER_PAGE + 1;
+
+  const endProduct = Math.min(
+    currentPage * PRODUCTS_PER_PAGE,
+    filteredProducts.length
+  );
+
+  // Pagination numbers
+  const getPageNumbers = () => {
+    const pages: number[] = [];
+
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(totalPages, currentPage + 2);
+
+    if (currentPage <= 3) {
+      end = Math.min(5, totalPages);
+    }
+
+    if (currentPage > totalPages - 3) {
+      start = Math.max(1, totalPages - 4);
+    }
+
+    for (let page = start; page <= end; page++) {
+      pages.push(page);
+    }
+
+    return pages;
+  };
 
   return (
     <>
@@ -294,15 +373,12 @@ export default function ProductsPage() {
 
       <main className="products-page">
 
-        {/* =========================================
-            HERO
-        ========================================= */}
+        {/* HERO */}
 
         <section className="products-hero">
           <div className="products-hero-content">
 
             <div className="products-hero-text">
-
               <span className="products-hero-label">
                 ADVIXIO MARKETPLACE
               </span>
@@ -317,7 +393,6 @@ export default function ProductsPage() {
               >
                 {banner.button}
               </Link>
-
             </div>
 
             <div className="products-hero-image">
@@ -346,12 +421,9 @@ export default function ProductsPage() {
           </div>
         </section>
 
-        {/* =========================================
-            SEARCH
-        ========================================= */}
+        {/* SEARCH */}
 
         <section className="product-search-section">
-
           <div className="product-search-box">
 
             <input
@@ -368,33 +440,24 @@ export default function ProductsPage() {
             </button>
 
           </div>
-
         </section>
 
-        {/* =========================================
-            POPULAR CATEGORIES
-        ========================================= */}
+        {/* POPULAR CATEGORIES */}
 
         <section className="popular-products-section">
 
           <div className="section-heading">
-
             <div>
               <span>EXPLORE</span>
-
-              <h2>
-                Popular Categories
-              </h2>
+              <h2>Popular Categories</h2>
             </div>
 
             <Link href="/categories">
               View All Categories →
             </Link>
-
           </div>
 
           <div className="popular-category-list">
-
             {categories.slice(0, 6).map((category) => (
               <button
                 key={category.id}
@@ -411,39 +474,31 @@ export default function ProductsPage() {
                 {category.name}
               </button>
             ))}
-
           </div>
 
         </section>
 
-        {/* =========================================
-            PRODUCTS
-        ========================================= */}
+        {/* PRODUCTS */}
 
         <section className="products-section">
 
           <div className="products-toolbar">
 
             <div>
-
               <span className="products-toolbar-label">
                 MARKETPLACE
               </span>
 
-              <h2>
-                Explore Products
-              </h2>
+              <h2>Explore Products</h2>
 
               <p>
                 {loading
                   ? "Loading products..."
-                  : `Showing ${filteredProducts.length} of ${products.length} products`}
+                  : `Showing ${startProduct}-${endProduct} of ${filteredProducts.length} products`}
               </p>
-
             </div>
 
             <div className="products-sort">
-
               <label htmlFor="sort">
                 Sort by
               </label>
@@ -455,183 +510,236 @@ export default function ProductsPage() {
                   setSort(event.target.value)
                 }
               >
-                <option value="relevance">
-                  Relevance
-                </option>
-
-                <option value="name">
-                  Name
-                </option>
-
-                <option value="price-low">
-                  Price: Low to High
-                </option>
-
-                <option value="price-high">
-                  Price: High to Low
-                </option>
+                <option value="relevance">Relevance</option>
+                <option value="name">Name</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
               </select>
-
             </div>
 
           </div>
 
           <div className="products-layout">
 
-            {/* =====================================
-                SIDEBAR
-            ===================================== */}
+            {/* SIDEBAR */}
 
-            <aside className="products-sidebar">
+           
+{/* DESKTOP SIDEBAR */}
 
-              <div className="filter-box">
+<aside className="products-sidebar desktop-products-sidebar">
 
-                <div className="filter-header">
+  <div className="filter-box">
+    <div className="filter-header">
+      <h3>Categories</h3>
 
-                  <h3>
-                    Categories
-                  </h3>
+      {selectedCategories.length > 0 && (
+        <button
+          type="button"
+          onClick={() => setSelectedCategories([])}
+        >
+          Clear
+        </button>
+      )}
+    </div>
 
-                  {selectedCategories.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setSelectedCategories([])
-                      }
-                    >
-                      Clear
-                    </button>
-                  )}
+    <div className="filter-list">
+      {visibleCategories.map((category) => (
+        <label
+          key={category.id}
+          className="filter-option"
+        >
+          <input
+            type="checkbox"
+            checked={selectedCategories.includes(category.name)}
+            onChange={() => toggleCategory(category.name)}
+          />
+          <span>{category.name}</span>
+        </label>
+      ))}
+    </div>
 
-                </div>
+    <button
+      type="button"
+      className="view-more-filter"
+      onClick={() => setShowAllCategories((current) => !current)}
+    >
+      {showAllCategories
+        ? "Show Less ↑"
+        : `View All ${categories.length} Categories ↓`}
+    </button>
+  </div>
 
-                <div className="filter-list">
+  <div className="filter-box">
+    <div className="filter-header">
+      <h3>Supplier Type</h3>
 
-                  {visibleCategories.map((category) => (
+      {selectedSuppliers.length > 0 && (
+        <button
+          type="button"
+          onClick={() => setSelectedSuppliers([])}
+        >
+          Clear
+        </button>
+      )}
+    </div>
 
-                    <label
-                      key={category.id}
-                      className="filter-option"
-                    >
+    <div className="filter-list">
+      {supplierTypes.map((supplier) => (
+        <label
+          key={supplier}
+          className="filter-option"
+        >
+          <input
+            type="checkbox"
+            checked={selectedSuppliers.includes(supplier)}
+            onChange={() => toggleSupplier(supplier)}
+          />
+          <span>{supplier}</span>
+        </label>
+      ))}
+    </div>
+  </div>
 
-                      <input
-                        type="checkbox"
-                        checked={selectedCategories.includes(
-                          category.name
-                        )}
-                        onChange={() =>
-                          toggleCategory(category.name)
-                        }
-                      />
+  {(selectedCategories.length > 0 ||
+    selectedSuppliers.length > 0 ||
+    search) && (
+    <button
+      type="button"
+      className="clear-all-filters"
+      onClick={clearFilters}
+    >
+      Clear All Filters
+    </button>
+  )}
+</aside>
 
-                      <span>
-                        {category.name}
-                      </span>
+{/* MOBILE FILTER DROPDOWNS */}
 
-                    </label>
+<div className="mobile-products-filters">
 
-                  ))}
+  <details className="mobile-filter-dropdown">
+    <summary>
+      <span>
+        Categories
+        {selectedCategories.length > 0 && (
+          <small>{selectedCategories.length} selected</small>
+        )}
+      </span>
 
-                </div>
+      <span className="mobile-filter-arrow">⌄</span>
+    </summary>
 
-                <button
-                  type="button"
-                  className="view-more-filter"
-                  onClick={() =>
-                    setShowAllCategories(
-                      (current) => !current
-                    )
-                  }
-                >
-                  {showAllCategories
-                    ? "Show Less ↑"
-                    : `View All ${categories.length} Categories ↓`}
-                </button>
+    <div className="mobile-filter-content">
 
-              </div>
+      <div className="mobile-filter-top">
+        <span>Select Categories</span>
 
-              {/* SUPPLIER FILTER */}
+        {selectedCategories.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setSelectedCategories([])}
+          >
+            Clear
+          </button>
+        )}
+      </div>
 
-              <div className="filter-box">
+      <div className="mobile-filter-options">
+        {visibleCategories.map((category) => (
+          <label
+            key={category.id}
+            className="filter-option"
+          >
+            <input
+              type="checkbox"
+              checked={selectedCategories.includes(category.name)}
+              onChange={() => toggleCategory(category.name)}
+            />
+            <span>{category.name}</span>
+          </label>
+        ))}
+      </div>
 
-                <div className="filter-header">
+      <button
+        type="button"
+        className="view-more-filter"
+        onClick={() => setShowAllCategories((current) => !current)}
+      >
+        {showAllCategories
+          ? "Show Less ↑"
+          : `View All ${categories.length} Categories ↓`}
+      </button>
 
-                  <h3>
-                    Supplier Type
-                  </h3>
+    </div>
+  </details>
 
-                  {selectedSuppliers.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setSelectedSuppliers([])
-                      }
-                    >
-                      Clear
-                    </button>
-                  )}
+  <details className="mobile-filter-dropdown">
+    <summary>
+      <span>
+        Supplier Type
+        {selectedSuppliers.length > 0 && (
+          <small>{selectedSuppliers.length} selected</small>
+        )}
+      </span>
 
-                </div>
+      <span className="mobile-filter-arrow">⌄</span>
+    </summary>
 
-                <div className="filter-list">
+    <div className="mobile-filter-content">
 
-                  {supplierTypes.map((supplier) => (
+      <div className="mobile-filter-top">
+        <span>Select Supplier Type</span>
 
-                    <label
-                      key={supplier}
-                      className="filter-option"
-                    >
+        {selectedSuppliers.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setSelectedSuppliers([])}
+          >
+            Clear
+          </button>
+        )}
+      </div>
 
-                      <input
-                        type="checkbox"
-                        checked={selectedSuppliers.includes(
-                          supplier
-                        )}
-                        onChange={() =>
-                          toggleSupplier(supplier)
-                        }
-                      />
+      <div className="mobile-filter-options">
+        {supplierTypes.map((supplier) => (
+          <label
+            key={supplier}
+            className="filter-option"
+          >
+            <input
+              type="checkbox"
+              checked={selectedSuppliers.includes(supplier)}
+              onChange={() => toggleSupplier(supplier)}
+            />
+            <span>{supplier}</span>
+          </label>
+        ))}
+      </div>
 
-                      <span>
-                        {supplier}
-                      </span>
+    </div>
+  </details>
 
-                    </label>
+  {(selectedCategories.length > 0 ||
+    selectedSuppliers.length > 0 ||
+    search) && (
+    <button
+      type="button"
+      className="mobile-clear-filters"
+      onClick={clearFilters}
+    >
+      Clear All Filters
+    </button>
+  )}
 
-                  ))}
+</div>
 
-                </div>
-
-              </div>
-
-              {(selectedCategories.length > 0 ||
-                selectedSuppliers.length > 0 ||
-                search) && (
-
-                <button
-                  type="button"
-                  className="clear-all-filters"
-                  onClick={clearFilters}
-                >
-                  Clear All Filters
-                </button>
-
-              )}
-
-            </aside>
-
-            {/* =====================================
-                PRODUCT RESULTS
-            ===================================== */}
+            {/* PRODUCT RESULTS */}
 
             <div className="products-results">
 
               {loading && (
                 <div className="no-products">
-                  <h3>
-                    Loading products...
-                  </h3>
-
+                  <h3>Loading products...</h3>
                   <p>
                     Please wait while we load products
                     from Advixio marketplace.
@@ -641,18 +749,13 @@ export default function ProductsPage() {
 
               {!loading && error && (
                 <div className="no-products">
-
                   <div className="no-products-icon">
                     ⚠️
                   </div>
 
-                  <h3>
-                    Unable to load products
-                  </h3>
+                  <h3>Unable to load products</h3>
 
-                  <p>
-                    {error}
-                  </p>
+                  <p>{error}</p>
 
                   <button
                     type="button"
@@ -662,33 +765,84 @@ export default function ProductsPage() {
                   >
                     Retry
                   </button>
-
                 </div>
               )}
 
               {!loading &&
                 !error &&
                 filteredProducts.length > 0 && (
+                  <>
+                    <ProductGrid
+                      products={paginatedProducts}
+                    />
 
-                  <ProductGrid
-                    products={filteredProducts}
-                  />
+                    {/* PAGINATION */}
 
+                    {totalPages > 1 && (
+                      <nav
+                        className="products-pagination"
+                        aria-label="Product pagination"
+                      >
+                        <button
+                          type="button"
+                          className="pagination-btn pagination-prev"
+                          disabled={currentPage === 1}
+                          onClick={() =>
+                            goToPage(currentPage - 1)
+                          }
+                        >
+                          Previous
+                        </button>
+
+                        {getPageNumbers().map((page) => (
+                          <button
+                            key={page}
+                            type="button"
+                            className={
+                              currentPage === page
+                                ? "pagination-btn active"
+                                : "pagination-btn"
+                            }
+                            aria-current={
+                              currentPage === page
+                                ? "page"
+                                : undefined
+                            }
+                            onClick={() => goToPage(page)}
+                          >
+                            {page}
+                          </button>
+                        ))}
+
+                        <button
+                          type="button"
+                          className="pagination-btn pagination-next"
+                          disabled={currentPage === totalPages}
+                          onClick={() =>
+                            goToPage(currentPage + 1)
+                          }
+                        >
+                          Next
+                        </button>
+                      </nav>
+                    )}
+
+                    <p className="pagination-info">
+                      Showing {startProduct}–{endProduct} of{" "}
+                      {filteredProducts.length} products
+                    </p>
+                  </>
                 )}
 
               {!loading &&
                 !error &&
                 filteredProducts.length === 0 && (
-
                   <div className="no-products">
-
                     <div className="no-products-icon">
                       🔎
                     </div>
 
-                    <h3>
-                      No products found
-                    </h3>
+                    <h3>No products found</h3>
 
                     <p>
                       Try changing your search or
@@ -701,9 +855,7 @@ export default function ProductsPage() {
                     >
                       Clear Filters
                     </button>
-
                   </div>
-
                 )}
 
             </div>
@@ -712,9 +864,7 @@ export default function ProductsPage() {
 
         </section>
 
-        {/* =========================================
-            SUPPLIER CTA
-        ========================================= */}
+        {/* SUPPLIER CTA */}
 
         <section className="supplier-cta">
 
@@ -725,14 +875,9 @@ export default function ProductsPage() {
             </div>
 
             <div className="supplier-cta-text">
+              <span>GROW YOUR BUSINESS</span>
 
-              <span>
-                GROW YOUR BUSINESS
-              </span>
-
-              <h2>
-                Are You a Supplier?
-              </h2>
+              <h2>Are You a Supplier?</h2>
 
               <p>
                 List your products on Advixio and
@@ -741,25 +886,13 @@ export default function ProductsPage() {
               </p>
 
               <div className="supplier-cta-points">
-
-                <span>
-                  ✓ Reach new buyers
-                </span>
-
-                <span>
-                  ✓ Showcase your products
-                </span>
-
-                <span>
-                  ✓ Get business enquiries
-                </span>
-
+                <span>✓ Reach new buyers</span>
+                <span>✓ Showcase your products</span>
+                <span>✓ Get business enquiries</span>
               </div>
-
             </div>
 
             <div className="supplier-cta-action">
-
               <Link
                 href="/register"
                 className="supplier-primary-button"
@@ -773,7 +906,6 @@ export default function ProductsPage() {
               >
                 Manage Products
               </Link>
-
             </div>
 
           </div>

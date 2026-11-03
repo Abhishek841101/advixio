@@ -7,6 +7,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ProductImageGallery from "@/components/products/ProductImageGallery";
 import ProductDescription from "@/components/products/ProductDescription";
+import ProductDetailTabs from "@/components/products/ProductDetailTabs";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -113,7 +114,7 @@ async function getProduct(slug: string): Promise<Product | null> {
 }
 
 /* =====================================================
-   GET OTHER PRODUCTS FROM THE SAME SUPPLIER
+   GET OTHER PRODUCTS FROM SAME SUPPLIER
 ===================================================== */
 
 async function getSupplierProducts(
@@ -226,7 +227,7 @@ export async function generateMetadata({
 }
 
 /* =====================================================
-   PRICE
+   HELPERS
 ===================================================== */
 
 function formatPrice(price?: number) {
@@ -236,10 +237,6 @@ function formatPrice(price?: number) {
 
   return `₹${price.toLocaleString("en-IN")}`;
 }
-
-/* =====================================================
-   LOCATION
-===================================================== */
 
 function getLocation(product: Product) {
   const productLocation = product.location;
@@ -267,10 +264,6 @@ function getLocation(product: Product) {
   return "Location not available";
 }
 
-/* =====================================================
-   SUPPLIER NAME
-===================================================== */
-
 function getSupplierName(product: Product) {
   return (
     product.companyName?.trim() ||
@@ -280,12 +273,36 @@ function getSupplierName(product: Product) {
   );
 }
 
-/* =====================================================
-   FIELD NAME
-===================================================== */
-
 function getFieldName(field: Specification | CustomField) {
   return field.name?.trim() || field.label?.trim() || "";
+}
+
+function getPhoneNumber(product: Product) {
+  const rawPhone = product.seller?.phone || "";
+
+  let phone = String(rawPhone).replace(/\D/g, "");
+
+  if (phone.length === 10) {
+    phone = `91${phone}`;
+  } else if (phone.length === 11 && phone.startsWith("0")) {
+    phone = `91${phone.slice(1)}`;
+  }
+
+  return phone.length >= 11 && phone.length <= 15 ? phone : "";
+}
+
+function makeSupplierSlug(product: Product, supplierName: string) {
+  return (
+    product.seller?.companyName ||
+    product.seller?.name ||
+    product.companyName ||
+    supplierName ||
+    "supplier"
+  )
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 /* =====================================================
@@ -328,6 +345,15 @@ export default async function ProductDetailPage({ params }: Props) {
 
   const supplierName = getSupplierName(product);
   const supplierLocation = getLocation(product);
+  const phone = getPhoneNumber(product);
+  const supplierCompanySlug = makeSupplierSlug(product, supplierName);
+
+  const whatsappMessage = encodeURIComponent(
+    `Hello, I am interested in ${product.name}. Please share the price and product details.`
+  );
+
+  const enquiryUrl =
+    `/products/${encodeURIComponent(product.slug)}/enquiry`;
 
   const productImages = Array.isArray(product.images)
     ? product.images.filter(
@@ -336,7 +362,8 @@ export default async function ProductDetailPage({ params }: Props) {
       )
     : [];
 
-  /* Product JSON-LD */
+  /* PRODUCT JSON-LD */
+
   const productDescription =
     product.description?.trim() ||
     product.shortDescription?.trim();
@@ -375,7 +402,8 @@ export default async function ProductDetailPage({ params }: Props) {
       : {}),
   };
 
-  /* Breadcrumb JSON-LD */
+  /* BREADCRUMB JSON-LD */
+
   const categoryName = product.category?.name?.trim();
   const categorySlug = product.category?.slug?.trim();
   const productName = product.name?.trim() || "Product";
@@ -416,6 +444,16 @@ export default async function ProductDetailPage({ params }: Props) {
     ],
   };
 
+  const customFieldData = customFields.map((field) => ({
+    name: getFieldName(field),
+    value: String(field.value),
+  }));
+
+  const specificationData = specifications.map((field) => ({
+    name: getFieldName(field),
+    value: String(field.value),
+  }));
+
   return (
     <>
       <script
@@ -442,6 +480,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
       <main className="product-detail-page">
         {/* BREADCRUMB */}
+
         <div className="product-breadcrumb">
           <Link href="/">Home</Link>
           <span>›</span>
@@ -462,8 +501,11 @@ export default async function ProductDetailPage({ params }: Props) {
           <span>{product.name}</span>
         </div>
 
-        {/* PRODUCT MAIN */}
+        {/* MAIN PRODUCT SECTION */}
+
         <section className="product-main-container">
+          {/* PRODUCT IMAGE */}
+
           <div className="product-gallery">
             <ProductImageGallery
               images={productImages}
@@ -471,533 +513,413 @@ export default async function ProductDetailPage({ params }: Props) {
             />
           </div>
 
-          
-<div className="product-main-info">
-  <span className="product-category-badge">
-    {product.subcategory ||
-      product.category?.name ||
-      "Industrial Product"}
-  </span>
+          {/* PRODUCT INFORMATION */}
 
-  <h1>{product.name}</h1>
+          <div className="product-main-info">
+            <span className="product-category-badge">
+              {product.subcategory ||
+                product.category?.name ||
+                "Industrial Product"}
+            </span>
 
-  <p className="product-short-description">
-    {product.shortDescription ||
-      "Quality industrial product from a verified supplier."}
-  </p>
+            <h1>{product.name}</h1>
 
-  <div className="product-price-box">
-    <span className="product-price-label">
-      Starting Price
-    </span>
+            <p className="product-short-description">
+              {product.shortDescription ||
+                "Quality industrial product from a verified supplier."}
+            </p>
 
-    <div className="product-detail-price">
-      {formatPrice(product.price)}
-      {product.unit && <span> / {product.unit}</span>}
-    </div>
-  </div>
+            <div className="product-price-box">
+              <span className="product-price-label">
+                Starting Price
+              </span>
 
-  <div className="product-basic-info">
-    <div>
-      <span>Brand</span>
-      <strong>{product.brand || "N/A"}</strong>
-    </div>
-
-    <div>
-      <span>Model</span>
-      <strong>{product.model || "N/A"}</strong>
-    </div>
-
-    <div>
-      <span>Category</span>
-      <strong>
-        {product.category?.name ||
-          product.subcategory ||
-          "N/A"}
-      </strong>
-    </div>
-  </div>
-
-  {/*
-    Supplier contact number.
-    Apne backend ke actual phone field ke according
-    fields add/remove kar sakte ho.
-  */}
-  
-  {(() => {
-    const rawPhone = product.seller?.phone || "";
-
-    let phone = String(rawPhone).replace(/\D/g, "");
-
-    if (phone.length === 10) {
-      phone = `91${phone}`;
-    }
-
-    const validPhone =
-      phone.length >= 11 && phone.length <= 15;
-
-    const whatsappMessage = encodeURIComponent(
-      `Hello, I am interested in ${product.name}. Please share the price and product details.`
-    );
-
-    return (
-      <div className="product-actions">
-        <a
-          href={validPhone ? `tel:+${phone}` : undefined}
-          className={`contact-supplier-button ${
-            !validPhone ? "is-disabled" : ""
-          }`}
-          aria-disabled={!validPhone}
-        >
-          Call
-        </a>
-
-        <a
-          href={
-            validPhone
-              ? `https://wa.me/${phone}?text=${whatsappMessage}`
-              : undefined
-          }
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`whatsapp-supplier-button ${
-            !validPhone ? "is-disabled" : ""
-          }`}
-          aria-disabled={!validPhone}
-        >
-          WhatsApp
-        </a>
-
-        <Link
-          href={`/products/${encodeURIComponent(product.slug)}/enquiry`}
-          className="send-enquiry-button"
-        >
-          Enquiry
-        </Link>
-      </div>
-    );
-  })()}
-
-</div>
-
-
-          {/* ENQUIRY CARD */}
-         
-<aside className="product-enquiry-card">
-  <div className="enquiry-card-heading">
-    <span className="enquiry-card-eyebrow">
-      PRODUCT ENQUIRY
-    </span>
-
-    <h2>Interested in this product?</h2>
-
-    <p>
-      Share your requirements with the supplier and get a
-      quotation tailored to your business needs.
-    </p>
-  </div>
-
-  <Link
-    href={`/products/${encodeURIComponent(product.slug)}/enquiry`}
-    className="enquiry-primary-button"
-  >
-    <span>Send Enquiry</span>
-    <span className="enquiry-button-arrow" aria-hidden="true">
-      →
-    </span>
-  </Link>
-
-  <div className="enquiry-card-benefits">
-    <div className="enquiry-benefit-item">
-      <span className="enquiry-benefit-icon" aria-hidden="true">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" />
-          <path d="m9 12 2 2 4-4" />
-        </svg>
-      </span>
-
-      <span>
-        <strong>Direct Supplier Enquiry</strong>
-        <small>Your requirement goes to the supplier</small>
-      </span>
-    </div>
-
-    <div className="enquiry-benefit-item">
-      <span className="enquiry-benefit-icon" aria-hidden="true">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="9" />
-          <path d="M12 7v5l3 2" />
-        </svg>
-      </span>
-
-      <span>
-        <strong>Discuss Price & Availability</strong>
-        <small>Confirm quantity, delivery and pricing</small>
-      </span>
-    </div>
-  </div>
-
-  <div className="enquiry-supplier-section">
-    <div className="enquiry-supplier-avatar" aria-hidden="true">
-      {String(supplierName || "S").trim().charAt(0).toUpperCase()}
-    </div>
-
-    <div className="enquiry-supplier-details">
-      <span className="enquiry-supplier-label">
-        SUPPLIER
-      </span>
-
-      <strong className="enquiry-supplier-name">
-        {supplierName || "Product Supplier"}
-      </strong>
-
-      {supplierLocation && (
-        <span className="enquiry-supplier-location">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" />
-            <circle cx="12" cy="10" r="2.5" />
-          </svg>
-          {supplierLocation}
-        </span>
-      )}
-    </div>
-  </div>
-
- <Link
-  href={`/products/${encodeURIComponent(product.slug)}/supplier/${encodeURIComponent(
-    (
-      product.seller?.companyName ||
-      product.seller?.name ||
-      supplierName ||
-      "supplier"
-    )
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "")
-  )}`}
-  className="enquiry-view-supplier"
->
-  <span>View Supplier Profile</span>
-  <span aria-hidden="true">↗</span>
-</Link>
-</aside>
-
-        </section>
-
-        {/* PRODUCT INFORMATION */}
-        <section className="product-information-layout">
-          <div className="product-information-main">
-            
-            {/* 1. PRODUCT DESCRIPTION */}
-<div className="product-information-card min-w-0 max-w-full overflow-hidden">
-  <h2>Product Description</h2>
-
-  <div className="product-description-responsive">
-    <ProductDescription
-      description={
-        product.description?.trim() ||
-        product.shortDescription?.trim() ||
-        "No product description available."
-      }
-      maxLength={350}
-    />
-  </div>
-</div>
-
-            {/* 2. MORE PRODUCTS FROM THIS SUPPLIER */}
-{supplierProducts.length > 0 && (
-  <section className="my-8 w-full min-w-0 max-w-full overflow-hidden sm:my-10">
-
-    <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-      <div className="min-w-0">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">
-          Supplier catalogue
-        </p>
-
-        <h2 className="mt-1 text-xl font-extrabold text-slate-900 sm:text-2xl">
-          More Products From This Supplier
-        </h2>
-
-        <p className="mt-1 text-sm text-slate-500">
-          Explore other products offered by {supplierName}.
-        </p>
-      </div>
-
-      {supplierIdentifier && (
-        <Link
-          href={`/suppliers/${encodeURIComponent(supplierIdentifier)}`}
-          className="shrink-0 text-sm font-bold text-violet-700 hover:text-violet-900"
-        >
-          View All →
-        </Link>
-      )}
-    </div>
-
-    {/* HORIZONTAL PRODUCT SCROLL */}
-    <div className="supplier-products-scroll">
-
-      {supplierProducts.map((item) => {
-        const image = item.images?.find(
-          (url) => typeof url === "string" && url.trim() !== ""
-        );
-
-        return (
-          <article
-            key={item._id}
-            className="supplier-product-item"
-          >
-            <Link
-              href={`/products/${encodeURIComponent(item.slug)}`}
-              className="block h-full"
-            >
-              <div className="flex h-36 items-center justify-center overflow-hidden bg-slate-50 sm:h-40">
-                {image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={image}
-                    alt={item.name}
-                    loading="lazy"
-                    className="h-full w-full object-contain p-3 transition duration-300 hover:scale-105"
-                  />
-                ) : (
-                  <span className="px-4 text-center text-sm text-slate-400">
-                    Product image unavailable
-                  </span>
-                )}
+              <div className="product-detail-price">
+                {formatPrice(product.price)}
+                {product.unit && <span> / {product.unit}</span>}
               </div>
-
-              <div className="p-3 sm:p-4">
-                <h3 className="line-clamp-2 min-h-10 text-sm font-bold leading-5 text-slate-800">
-                  {item.name}
-                </h3>
-
-                <p className="mt-2 text-base font-extrabold text-slate-900">
-                  {formatPrice(item.price)}
-                  {item.unit && (
-                    <span className="text-xs font-semibold text-slate-500">
-                      {" "}/ {item.unit}
-                    </span>
-                  )}
-                </p>
-
-                <p className="mt-3 border-t border-slate-100 pt-3 text-xs font-bold text-violet-700">
-                  View product details →
-                </p>
-              </div>
-            </Link>
-          </article>
-        );
-      })}
-
-    </div>
-
-    <p className="mt-2 text-center text-xs text-slate-400 sm:hidden">
-      ← Swipe to explore more products →
-    </p>
-
-  </section>
-)}
-
-            {/* 3. ADDITIONAL PRODUCT DETAILS */}
-            <div className="product-information-card">
-              <h2>Additional Product Details</h2>
-
-              {customFields.length > 0 ? (
-                <div className="specifications-table">
-                  {customFields.map((field, index) => (
-                    <div
-                      className="specification-row"
-                      key={`custom-${getFieldName(field)}-${index}`}
-                    >
-                      <div className="specification-label">
-                        {getFieldName(field)}
-                      </div>
-
-                      <div className="specification-value">
-                        {String(field.value)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>No additional product details available.</p>
-              )}
             </div>
 
-            {/* 4. PRODUCT SPECIFICATIONS */}
-            <div className="product-information-card">
-              <h2>Product Specifications</h2>
+            <div className="product-basic-info">
+              <div>
+                <span>Brand</span>
+                <strong>{product.brand || "N/A"}</strong>
+              </div>
 
-              {specifications.length > 0 ? (
-                <div className="specifications-table">
-                  {specifications.map((specification, index) => (
-                    <div
-                      className="specification-row"
-                      key={`spec-${getFieldName(
-                        specification
-                      )}-${index}`}
-                    >
-                      <div className="specification-label">
-                        {getFieldName(specification)}
-                      </div>
+              <div>
+                <span>Model</span>
+                <strong>{product.model || "N/A"}</strong>
+              </div>
 
-                      <div className="specification-value">
-                        {String(specification.value)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>No specifications available.</p>
-              )}
+              <div>
+                <span>Category</span>
+                <strong>
+                  {product.category?.name ||
+                    product.subcategory ||
+                    "N/A"}
+                </strong>
+              </div>
             </div>
 
-            {/* 5. BUSINESS INFORMATION */}
-            <div className="product-information-card">
-              <h2>Business Information</h2>
+            {/* DESKTOP PRODUCT ACTIONS */}
 
-              <div className="specifications-table">
-                <div className="specification-row">
-                  <div className="specification-label">
-                    Company Name
-                  </div>
+            <div className="product-actions">
+              <a
+                href={phone ? `tel:+${phone}` : undefined}
+                className={`contact-supplier-button ${
+                  !phone ? "is-disabled" : ""
+                }`}
+                aria-disabled={!phone}
+              >
+                Call Supplier
+              </a>
 
-                  <div className="specification-value">
-                    {product.companyName ||
-                      product.seller?.companyName ||
-                      "Not provided"}
-                  </div>
-                </div>
+              <a
+                href={
+                  phone
+                    ? `https://wa.me/${phone}?text=${whatsappMessage}`
+                    : undefined
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`whatsapp-supplier-button ${
+                  !phone ? "is-disabled" : ""
+                }`}
+                aria-disabled={!phone}
+              >
+                WhatsApp
+              </a>
 
-                <div className="specification-row">
-                  <div className="specification-label">City</div>
+              <Link
+                href={enquiryUrl}
+                className="send-enquiry-button"
+              >
+                Send Enquiry
+              </Link>
+            </div>
 
-                  <div className="specification-value">
-                    {product.location?.city ||
-                      product.seller?.city ||
-                      "Not provided"}
-                  </div>
-                </div>
+            {/* MOBILE SUPPLIER SUMMARY */}
 
-                <div className="specification-row">
-                  <div className="specification-label">State</div>
-
-                  <div className="specification-value">
-                    {product.location?.state ||
-                      product.seller?.state ||
-                      "Not provided"}
-                  </div>
-                </div>
-
-                <div className="specification-row">
-                  <div className="specification-label">Country</div>
-
-                  <div className="specification-value">
-                    {product.location?.country || "India"}
-                  </div>
-                </div>
+            <div className="mobile-supplier-summary">
+              <div className="mobile-supplier-avatar">
+                {supplierName.charAt(0).toUpperCase()}
               </div>
+
+              <div className="mobile-supplier-text">
+                <span>SUPPLIER</span>
+                <strong>{supplierName}</strong>
+                <small>{supplierLocation}</small>
+              </div>
+
+              <Link
+                href={`/products/${encodeURIComponent(
+                  product.slug
+                )}/supplier/${encodeURIComponent(
+                  supplierCompanySlug
+                )}`}
+                className="mobile-supplier-link"
+              >
+                View
+              </Link>
             </div>
           </div>
 
-          {/* SUPPLIER CARD */}
-          <aside id="supplier" className="product-supplier-card">
-            {(() => {
-              const supplierCompanySlug = (
-                product.seller?.companyName ||
-                product.seller?.name ||
-                product.companyName ||
-                supplierName ||
-                "supplier"
-              )
-                .trim()
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/^-|-$/g, "");
+          {/* DESKTOP ENQUIRY CARD */}
 
-              const supplierId = product.seller?._id;
+          <aside className="product-enquiry-card">
+            <div className="enquiry-card-heading">
+              <span className="enquiry-card-eyebrow">
+                PRODUCT ENQUIRY
+              </span>
 
-              return (
-                <>
-                  <span className="supplier-label">SUPPLIER</span>
+              <h2>Interested in this product?</h2>
 
-                  <h2>{supplierName}</h2>
+              <p>
+                Share your requirements with the supplier and get a
+                quotation tailored to your business needs.
+              </p>
+            </div>
 
-                  <p>{supplierLocation}</p>
+            <Link
+              href={enquiryUrl}
+              className="enquiry-primary-button"
+            >
+              <span>Send Enquiry</span>
+              <span className="enquiry-button-arrow" aria-hidden="true">
+                →
+              </span>
+            </Link>
 
-                  <div className="supplier-status">
-                    Verified Supplier
-                  </div>
+            <div className="enquiry-card-benefits">
+              <div className="enquiry-benefit-item">
+                <span className="enquiry-benefit-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" />
+                    <path d="m9 12 2 2 4-4" />
+                  </svg>
+                </span>
 
-                  <hr />
+                <span>
+                  <strong>Direct Supplier Enquiry</strong>
+                  <small>Your requirement goes to the supplier</small>
+                </span>
+              </div>
 
-                  <p className="supplier-description">
-                    {product.companyName
-                      ? `${product.companyName} offers this product through the Advixio marketplace.`
-                      : "Trusted supplier offering quality products and industrial solutions."}
-                  </p>
+              <div className="enquiry-benefit-item">
+                <span className="enquiry-benefit-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v5l3 2" />
+                  </svg>
+                </span>
 
-                  {product.seller?.email && (
-                    <p className="supplier-email">
-                      <strong>Email:</strong>{" "}
-                      {product.seller.email}
-                    </p>
-                  )}
+                <span>
+                  <strong>Discuss Price & Availability</strong>
+                  <small>Confirm quantity, delivery and pricing</small>
+                </span>
+              </div>
+            </div>
 
-                  {product.seller?.phone && (
-                    <p className="supplier-phone">
-                      <strong>Phone:</strong>{" "}
-                      {product.seller.phone}
-                    </p>
-                  )}
+            <div className="enquiry-supplier-section">
+              <div className="enquiry-supplier-avatar">
+                {supplierName.charAt(0).toUpperCase()}
+              </div>
 
-                  {supplierId ? (
-                    <Link
-                      href={`/products/${encodeURIComponent(
-                        product.slug
-                      )}/supplier/${encodeURIComponent(
-                        supplierCompanySlug
-                      )}`}
-                      className="supplier-contact-button"
-                    >
-                      Contact Supplier
-                      <span aria-hidden="true"> ↗</span>
-                    </Link>
-                  ) : (
-                    <p className="supplier-email">
-                      Supplier contact details are currently unavailable.
-                    </p>
-                  )}
-                </>
-              );
-            })()}
+              <div className="enquiry-supplier-details">
+                <span className="enquiry-supplier-label">
+                  SUPPLIER
+                </span>
+
+                <strong className="enquiry-supplier-name">
+                  {supplierName}
+                </strong>
+
+                <span className="enquiry-supplier-location">
+                  {supplierLocation}
+                </span>
+              </div>
+            </div>
+
+            <Link
+              href={`/products/${encodeURIComponent(
+                product.slug
+              )}/supplier/${encodeURIComponent(
+                supplierCompanySlug
+              )}`}
+              className="enquiry-view-supplier"
+            >
+              <span>View Supplier Profile</span>
+              <span aria-hidden="true">↗</span>
+            </Link>
           </aside>
         </section>
 
-        {/* BUYING CTA */}
+        {/* PRODUCT INFORMATION */}
+
+        <section className="product-information-layout">
+          <div className="product-information-main">
+            {/* PRODUCT DESCRIPTION */}
+
+            <div className="product-information-card min-w-0 max-w-full overflow-hidden">
+              <h2>Product Description</h2>
+
+              <div className="product-description-responsive">
+                <ProductDescription
+                  description={
+                    product.description?.trim() ||
+                    product.shortDescription?.trim() ||
+                    "No product description available."
+                  }
+                  maxLength={350}
+                />
+              </div>
+            </div>
+
+            {/* MORE PRODUCTS FROM SUPPLIER */}
+
+            {supplierProducts.length > 0 && (
+              <section className="supplier-catalogue-section w-full min-w-0 max-w-full overflow-hidden">
+                <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">
+                      Supplier catalogue
+                    </p>
+
+                    <h2 className="mt-1 text-xl font-extrabold text-slate-900 sm:text-2xl">
+                      More Products From This Supplier
+                    </h2>
+
+                    <p className="mt-1 text-sm text-slate-500">
+                      Explore other products offered by {supplierName}.
+                    </p>
+                  </div>
+
+                  {supplierIdentifier && (
+                    <Link
+                      href={`/suppliers/${encodeURIComponent(
+                        supplierIdentifier
+                      )}`}
+                      className="shrink-0 text-sm font-bold text-violet-700 hover:text-violet-900"
+                    >
+                      View All →
+                    </Link>
+                  )}
+                </div>
+
+                <div className="supplier-products-scroll">
+                  {supplierProducts.map((item) => {
+                    const image = item.images?.find(
+                      (url) =>
+                        typeof url === "string" &&
+                        url.trim() !== ""
+                    );
+
+                    return (
+                      <article
+                        key={item._id}
+                        className="supplier-product-item"
+                      >
+                        <Link
+                          href={`/products/${encodeURIComponent(
+                            item.slug
+                          )}`}
+                          className="block h-full"
+                        >
+                          <div className="flex h-36 items-center justify-center overflow-hidden bg-slate-50 sm:h-40">
+                            {image ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={image}
+                                alt={item.name}
+                                loading="lazy"
+                                className="h-full w-full object-contain p-3 transition duration-300 hover:scale-105"
+                              />
+                            ) : (
+                              <span className="px-4 text-center text-sm text-slate-400">
+                                Product image unavailable
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="p-3 sm:p-4">
+                            <h3 className="line-clamp-2 min-h-10 text-sm font-bold leading-5 text-slate-800">
+                              {item.name}
+                            </h3>
+
+                            <p className="mt-2 text-base font-extrabold text-slate-900">
+                              {formatPrice(item.price)}
+                              {item.unit && (
+                                <span className="text-xs font-semibold text-slate-500">
+                                  {" "}/ {item.unit}
+                                </span>
+                              )}
+                            </p>
+
+                            <p className="mt-3 border-t border-slate-100 pt-3 text-xs font-bold text-violet-700">
+                              View product details →
+                            </p>
+                          </div>
+                        </Link>
+                      </article>
+                    );
+                  })}
+                </div>
+
+                <p className="mt-2 text-center text-xs text-slate-400 sm:hidden">
+                  ← Swipe to explore more products →
+                </p>
+              </section>
+            )}
+
+            {/* COMBINED TABS: THREE SECTIONS IN ONE CARD */}
+
+            <ProductDetailTabs
+              customFields={customFieldData}
+              specifications={specificationData}
+              companyName={
+                product.companyName ||
+                product.seller?.companyName ||
+                "Not provided"
+              }
+              city={
+                product.location?.city ||
+                product.seller?.city ||
+                "Not provided"
+              }
+              state={
+                product.location?.state ||
+                product.seller?.state ||
+                "Not provided"
+              }
+              country={product.location?.country || "India"}
+            />
+          </div>
+
+          {/* SUPPLIER SIDEBAR */}
+
+          <aside id="supplier" className="product-supplier-card">
+            <span className="supplier-label">SUPPLIER</span>
+
+            <h2>{supplierName}</h2>
+
+            <p>{supplierLocation}</p>
+
+            <div className="supplier-status">
+              Verified Supplier
+            </div>
+
+            <hr />
+
+            <p className="supplier-description">
+              {product.companyName
+                ? `${product.companyName} offers this product through the Advixio marketplace.`
+                : "Trusted supplier offering quality products and industrial solutions."}
+            </p>
+
+            {product.seller?.email && (
+              <p className="supplier-email">
+                <strong>Email:</strong>{" "}
+                {product.seller.email}
+              </p>
+            )}
+
+            {product.seller?.phone && (
+              <p className="supplier-phone">
+                <strong>Phone:</strong>{" "}
+                {product.seller.phone}
+              </p>
+            )}
+
+            <Link
+              href={`/products/${encodeURIComponent(
+                product.slug
+              )}/supplier/${encodeURIComponent(
+                supplierCompanySlug
+              )}`}
+              className="supplier-contact-button"
+            >
+              Contact Supplier
+              <span aria-hidden="true"> ↗</span>
+            </Link>
+          </aside>
+        </section>
+
+        {/* BOTTOM CTA */}
+
         <section className="product-bottom-cta">
           <div>
             <span>LOOKING FOR THIS PRODUCT?</span>
@@ -1010,11 +932,54 @@ export default async function ProductDetailPage({ params }: Props) {
             </p>
           </div>
 
-          <button type="button">
+          <Link
+            href={enquiryUrl}
+            className="product-bottom-cta-link"
+          >
             Send Your Requirement →
-          </button>
+          </Link>
         </section>
       </main>
+
+      {/* MOBILE FIXED ACTION BAR */}
+
+      <div className="mobile-product-action-bar">
+        <a
+          href={phone ? `tel:+${phone}` : undefined}
+          className={`mobile-action-call ${
+            !phone ? "is-disabled" : ""
+          }`}
+          aria-disabled={!phone}
+        >
+          <span className="mobile-action-icon">☎</span>
+          <span>Call</span>
+        </a>
+
+        <a
+          href={
+            phone
+              ? `https://wa.me/${phone}?text=${whatsappMessage}`
+              : undefined
+          }
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`mobile-action-whatsapp ${
+            !phone ? "is-disabled" : ""
+          }`}
+          aria-disabled={!phone}
+        >
+          <span className="mobile-action-icon">◉</span>
+          <span>WhatsApp</span>
+        </a>
+
+        <Link
+          href={enquiryUrl}
+          className="mobile-action-enquiry"
+        >
+          <span className="mobile-action-icon">✉</span>
+          <span>Enquiry</span>
+        </Link>
+      </div>
 
       <Footer />
     </>

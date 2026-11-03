@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
@@ -18,9 +17,6 @@ import {
   CheckCircle2,
   AlertCircle,
   ArrowLeft,
-  BriefcaseBusiness,
-  Hash,
-  FileText,
   Eye,
   EyeOff,
   RefreshCw,
@@ -68,14 +64,161 @@ const emptyProfile: Profile = {
   pincode: "",
 };
 
+/* =========================================
+   REUSABLE PROFILE FIELD
+   IMPORTANT: Keep this outside ProfilePage.
+========================================= */
+
+type ProfileFieldProps = {
+  label: string;
+  value?: string;
+  field?: keyof Profile;
+  placeholder?: string;
+  type?: string;
+  multiline?: boolean;
+  disabled?: boolean;
+  editing: ProfileSection | null;
+  form: Profile;
+  onChange: (field: keyof Profile, value: string) => void;
+};
+
+function ProfileField({
+  label,
+  value,
+  field,
+  placeholder,
+  type = "text",
+  multiline = false,
+  disabled = false,
+  editing,
+  form,
+  onChange,
+}: ProfileFieldProps) {
+  const isEditing =
+    editing !== null && !disabled && field !== undefined;
+
+  const inputClass =
+    "profile-input w-full min-w-0 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50";
+
+  return (
+    <div className="min-w-0 space-y-2">
+      <label className="block text-sm font-semibold text-slate-700">
+        {label}
+      </label>
+
+      {isEditing ? (
+        multiline ? (
+          <textarea
+            value={String(form[field] ?? "")}
+            onChange={(e) => onChange(field, e.target.value)}
+            placeholder={placeholder || `Enter ${label.toLowerCase()}`}
+            rows={4}
+            maxLength={
+              field === "businessDescription" ? 1000 : undefined
+            }
+            className={`${inputClass} min-h-28 resize-y`}
+          />
+        ) : (
+          <input
+            type={type}
+            value={String(form[field] ?? "")}
+            onChange={(e) => onChange(field, e.target.value)}
+            placeholder={placeholder || `Enter ${label.toLowerCase()}`}
+            maxLength={field === "name" ? 100 : undefined}
+            className={inputClass}
+          />
+        )
+      ) : (
+        <div className="flex min-h-12 w-full min-w-0 items-center rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
+          <span className="min-w-0 break-words [overflow-wrap:anywhere]">
+            {value || (
+              <span className="font-normal text-slate-400">
+                Not provided
+              </span>
+            )}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* =========================================
+   SECTION ACTIONS
+   IMPORTANT: Keep this outside ProfilePage.
+========================================= */
+
+type SectionActionsProps = {
+  section: ProfileSection;
+  editing: ProfileSection | null;
+  saving: boolean;
+  onEdit: (section: ProfileSection) => void;
+  onCancel: () => void;
+};
+
+function SectionActions({
+  section,
+  editing,
+  saving,
+  onEdit,
+  onCancel,
+}: SectionActionsProps) {
+  if (editing !== section) {
+    return (
+      <button
+        type="button"
+        onClick={() => onEdit(section)}
+        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-2.5 text-sm font-bold text-indigo-700 transition hover:bg-indigo-100"
+      >
+        <Pencil size={15} />
+        Edit
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex shrink-0 flex-wrap items-center gap-2">
+      <button
+        type="button"
+        onClick={onCancel}
+        disabled={saving}
+        className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 disabled:opacity-60 sm:px-4"
+      >
+        <X size={15} />
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        form={`profile-${section}`}
+        disabled={saving}
+        className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-3 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-700 disabled:opacity-60 sm:px-4"
+      >
+        {saving ? (
+          <Loader2 size={16} className="animate-spin" />
+        ) : (
+          <Save size={16} />
+        )}
+        {saving ? "Saving..." : "Save"}
+      </button>
+    </div>
+  );
+}
+
+/* =========================================
+   MAIN PROFILE PAGE
+========================================= */
+
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile>(emptyProfile);
   const [form, setForm] = useState<Profile>(emptyProfile);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
   const [profileImage, setProfileImage] = useState<File | null>(null);
-const [imagePreview, setImagePreview] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
+
   const [editing, setEditing] = useState<ProfileSection | null>(null);
 
   const [error, setError] = useState("");
@@ -92,20 +235,14 @@ const [imagePreview, setImagePreview] = useState("");
     confirmPassword: "",
   });
 
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem("advixio_token")
-      : null;
-
-  const authHeaders = () => ({
-    Authorization: `Bearer ${localStorage.getItem("advixio_token")}`,
-    "Content-Type": "application/json",
-  });
-
   const showMessage = (message: string, isError = false) => {
     setError(isError ? message : "");
     setSuccess(isError ? "" : message);
   };
+
+  /* =========================================
+     LOAD PROFILE
+  ========================================= */
 
   const loadProfile = async () => {
     try {
@@ -142,14 +279,14 @@ const [imagePreview, setImagePreview] = useState("");
       const user: Profile = result.data;
 
       setProfile(user);
-      setImagePreview(user.profileImage || "");
-setProfileImage(null);
       setForm({
         ...emptyProfile,
         ...user,
       });
 
-      // Keep dashboard user data synchronized.
+      setImagePreview(user.profileImage || "");
+      setProfileImage(null);
+
       localStorage.setItem(
         "advixio_user",
         JSON.stringify({
@@ -176,6 +313,10 @@ setProfileImage(null);
     loadProfile();
   }, []);
 
+  /* =========================================
+     FORM HANDLERS
+  ========================================= */
+
   const updateField = (field: keyof Profile, value: string) => {
     setForm((previous) => ({
       ...previous,
@@ -191,12 +332,16 @@ setProfileImage(null);
   };
 
   const cancelEditing = () => {
-  setForm({ ...profile });
-  setProfileImage(null);
-  setImagePreview(profile.profileImage || "");
-  setEditing(null);
-  setError("");
-};
+    setForm({ ...profile });
+    setProfileImage(null);
+    setImagePreview(profile.profileImage || "");
+    setEditing(null);
+    setError("");
+  };
+
+  /* =========================================
+     SAVE PROFILE
+  ========================================= */
 
   const saveProfile = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -227,23 +372,22 @@ setProfileImage(null);
 
       const formData = new FormData();
 
-// Existing section fields
-Object.entries(payload).forEach(([key, value]) => {
-  formData.append(key, value);
-});
+      Object.entries(payload).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
 
-// Profile image
-if (profileImage) {
-  formData.append("profileImage", profileImage);
-}
+      if (profileImage) {
+        formData.append("profileImage", profileImage);
+      }
 
-const response = await fetch(`${API_URL}/auth/profile`, {
-  method: "PUT",
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("advixio_token")}`,
-  },
-  body: formData,
-});
+      const response = await fetch(`${API_URL}/auth/profile`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("advixio_token")}`,
+        },
+        body: formData,
+      });
+
       const result = await response.json();
 
       if (response.status === 401) {
@@ -257,29 +401,27 @@ const response = await fetch(`${API_URL}/auth/profile`, {
         throw new Error(result.message || "Profile update failed");
       }
 
-      setProfile(result.data);
+      const updatedProfile: Profile = result.data;
 
-// Update profile image from server response
-setImagePreview(result.data.profileImage || "");
+      setProfile(updatedProfile);
+      setForm({
+        ...emptyProfile,
+        ...updatedProfile,
+      });
 
-// Clear selected image
-setProfileImage(null);
-
-setForm({
-  ...emptyProfile,
-  ...result.data,
-});
+      setImagePreview(updatedProfile.profileImage || "");
+      setProfileImage(null);
 
       localStorage.setItem(
         "advixio_user",
         JSON.stringify({
-          id: result.data._id || result.data.id,
-          name: result.data.name,
-          email: result.data.email,
-          phone: result.data.phone,
-          companyName: result.data.companyName,
-          city: result.data.city,
-          state: result.data.state,
+          id: updatedProfile._id || updatedProfile.id,
+          name: updatedProfile.name,
+          email: updatedProfile.email,
+          phone: updatedProfile.phone,
+          companyName: updatedProfile.companyName,
+          city: updatedProfile.city,
+          state: updatedProfile.state,
         })
       );
 
@@ -294,6 +436,10 @@ setForm({
       setSaving(false);
     }
   };
+
+  /* =========================================
+     CHANGE PASSWORD
+  ========================================= */
 
   const changePassword = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -314,22 +460,21 @@ setForm({
     try {
       setChangingPassword(true);
 
-      const response = await fetch(
-        `${API_URL}/auth/change-password`,
-        {
-          method: "PUT",
-          headers: authHeaders(),
-          body: JSON.stringify({
-            currentPassword: passwords.currentPassword,
-            newPassword: passwords.newPassword,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/auth/change-password`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("advixio_token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentPassword: passwords.currentPassword,
+          newPassword: passwords.newPassword,
+        }),
+      });
 
       const result = await response.json();
 
       if (response.status === 401) {
-        // Incorrect current password should not log out the user.
         if (result.message?.toLowerCase().includes("current password")) {
           throw new Error(result.message);
         }
@@ -356,7 +501,7 @@ setForm({
       localStorage.removeItem("advixio_token");
       localStorage.removeItem("advixio_user");
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         window.location.href = "/login";
       }, 1500);
     } catch (err) {
@@ -369,6 +514,44 @@ setForm({
     }
   };
 
+  /* =========================================
+     PROFILE IMAGE
+  ========================================= */
+
+  const handleImageChange = (file?: File) => {
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      showMessage("Image size must be less than 5 MB.", true);
+      return;
+    }
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      showMessage("Please select a JPG, PNG or WEBP image.", true);
+      return;
+    }
+
+    setProfileImage(file);
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setImagePreview(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(file);
+
+    setEditing("personal");
+    setError("");
+    setSuccess("");
+  };
+
+  /* =========================================
+     INITIALS
+  ========================================= */
+
   const initials = profile.name
     ? profile.name
         .split(" ")
@@ -379,116 +562,14 @@ setForm({
         .toUpperCase()
     : "U";
 
-  const Field = ({
-    label,
-    value,
-    field,
-    placeholder,
-    type = "text",
-    multiline = false,
-    disabled = false,
-  }: {
-    label: string;
-    value?: string;
-    field?: keyof Profile;
-    placeholder?: string;
-    type?: string;
-    multiline?: boolean;
-    disabled?: boolean;
-  }) => {
-    const isEditing =
-      editing !== null && !disabled && field !== undefined;
-
-    return (
-      <div className="space-y-2">
-        <label className="text-sm font-semibold text-slate-700">
-          {label}
-        </label>
-
-        {isEditing ? (
-          multiline ? (
-            <textarea
-              value={String(form[field] ?? "")}
-              onChange={(e) => updateField(field, e.target.value)}
-              placeholder={placeholder || `Enter ${label.toLowerCase()}`}
-              rows={4}
-              maxLength={field === "businessDescription" ? 1000 : undefined}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
-            />
-          ) : (
-            <input
-              type={type}
-              value={String(form[field] ?? "")}
-              onChange={(e) => updateField(field, e.target.value)}
-              placeholder={placeholder || `Enter ${label.toLowerCase()}`}
-              maxLength={field === "name" ? 100 : undefined}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
-            />
-          )
-        ) : (
-          <div className="min-h-12 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 break-words">
-            {value || (
-              <span className="font-normal text-slate-400">
-                Not provided
-              </span>
-            )}
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const SectionActions = ({
-    section,
-  }: {
-    section: ProfileSection;
-  }) => {
-    if (editing !== section) {
-      return (
-        <button
-          type="button"
-          onClick={() => startEditing(section)}
-          className="inline-flex items-center gap-2 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-2.5 text-sm font-bold text-indigo-700 transition hover:bg-indigo-100"
-        >
-          <Pencil size={15} />
-          Edit
-        </button>
-      );
-    }
-
-    return (
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={cancelEditing}
-          disabled={saving}
-          className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-50"
-        >
-          <X size={15} />
-          Cancel
-        </button>
-
-        <button
-          type="submit"
-          form={`profile-${section}`}
-          disabled={saving}
-          className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-700 disabled:opacity-60"
-        >
-          {saving ? (
-            <Loader2 size={16} className="animate-spin" />
-          ) : (
-            <Save size={16} />
-          )}
-          {saving ? "Saving..." : "Save Changes"}
-        </button>
-      </div>
-    );
-  };
+  /* =========================================
+     LOADING
+  ========================================= */
 
   if (loading) {
     return (
-      <main className="flex min-h-[70vh] items-center justify-center bg-slate-50">
-        <div className="flex flex-col items-center gap-3">
+      <main className="profile-page flex min-h-screen items-center justify-center bg-[#f6f7fb] px-4 py-8">
+        <div className="flex flex-col items-center gap-4">
           <Loader2 size={35} className="animate-spin text-indigo-600" />
           <p className="text-sm font-medium text-slate-500">
             Loading your profile...
@@ -498,13 +579,17 @@ setForm({
     );
   }
 
-  return (
-    <main className="min-h-screen bg-[#f6f7fb] px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl space-y-7">
+  /* =========================================
+     MAIN UI
+  ========================================= */
 
-        {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
+  return (
+    <main className="profile-page min-h-screen w-full bg-[#f6f7fb] px-3 py-5 sm:px-6 sm:py-8 lg:px-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 sm:gap-7">
+
+        {/* HEADER */}
+        <header className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
             <Link
               href="/dashboard"
               className="mb-3 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-indigo-600"
@@ -517,7 +602,7 @@ setForm({
               My Profile
             </h1>
 
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm leading-6 text-slate-500">
               Manage your personal information and business account.
             </p>
           </div>
@@ -525,141 +610,123 @@ setForm({
           <button
             onClick={loadProfile}
             type="button"
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-600 shadow-sm hover:border-indigo-200 hover:text-indigo-600"
+            className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-indigo-200 hover:text-indigo-600 sm:w-auto"
           >
             <RefreshCw size={16} />
             Refresh
           </button>
-        </div>
+        </header>
 
-        {/* Alerts */}
+        {/* ALERTS */}
         {error && (
-          <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <div className="flex min-w-0 items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-700 sm:p-4">
             <AlertCircle size={19} className="mt-0.5 shrink-0" />
-            {error}
+            <span className="min-w-0 break-words">{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
+          <div className="flex min-w-0 items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm leading-6 text-emerald-700 sm:p-4">
             <CheckCircle2 size={19} className="mt-0.5 shrink-0" />
-            {success}
+            <span className="min-w-0 break-words">{success}</span>
           </div>
         )}
 
-        {/* Profile Overview */}
-        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-         <div className="h-16 sm:h-24 bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-500" />
-          <div className="px-4 pb-4 sm:px-8 sm:pb-6">
-            <div className="-mt-9 sm:-mt-11 flex flex-wrap items-end gap-3 sm:gap-4">
-              </div><div className="-mt-11 flex flex-wrap items-end gap-4">
-              <div className="relative shrink-0">
-  <div className="flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-indigo-100 text-2xl sm:text-3xl font-extrabold text-indigo-700 shadow-sm">
-    {imagePreview ? (
-      <img
-        src={imagePreview}
-        alt="Profile"
-        className="h-full w-full object-cover"
-      />
-    ) : (
-      initials
-    )}
-  </div>
+        {/* PROFILE OVERVIEW */}
+        <section className="profile-overview min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="h-16 bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-500 sm:h-24" />
 
-  <label
-    htmlFor="profile-image"
-    className="absolute -bottom-2 -right-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-indigo-600 text-white shadow-md transition hover:bg-indigo-700"
-    title="Change profile photo"
-  >
-    <Pencil size={15} />
-  </label>
+          <div className="px-4 pb-5 sm:px-7 sm:pb-6">
+            <div className="-mt-9 flex min-w-0 flex-col gap-4 sm:-mt-11 sm:flex-row sm:flex-wrap sm:items-end">
+              <div className="relative w-fit shrink-0">
+                <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-indigo-100 text-2xl font-extrabold text-indigo-700 shadow-sm sm:h-24 sm:w-24 sm:text-3xl">
+                  {imagePreview ? (
+                    <img
+                      src={imagePreview}
+                      alt="Profile"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    initials
+                  )}
+                </div>
 
-  <input
-    id="profile-image"
-    type="file"
-    accept="image/png,image/jpeg,image/webp"
-    className="hidden"
-    onChange={(e) => {
-  const file = e.target.files?.[0];
+                <label
+                  htmlFor="profile-image"
+                  className="absolute -bottom-2 -right-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-indigo-600 text-white shadow-md transition hover:bg-indigo-700"
+                  title="Change profile photo"
+                >
+                  <Pencil size={15} />
+                </label>
 
-  if (!file) return;
+                <input
+                  id="profile-image"
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="hidden"
+                  onChange={(e) => {
+                    handleImageChange(e.target.files?.[0]);
+                    e.target.value = "";
+                  }}
+                />
+              </div>
 
-  if (file.size > 5 * 1024 * 1024) {
-    showMessage("Image size must be less than 5 MB.", true);
-    e.target.value = "";
-    return;
-  }
-
-  // Set selected image
-  setProfileImage(file);
-
-  // Show image preview
-  setImagePreview(URL.createObjectURL(file));
-
-  // Activate Personal Information editing
-  setEditing("personal");
-
-  setError("");
-  setSuccess("");
-}}
-  />
-</div>
-
-              <div className="flex-1 pb-1">
-                <h2 className="text-xl font-extrabold text-slate-900">
+              <div className="min-w-0 flex-1 pb-1">
+                <h2 className="break-words text-xl font-extrabold text-slate-900">
                   {profile.name || "Your Name"}
                 </h2>
 
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 break-words text-sm text-slate-500">
                   {profile.companyName || "Supplier Account"}
                 </p>
               </div>
 
               <div className="pb-1">
                 <span
-                  className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-bold ${
+                  className={`inline-flex max-w-full items-center gap-2 rounded-full px-3 py-2 text-xs font-bold ${
                     profile.isActive
                       ? "bg-emerald-50 text-emerald-700"
                       : "bg-red-50 text-red-700"
                   }`}
                 >
-                  <span className="h-2 w-2 rounded-full bg-current" />
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-current" />
                   {profile.isActive ? "Active Account" : "Inactive Account"}
                 </span>
               </div>
             </div>
-<div className="mt-4 sm:mt-6 grid gap-3 sm:gap-4 border-t border-slate-100 pt-4 sm:pt-5 sm:grid-cols-3">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+
+            <div className="mt-5 grid min-w-0 grid-cols-1 gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
                   <Mail size={18} />
                 </div>
                 <div className="min-w-0">
                   <p className="text-xs text-slate-400">Email Address</p>
-                  <p className="truncate text-sm font-semibold text-slate-700">
+                  <p className="break-all text-sm font-semibold text-slate-700">
                     {profile.email}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                   <Phone size={18} />
                 </div>
                 <div className="min-w-0">
                   <p className="text-xs text-slate-400">Phone Number</p>
-                  <p className="text-sm font-semibold text-slate-700">
+                  <p className="break-words text-sm font-semibold text-slate-700">
                     {profile.phone || "Not provided"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+              <div className="flex min-w-0 items-center gap-3 sm:col-span-2 lg:col-span-1">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
                   <MapPin size={18} />
                 </div>
                 <div className="min-w-0">
                   <p className="text-xs text-slate-400">Location</p>
-                  <p className="truncate text-sm font-semibold text-slate-700">
+                  <p className="break-words text-sm font-semibold text-slate-700">
                     {[profile.city, profile.state].filter(Boolean).join(", ") ||
                       "Not provided"}
                   </p>
@@ -669,200 +736,255 @@ setForm({
           </div>
         </section>
 
-        {/* Personal Information */}
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+        {/* PERSONAL INFORMATION */}
+        <section className="profile-card min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-7">
+          <div className="mb-5 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
                 <UserRound size={21} />
               </div>
-              <div>
+              <div className="min-w-0">
                 <h2 className="font-extrabold text-slate-900">
                   Personal Information
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs leading-5 text-slate-500">
                   Your basic account information
                 </p>
               </div>
             </div>
 
-            <SectionActions section="personal" />
+            <SectionActions
+              section="personal"
+              editing={editing}
+              saving={saving}
+              onEdit={startEditing}
+              onCancel={cancelEditing}
+            />
           </div>
 
           <form id="profile-personal" onSubmit={saveProfile}>
-            <div className="grid gap-5 sm:grid-cols-2">
-              <Field
+            <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+              <ProfileField
                 label="Full Name"
                 value={profile.name}
                 field="name"
+                editing={editing}
+                form={form}
+                onChange={updateField}
               />
 
-              <Field
+              <ProfileField
                 label="Email Address"
                 value={profile.email}
                 disabled
+                editing={editing}
+                form={form}
+                onChange={updateField}
               />
 
-              <Field
+              <ProfileField
                 label="Phone Number"
                 value={profile.phone}
                 field="phone"
                 placeholder="Enter your phone number"
+                editing={editing}
+                form={form}
+                onChange={updateField}
               />
             </div>
 
-            <p className="mt-4 text-xs text-slate-400">
-              Email address cannot be edited here. Email changes require verification.
+            <p className="mt-4 text-xs leading-5 text-slate-400">
+              Email address cannot be edited here. Email changes require
+              verification.
             </p>
           </form>
         </section>
 
-        {/* Business Information */}
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+        {/* BUSINESS INFORMATION */}
+        <section className="profile-card min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-7">
+          <div className="mb-5 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
                 <Building2 size={21} />
               </div>
-              <div>
+              <div className="min-w-0">
                 <h2 className="font-extrabold text-slate-900">
                   Business Information
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs leading-5 text-slate-500">
                   Your company and business details
                 </p>
               </div>
             </div>
 
-            <SectionActions section="business" />
+            <SectionActions
+              section="business"
+              editing={editing}
+              saving={saving}
+              onEdit={startEditing}
+              onCancel={cancelEditing}
+            />
           </div>
 
           <form id="profile-business" onSubmit={saveProfile}>
-            <div className="grid gap-5 sm:grid-cols-2">
-              <Field
+            <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+              <ProfileField
                 label="Company Name"
                 value={profile.companyName}
                 field="companyName"
+                editing={editing}
+                form={form}
+                onChange={updateField}
               />
 
-              <Field
+              <ProfileField
                 label="Business Type"
                 value={profile.businessType}
                 field="businessType"
                 placeholder="Manufacturer / Trader / Distributor"
+                editing={editing}
+                form={form}
+                onChange={updateField}
               />
 
-              <Field
+              <ProfileField
                 label="GST Number"
                 value={profile.gstNumber}
                 field="gstNumber"
                 placeholder="Enter GST number"
+                editing={editing}
+                form={form}
+                onChange={updateField}
               />
 
-              <Field
+              <ProfileField
                 label="Company Slug"
                 value={profile.companySlug}
                 disabled
+                editing={editing}
+                form={form}
+                onChange={updateField}
               />
 
-              <div className="sm:col-span-2">
-                <Field
+              <div className="min-w-0 sm:col-span-2">
+                <ProfileField
                   label="Business Description"
                   value={profile.businessDescription}
                   field="businessDescription"
                   multiline
                   placeholder="Describe your company and products..."
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
                 />
               </div>
             </div>
           </form>
         </section>
 
-        {/* Address Information */}
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+        {/* ADDRESS INFORMATION */}
+        <section className="profile-card min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-7">
+          <div className="mb-5 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                 <MapPin size={21} />
               </div>
-              <div>
+              <div className="min-w-0">
                 <h2 className="font-extrabold text-slate-900">
                   Address Information
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs leading-5 text-slate-500">
                   Your business location
                 </p>
               </div>
             </div>
 
-            <SectionActions section="address" />
+            <SectionActions
+              section="address"
+              editing={editing}
+              saving={saving}
+              onEdit={startEditing}
+              onCancel={cancelEditing}
+            />
           </div>
 
           <form id="profile-address" onSubmit={saveProfile}>
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div className="sm:col-span-2">
-                <Field
+            <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+              <div className="min-w-0 sm:col-span-2">
+                <ProfileField
                   label="Complete Address"
                   value={profile.address}
                   field="address"
                   placeholder="Building, street, area..."
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
                 />
               </div>
 
-              <Field
+              <ProfileField
                 label="City"
                 value={profile.city}
                 field="city"
+                editing={editing}
+                form={form}
+                onChange={updateField}
               />
 
-              <Field
+              <ProfileField
                 label="State"
                 value={profile.state}
                 field="state"
+                editing={editing}
+                form={form}
+                onChange={updateField}
               />
 
-              <Field
+              <ProfileField
                 label="PIN Code"
                 value={profile.pincode}
                 field="pincode"
                 placeholder="Enter PIN code"
+                editing={editing}
+                form={form}
+                onChange={updateField}
               />
             </div>
           </form>
         </section>
 
-        {/* Account Verification */}
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+        {/* ACCOUNT VERIFICATION */}
+        <section className="profile-card min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-7">
+          <div className="mb-5 flex min-w-0 items-center gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
               <ShieldCheck size={21} />
             </div>
-            <div>
+            <div className="min-w-0">
               <h2 className="font-extrabold text-slate-900">
                 Account Verification
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs leading-5 text-slate-500">
                 Your contact verification status
               </p>
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50 p-4">
-              <div className="flex items-center gap-3">
-                <Mail size={20} className="text-slate-500" />
-                <div>
+          <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="flex min-w-0 flex-col gap-3 rounded-xl border border-slate-100 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-center gap-3">
+                <Mail size={20} className="shrink-0 text-slate-500" />
+                <div className="min-w-0">
                   <p className="text-sm font-bold text-slate-800">
                     Email Verification
                   </p>
-                  <p className="text-xs text-slate-400">
+                  <p className="break-all text-xs text-slate-400">
                     {profile.email}
                   </p>
                 </div>
               </div>
 
               <span
-                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${
+                className={`w-fit shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${
                   profile.isEmailVerified
                     ? "bg-emerald-100 text-emerald-700"
                     : "bg-amber-100 text-amber-700"
@@ -872,21 +994,21 @@ setForm({
               </span>
             </div>
 
-            <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50 p-4">
-              <div className="flex items-center gap-3">
-                <Phone size={20} className="text-slate-500" />
-                <div>
+            <div className="flex min-w-0 flex-col gap-3 rounded-xl border border-slate-100 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-center gap-3">
+                <Phone size={20} className="shrink-0 text-slate-500" />
+                <div className="min-w-0">
                   <p className="text-sm font-bold text-slate-800">
                     Phone Verification
                   </p>
-                  <p className="text-xs text-slate-400">
+                  <p className="break-words text-xs text-slate-400">
                     {profile.phone || "No phone number"}
                   </p>
                 </div>
               </div>
 
               <span
-                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${
+                className={`w-fit shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${
                   profile.isPhoneVerified
                     ? "bg-emerald-100 text-emerald-700"
                     : "bg-amber-100 text-amber-700"
@@ -897,23 +1019,24 @@ setForm({
             </div>
           </div>
 
-          <p className="mt-4 text-xs text-slate-400">
-            OTP verification will be required to verify your email and phone number.
+          <p className="mt-4 text-xs leading-5 text-slate-400">
+            OTP verification will be required to verify your email and phone
+            number.
           </p>
         </section>
 
-        {/* Security */}
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+        {/* SECURITY */}
+        <section className="profile-card min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-7">
+          <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
                 <LockKeyhole size={21} />
               </div>
-              <div>
+              <div className="min-w-0">
                 <h2 className="font-extrabold text-slate-900">
                   Account Security
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs leading-5 text-slate-500">
                   Keep your account password secure
                 </p>
               </div>
@@ -922,11 +1045,11 @@ setForm({
             <button
               type="button"
               onClick={() => {
-                setShowPasswordForm(!showPasswordForm);
+                setShowPasswordForm((previous) => !previous);
                 setError("");
                 setSuccess("");
               }}
-              className="rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-2.5 text-sm font-bold text-indigo-700 hover:bg-indigo-100"
+              className="w-full shrink-0 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-2.5 text-sm font-bold text-indigo-700 transition hover:bg-indigo-100 sm:w-auto"
             >
               {showPasswordForm ? "Cancel" : "Change Password"}
             </button>
@@ -937,8 +1060,9 @@ setForm({
               onSubmit={changePassword}
               className="mt-6 space-y-5 border-t border-slate-100 pt-6"
             >
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div className="space-y-2 sm:col-span-2">
+              <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+                {/* CURRENT PASSWORD */}
+                <div className="min-w-0 space-y-2 sm:col-span-2">
                   <label className="text-sm font-semibold text-slate-700">
                     Current Password
                   </label>
@@ -950,19 +1074,19 @@ setForm({
                       autoComplete="current-password"
                       value={passwords.currentPassword}
                       onChange={(e) =>
-                        setPasswords({
-                          ...passwords,
+                        setPasswords((previous) => ({
+                          ...previous,
                           currentPassword: e.target.value,
-                        })
+                        }))
                       }
                       placeholder="Enter current password"
-                      className="w-full rounded-xl border border-slate-200 px-4 py-3 pr-12 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
+                      className="profile-input w-full min-w-0 rounded-xl border border-slate-200 px-4 py-3 pr-12 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
                     />
 
                     <button
                       type="button"
                       onClick={() =>
-                        setShowCurrentPassword(!showCurrentPassword)
+                        setShowCurrentPassword((previous) => !previous)
                       }
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
                     >
@@ -975,7 +1099,8 @@ setForm({
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                {/* NEW PASSWORD */}
+                <div className="min-w-0 space-y-2">
                   <label className="text-sm font-semibold text-slate-700">
                     New Password
                   </label>
@@ -988,18 +1113,20 @@ setForm({
                       autoComplete="new-password"
                       value={passwords.newPassword}
                       onChange={(e) =>
-                        setPasswords({
-                          ...passwords,
+                        setPasswords((previous) => ({
+                          ...previous,
                           newPassword: e.target.value,
-                        })
+                        }))
                       }
                       placeholder="Minimum 8 characters"
-                      className="w-full rounded-xl border border-slate-200 px-4 py-3 pr-12 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
+                      className="profile-input w-full min-w-0 rounded-xl border border-slate-200 px-4 py-3 pr-12 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
                     />
 
                     <button
                       type="button"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      onClick={() =>
+                        setShowNewPassword((previous) => !previous)
+                      }
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
                     >
                       {showNewPassword ? (
@@ -1011,7 +1138,8 @@ setForm({
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                {/* CONFIRM PASSWORD */}
+                <div className="min-w-0 space-y-2">
                   <label className="text-sm font-semibold text-slate-700">
                     Confirm New Password
                   </label>
@@ -1023,13 +1151,13 @@ setForm({
                     autoComplete="new-password"
                     value={passwords.confirmPassword}
                     onChange={(e) =>
-                      setPasswords({
-                        ...passwords,
+                      setPasswords((previous) => ({
+                        ...previous,
                         confirmPassword: e.target.value,
-                      })
+                      }))
                     }
                     placeholder="Confirm new password"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
+                    className="profile-input w-full min-w-0 rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
                   />
                 </div>
               </div>
@@ -1037,7 +1165,7 @@ setForm({
               <button
                 type="submit"
                 disabled={changingPassword}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-indigo-700 disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-indigo-700 disabled:opacity-60 sm:w-auto"
               >
                 {changingPassword ? (
                   <Loader2 size={17} className="animate-spin" />
@@ -1050,8 +1178,8 @@ setForm({
           )}
         </section>
 
-        {/* Footer */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-5 text-xs text-slate-400">
+        {/* FOOTER */}
+        <footer className="flex min-w-0 flex-col gap-3 pb-5 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
           <p>Advixio360 Supplier Account Management</p>
 
           <Link
@@ -1060,7 +1188,7 @@ setForm({
           >
             Return to Dashboard
           </Link>
-        </div>
+        </footer>
       </div>
     </main>
   );
