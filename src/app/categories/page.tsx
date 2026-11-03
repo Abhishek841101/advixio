@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -5,57 +6,14 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
+const ITEMS_PER_PAGE = 10;
+
 const icons = [
-  "⚙",
-  "🚗",
-  "⚡",
-  "🏗",
-  "🔧",
-  "🛡",
-  "🌾",
-  "🏭",
-  "📦",
-  "🧪",
-  "⚕",
-  "🧵",
-  "◈",
-  "▣",
-  "⚒",
-  "◉",
-  "◌",
-  "❄",
-  "🏗",
-  "🔬",
-  "☀",
-  "🔋",
-  "💻",
-  "📡",
-  "▤",
-  "▦",
-  "⌂",
-  "◈",
-  "◉",
-  "◍",
-  "▣",
-  "✦",
-  "♻",
-  "⛏",
-  "◉",
-  "♻",
-  "▤",
-  "◇",
-  "◆",
-  "▥",
-  "▰",
-  "▤",
-  "⚕",
-  "✦",
-  "◇",
-  "♟",
-  "⚽",
-  "▣",
-  "⌁",
-  "⚙",
+  "⚙", "🚗", "⚡", "🏗", "🔧", "🛡", "🌾", "🏭", "📦", "🧪",
+  "⚕", "🧵", "◈", "▣", "⚒", "◉", "◌", "❄", "🏗", "🔬",
+  "☀", "🔋", "💻", "📡", "▤", "▦", "⌂", "◈", "◉", "◍",
+  "▣", "✦", "♻", "⛏", "◉", "♻", "▤", "◇", "◆", "▥",
+  "▰", "▤", "⚕", "✦", "◇", "♟", "⚽", "▣", "⌁", "⚙",
 ];
 
 type Category = {
@@ -74,8 +32,7 @@ const categories: Category[] = [
     _id: "1",
     name: "Industrial Machinery",
     slug: "industrial-machinery",
-    description:
-      "Industrial machines, production equipment and manufacturing solutions.",
+    description: "Industrial machines, production equipment and manufacturing solutions.",
     isActive: true,
     sortOrder: 1,
   },
@@ -83,8 +40,7 @@ const categories: Category[] = [
     _id: "2",
     name: "Automobile & Auto Parts",
     slug: "automobile-auto-parts",
-    description:
-      "Vehicles, automotive components, spare parts and accessories.",
+    description: "Vehicles, automotive components, spare parts and accessories.",
     isActive: true,
     sortOrder: 2,
   },
@@ -92,8 +48,7 @@ const categories: Category[] = [
     _id: "3",
     name: "Electrical & Electronics",
     slug: "electrical-electronics",
-    description:
-      "Electrical equipment, electronic components, appliances and systems.",
+    description: "Electrical equipment, electronic components, appliances and systems.",
     isActive: true,
     sortOrder: 3,
   },
@@ -101,8 +56,7 @@ const categories: Category[] = [
     _id: "4",
     name: "Construction & Building Materials",
     slug: "construction-building-materials",
-    description:
-      "Construction materials, building products, equipment and solutions.",
+    description: "Construction materials, building products, equipment and solutions.",
     isActive: true,
     sortOrder: 4,
   },
@@ -110,8 +64,7 @@ const categories: Category[] = [
     _id: "5",
     name: "Tools & Hardware",
     slug: "tools-hardware",
-    description:
-      "Hand tools, power tools, hardware and industrial accessories.",
+    description: "Hand tools, power tools, hardware and industrial accessories.",
     isActive: true,
     sortOrder: 5,
   },
@@ -119,8 +72,7 @@ const categories: Category[] = [
     _id: "6",
     name: "Safety & Security",
     slug: "safety-security",
-    description:
-      "Personal protective equipment, workplace safety and security products.",
+    description: "Personal protective equipment, workplace safety and security products.",
     isActive: true,
     sortOrder: 6,
   },
@@ -128,8 +80,7 @@ const categories: Category[] = [
     _id: "7",
     name: "Agriculture & Farming",
     slug: "agriculture-farming",
-    description:
-      "Agricultural machinery, farming equipment, irrigation and farm supplies.",
+    description: "Agricultural machinery, farming equipment, irrigation and farm supplies.",
     isActive: true,
     sortOrder: 7,
   },
@@ -137,8 +88,7 @@ const categories: Category[] = [
     _id: "8",
     name: "Food Processing Machinery",
     slug: "food-processing-machinery",
-    description:
-      "Food processing, packaging and commercial kitchen machinery.",
+    description: "Food processing, packaging and commercial kitchen machinery.",
     isActive: true,
     sortOrder: 8,
   },
@@ -146,8 +96,7 @@ const categories: Category[] = [
     _id: "9",
     name: "Packaging & Printing",
     slug: "packaging-printing",
-    description:
-      "Packaging machines, packaging materials, printing equipment and supplies.",
+    description: "Packaging machines, packaging materials, printing equipment and supplies.",
     isActive: true,
     sortOrder: 9,
   },
@@ -155,8 +104,7 @@ const categories: Category[] = [
     _id: "10",
     name: "Chemicals",
     slug: "chemicals",
-    description:
-      "Industrial chemicals, specialty chemicals and chemical raw materials.",
+    description: "Industrial chemicals, specialty chemicals and chemical raw materials.",
     isActive: true,
     sortOrder: 10,
   },
@@ -164,8 +112,7 @@ const categories: Category[] = [
     _id: "11",
     name: "Pharmaceuticals & Medical",
     slug: "pharmaceuticals-medical",
-    description:
-      "Pharmaceutical products, medical equipment and healthcare supplies.",
+    description: "Pharmaceutical products, medical equipment and healthcare supplies.",
     isActive: true,
     sortOrder: 11,
   },
@@ -173,8 +120,7 @@ const categories: Category[] = [
     _id: "12",
     name: "Textiles & Garments",
     slug: "textiles-garments",
-    description:
-      "Textile machinery, fabrics, garments, yarns and textile accessories.",
+    description: "Textile machinery, fabrics, garments, yarns and textile accessories.",
     isActive: true,
     sortOrder: 12,
   },
@@ -182,8 +128,7 @@ const categories: Category[] = [
     _id: "13",
     name: "Plastic & Rubber",
     slug: "plastic-rubber",
-    description:
-      "Plastic products, rubber products, raw materials and processing machinery.",
+    description: "Plastic products, rubber products, raw materials and processing machinery.",
     isActive: true,
     sortOrder: 13,
   },
@@ -191,8 +136,7 @@ const categories: Category[] = [
     _id: "14",
     name: "Metals & Metal Products",
     slug: "metals-metal-products",
-    description:
-      "Steel, aluminium, copper, metal products and metal processing solutions.",
+    description: "Steel, aluminium, copper, metal products and metal processing solutions.",
     isActive: true,
     sortOrder: 14,
   },
@@ -200,8 +144,7 @@ const categories: Category[] = [
     _id: "15",
     name: "Welding & Fabrication",
     slug: "welding-fabrication",
-    description:
-      "Welding machines, fabrication equipment, consumables and accessories.",
+    description: "Welding machines, fabrication equipment, consumables and accessories.",
     isActive: true,
     sortOrder: 15,
   },
@@ -209,8 +152,7 @@ const categories: Category[] = [
     _id: "16",
     name: "Pumps & Motors",
     slug: "pumps-motors",
-    description:
-      "Industrial pumps, motors, pumping systems and related equipment.",
+    description: "Industrial pumps, motors, pumping systems and related equipment.",
     isActive: true,
     sortOrder: 16,
   },
@@ -218,8 +160,7 @@ const categories: Category[] = [
     _id: "17",
     name: "Valves & Pipes",
     slug: "valves-pipes",
-    description:
-      "Industrial valves, pipes, fittings, flanges and piping systems.",
+    description: "Industrial valves, pipes, fittings, flanges and piping systems.",
     isActive: true,
     sortOrder: 17,
   },
@@ -227,8 +168,7 @@ const categories: Category[] = [
     _id: "18",
     name: "HVAC & Refrigeration",
     slug: "hvac-refrigeration",
-    description:
-      "Heating, ventilation, air conditioning and refrigeration equipment.",
+    description: "Heating, ventilation, air conditioning and refrigeration equipment.",
     isActive: true,
     sortOrder: 18,
   },
@@ -236,8 +176,7 @@ const categories: Category[] = [
     _id: "19",
     name: "Material Handling",
     slug: "material-handling",
-    description:
-      "Cranes, hoists, conveyors, forklifts and material handling equipment.",
+    description: "Cranes, hoists, conveyors, forklifts and material handling equipment.",
     isActive: true,
     sortOrder: 19,
   },
@@ -245,8 +184,7 @@ const categories: Category[] = [
     _id: "20",
     name: "Laboratory Equipment",
     slug: "laboratory-equipment",
-    description:
-      "Laboratory instruments, testing equipment and scientific supplies.",
+    description: "Laboratory instruments, testing equipment and scientific supplies.",
     isActive: true,
     sortOrder: 20,
   },
@@ -254,8 +192,7 @@ const categories: Category[] = [
     _id: "21",
     name: "Renewable Energy",
     slug: "renewable-energy",
-    description:
-      "Solar, wind, battery storage and renewable energy products.",
+    description: "Solar, wind, battery storage and renewable energy products.",
     isActive: true,
     sortOrder: 21,
   },
@@ -263,8 +200,7 @@ const categories: Category[] = [
     _id: "22",
     name: "Batteries & Power Solutions",
     slug: "batteries-power-solutions",
-    description:
-      "Batteries, UPS systems, inverters, generators and power backup solutions.",
+    description: "Batteries, UPS systems, inverters, generators and power backup solutions.",
     isActive: true,
     sortOrder: 22,
   },
@@ -272,8 +208,7 @@ const categories: Category[] = [
     _id: "23",
     name: "IT & Computer Hardware",
     slug: "it-computer-hardware",
-    description:
-      "Computers, networking equipment, servers, accessories and IT hardware.",
+    description: "Computers, networking equipment, servers, accessories and IT hardware.",
     isActive: true,
     sortOrder: 23,
   },
@@ -281,8 +216,7 @@ const categories: Category[] = [
     _id: "24",
     name: "Telecommunication",
     slug: "telecommunication",
-    description:
-      "Telecommunication equipment, networking products and communication systems.",
+    description: "Telecommunication equipment, networking products and communication systems.",
     isActive: true,
     sortOrder: 24,
   },
@@ -290,8 +224,7 @@ const categories: Category[] = [
     _id: "25",
     name: "Office Supplies & Equipment",
     slug: "office-supplies-equipment",
-    description:
-      "Office furniture, stationery, printers and workplace equipment.",
+    description: "Office furniture, stationery, printers and workplace equipment.",
     isActive: true,
     sortOrder: 25,
   },
@@ -299,8 +232,7 @@ const categories: Category[] = [
     _id: "26",
     name: "Furniture",
     slug: "furniture",
-    description:
-      "Office, industrial, commercial and residential furniture.",
+    description: "Office, industrial, commercial and residential furniture.",
     isActive: true,
     sortOrder: 26,
   },
@@ -308,8 +240,7 @@ const categories: Category[] = [
     _id: "27",
     name: "Home Appliances",
     slug: "home-appliances",
-    description:
-      "Home appliances, kitchen appliances and consumer electrical products.",
+    description: "Home appliances, kitchen appliances and consumer electrical products.",
     isActive: true,
     sortOrder: 27,
   },
@@ -317,8 +248,7 @@ const categories: Category[] = [
     _id: "28",
     name: "Industrial Automation",
     slug: "industrial-automation",
-    description:
-      "Automation systems, PLCs, sensors, robotics and control equipment.",
+    description: "Automation systems, PLCs, sensors, robotics and control equipment.",
     isActive: true,
     sortOrder: 28,
   },
@@ -326,8 +256,7 @@ const categories: Category[] = [
     _id: "29",
     name: "Robotics",
     slug: "robotics",
-    description:
-      "Industrial robots, robotic systems, automation and robotic accessories.",
+    description: "Industrial robots, robotic systems, automation and robotic accessories.",
     isActive: true,
     sortOrder: 29,
   },
@@ -335,8 +264,7 @@ const categories: Category[] = [
     _id: "30",
     name: "Instrumentation & Control",
     slug: "instrumentation-control",
-    description:
-      "Industrial instruments, measurement systems and process control equipment.",
+    description: "Industrial instruments, measurement systems and process control equipment.",
     isActive: true,
     sortOrder: 30,
   },
@@ -344,8 +272,7 @@ const categories: Category[] = [
     _id: "31",
     name: "Material & Handling Equipment",
     slug: "material-handling-equipment",
-    description:
-      "Industrial handling, lifting, storage and warehouse equipment.",
+    description: "Industrial handling, lifting, storage and warehouse equipment.",
     isActive: true,
     sortOrder: 31,
   },
@@ -353,8 +280,7 @@ const categories: Category[] = [
     _id: "32",
     name: "Cleaning & Maintenance",
     slug: "cleaning-maintenance",
-    description:
-      "Industrial cleaning machines, maintenance products and facility supplies.",
+    description: "Industrial cleaning machines, maintenance products and facility supplies.",
     isActive: true,
     sortOrder: 32,
   },
@@ -362,8 +288,7 @@ const categories: Category[] = [
     _id: "33",
     name: "Water Treatment & Waste Management",
     slug: "water-treatment-waste-management",
-    description:
-      "Water treatment systems, filtration, wastewater and waste management equipment.",
+    description: "Water treatment systems, filtration, wastewater and waste management equipment.",
     isActive: true,
     sortOrder: 33,
   },
@@ -371,8 +296,7 @@ const categories: Category[] = [
     _id: "34",
     name: "Mining & Quarrying",
     slug: "mining-quarrying",
-    description:
-      "Mining machinery, quarrying equipment and mineral processing solutions.",
+    description: "Mining machinery, quarrying equipment and mineral processing solutions.",
     isActive: true,
     sortOrder: 34,
   },
@@ -380,8 +304,7 @@ const categories: Category[] = [
     _id: "35",
     name: "Petroleum & Oil Equipment",
     slug: "petroleum-oil-equipment",
-    description:
-      "Oil, gas, petroleum handling equipment and related industrial products.",
+    description: "Oil, gas, petroleum handling equipment and related industrial products.",
     isActive: true,
     sortOrder: 35,
   },
@@ -389,8 +312,7 @@ const categories: Category[] = [
     _id: "36",
     name: "Renewable & Environmental Solutions",
     slug: "renewable-environmental-solutions",
-    description:
-      "Environmental technology, renewable energy and pollution control solutions.",
+    description: "Environmental technology, renewable energy and pollution control solutions.",
     isActive: true,
     sortOrder: 36,
   },
@@ -398,8 +320,7 @@ const categories: Category[] = [
     _id: "37",
     name: "Woodworking Machinery",
     slug: "woodworking-machinery",
-    description:
-      "Wood cutting, processing, furniture and woodworking machinery.",
+    description: "Wood cutting, processing, furniture and woodworking machinery.",
     isActive: true,
     sortOrder: 37,
   },
@@ -407,8 +328,7 @@ const categories: Category[] = [
     _id: "38",
     name: "Glass & Ceramics",
     slug: "glass-ceramics",
-    description:
-      "Glass products, ceramic products, manufacturing equipment and supplies.",
+    description: "Glass products, ceramic products, manufacturing equipment and supplies.",
     isActive: true,
     sortOrder: 38,
   },
@@ -416,8 +336,7 @@ const categories: Category[] = [
     _id: "39",
     name: "Leather & Footwear",
     slug: "leather-footwear",
-    description:
-      "Leather products, footwear, machinery and manufacturing supplies.",
+    description: "Leather products, footwear, machinery and manufacturing supplies.",
     isActive: true,
     sortOrder: 39,
   },
@@ -425,8 +344,7 @@ const categories: Category[] = [
     _id: "40",
     name: "Paper & Pulp",
     slug: "paper-pulp",
-    description:
-      "Paper products, pulp, paper manufacturing machinery and supplies.",
+    description: "Paper products, pulp, paper manufacturing machinery and supplies.",
     isActive: true,
     sortOrder: 40,
   },
@@ -434,8 +352,7 @@ const categories: Category[] = [
     _id: "41",
     name: "Hospitality & Hotel Supplies",
     slug: "hospitality-hotel-supplies",
-    description:
-      "Hotel, restaurant, catering and hospitality equipment and supplies.",
+    description: "Hotel, restaurant, catering and hospitality equipment and supplies.",
     isActive: true,
     sortOrder: 41,
   },
@@ -443,8 +360,7 @@ const categories: Category[] = [
     _id: "42",
     name: "Restaurant & Commercial Kitchen",
     slug: "restaurant-commercial-kitchen",
-    description:
-      "Commercial kitchen equipment, restaurant supplies and food service products.",
+    description: "Commercial kitchen equipment, restaurant supplies and food service products.",
     isActive: true,
     sortOrder: 42,
   },
@@ -452,8 +368,7 @@ const categories: Category[] = [
     _id: "43",
     name: "Medical & Hospital Equipment",
     slug: "medical-hospital-equipment",
-    description:
-      "Hospital equipment, medical devices, diagnostic equipment and healthcare supplies.",
+    description: "Hospital equipment, medical devices, diagnostic equipment and healthcare supplies.",
     isActive: true,
     sortOrder: 43,
   },
@@ -461,8 +376,7 @@ const categories: Category[] = [
     _id: "44",
     name: "Beauty & Personal Care",
     slug: "beauty-personal-care",
-    description:
-      "Beauty products, salon equipment, cosmetics and personal care supplies.",
+    description: "Beauty products, salon equipment, cosmetics and personal care supplies.",
     isActive: true,
     sortOrder: 44,
   },
@@ -470,8 +384,7 @@ const categories: Category[] = [
     _id: "45",
     name: "Gems, Jewellery & Handicrafts",
     slug: "gems-jewellery-handicrafts",
-    description:
-      "Jewellery, gemstones, handicrafts, decorative products and artisan goods.",
+    description: "Jewellery, gemstones, handicrafts, decorative products and artisan goods.",
     isActive: true,
     sortOrder: 45,
   },
@@ -479,8 +392,7 @@ const categories: Category[] = [
     _id: "46",
     name: "Apparel & Fashion",
     slug: "apparel-fashion",
-    description:
-      "Clothing, fashion accessories, footwear and fashion products.",
+    description: "Clothing, fashion accessories, footwear and fashion products.",
     isActive: true,
     sortOrder: 46,
   },
@@ -488,8 +400,7 @@ const categories: Category[] = [
     _id: "47",
     name: "Sports & Fitness",
     slug: "sports-fitness",
-    description:
-      "Sports equipment, gym equipment, fitness products and accessories.",
+    description: "Sports equipment, gym equipment, fitness products and accessories.",
     isActive: true,
     sortOrder: 47,
   },
@@ -497,8 +408,7 @@ const categories: Category[] = [
     _id: "48",
     name: "Toys & Games",
     slug: "toys-games",
-    description:
-      "Toys, games, educational products and recreational equipment.",
+    description: "Toys, games, educational products and recreational equipment.",
     isActive: true,
     sortOrder: 48,
   },
@@ -506,8 +416,7 @@ const categories: Category[] = [
     _id: "49",
     name: "Electrical Cables & Wires",
     slug: "electrical-cables-wires",
-    description:
-      "Power cables, wires, control cables and electrical wiring products.",
+    description: "Power cables, wires, control cables and electrical wiring products.",
     isActive: true,
     sortOrder: 49,
   },
@@ -515,8 +424,7 @@ const categories: Category[] = [
     _id: "50",
     name: "Industrial Supplies",
     slug: "industrial-supplies",
-    description:
-      "General industrial consumables, components and manufacturing supplies.",
+    description: "General industrial consumables, components and manufacturing supplies.",
     isActive: true,
     sortOrder: 50,
   },
@@ -524,9 +432,21 @@ const categories: Category[] = [
 
 export default function CategoriesPage() {
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(search.toLowerCase())
+    category.name.toLowerCase().includes(search.toLowerCase().trim())
+  );
+
+  const totalPages = Math.ceil(
+    filteredCategories.length / ITEMS_PER_PAGE
+  );
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  const paginatedCategories = filteredCategories.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
   );
 
   return (
@@ -563,7 +483,10 @@ export default function CategoriesPage() {
                 type="text"
                 placeholder="Search categories..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1);
+                }}
               />
 
               <button type="button">Search</button>
@@ -593,9 +516,7 @@ export default function CategoriesPage() {
           <div className="category-section-header">
             <div>
               <span className="section-label">MOST SEARCHED</span>
-
               <h2>Popular Categories</h2>
-
               <p>
                 Explore some of the most popular business categories
                 on Advixio.
@@ -645,13 +566,23 @@ export default function CategoriesPage() {
 
             <div className="category-result-count">
               Showing{" "}
-              <strong>{filteredCategories.length}</strong>{" "}
-              categories
+              <strong>
+                {filteredCategories.length === 0
+                  ? 0
+                  : startIndex + 1}
+                {" - "}
+                {Math.min(
+                  startIndex + ITEMS_PER_PAGE,
+                  filteredCategories.length
+                )}
+              </strong>{" "}
+              of{" "}
+              <strong>{filteredCategories.length}</strong> categories
             </div>
           </div>
 
           <div className="categories-grid">
-            {filteredCategories.map((category, index) => (
+            {paginatedCategories.map((category, index) => (
               <Link
                 href={`/categories/${category.slug}`}
                 key={category._id}
@@ -659,11 +590,12 @@ export default function CategoriesPage() {
               >
                 <div className="category-card-top">
                   <div className="category-icon">
-                    {category.icon || icons[index % icons.length]}
+                    {category.icon ||
+                      icons[(startIndex + index) % icons.length]}
                   </div>
 
                   <span className="category-number">
-                    {String(index + 1).padStart(2, "0")}
+                    {String(startIndex + index + 1).padStart(2, "0")}
                   </span>
                 </div>
 
@@ -684,9 +616,71 @@ export default function CategoriesPage() {
             ))}
           </div>
 
+          {/* NO RESULTS */}
           {filteredCategories.length === 0 && (
             <div className="category-no-results">
               No categories found for "{search}"
+            </div>
+          )}
+
+          {/* PAGINATION */}
+          {filteredCategories.length > 0 && totalPages > 1 && (
+            <div className="category-pagination">
+              <p className="pagination-info">
+                Showing{" "}
+                <strong>{startIndex + 1}</strong>
+                {" - "}
+                <strong>
+                  {Math.min(
+                    startIndex + ITEMS_PER_PAGE,
+                    filteredCategories.length
+                  )}
+                </strong>
+                {" of "}
+                <strong>{filteredCategories.length}</strong> categories
+              </p>
+
+              <div className="pagination-controls">
+                <button
+                  type="button"
+                  className="pagination-button"
+                  disabled={currentPage === 1}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                >
+                  ← Previous
+                </button>
+
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((page) => (
+                  <button
+                    type="button"
+                    key={page}
+                    className={`pagination-button ${
+                      currentPage === page ? "active" : ""
+                    }`}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </button>
+                ))}
+
+                <button
+                  type="button"
+                  className="pagination-button"
+                  disabled={currentPage === totalPages}
+                  onClick={() =>
+                    setCurrentPage((prev) =>
+                      Math.min(prev + 1, totalPages)
+                    )
+                  }
+                >
+                  Next →
+                </button>
+              </div>
             </div>
           )}
         </section>
