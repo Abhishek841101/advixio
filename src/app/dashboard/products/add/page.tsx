@@ -1,10 +1,15 @@
 "use client";
-
 import {
   FormEvent,
   useEffect,
   useState,
+  useRef,
 } from "react";
+// import {
+//   FormEvent,
+//   useEffect,
+//   useState,
+// } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -31,7 +36,9 @@ type Category = {
 
 export default function AddProductPage() {
   const router = useRouter();
+const excelInputRef = useRef<HTMLInputElement>(null);
 
+const [importing, setImporting] = useState(false);
   // =========================================================
   // HARD-CODED CATEGORIES
   // Backend se category fetch nahi hogi.
@@ -521,7 +528,97 @@ export default function AddProductPage() {
   // =========================================================
   // SUBMIT
   // =========================================================
+const handleExcelImport = async (
+  event: React.ChangeEvent<HTMLInputElement>
+) => {
+  const file = event.target.files?.[0];
 
+  if (!file) return;
+
+  setError("");
+
+  const extension = file.name
+    .split(".")
+    .pop()
+    ?.toLowerCase();
+
+  if (!["xlsx", "xls"].includes(extension || "")) {
+    setError("Please select a valid Excel file (.xlsx or .xls).");
+    event.target.value = "";
+    return;
+  }
+
+  const token = localStorage.getItem("advixio_token");
+
+  if (!token) {
+    window.location.href = "/login";
+    return;
+  }
+
+  try {
+    setImporting(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch(
+      `${API_URL}/products/bulk-upload`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      }
+    );
+
+    const result = await response.json();
+
+    console.log("BULK EXCEL UPLOAD RESPONSE:", result);
+
+    if (response.status === 401) {
+      localStorage.removeItem("advixio_token");
+      localStorage.removeItem("advixio_user");
+      window.location.href = "/login";
+      return;
+    }
+
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.message || "Excel upload failed."
+      );
+    }
+
+    const summary = result.summary;
+
+    const created =
+      summary?.created ??
+      summary?.successful ??
+      0;
+
+    const failed = summary?.failed ?? 0;
+
+    alert(
+      `Excel upload completed!\n\nCreated: ${created}\nFailed: ${failed}`
+    );
+
+    router.push("/dashboard/products");
+    router.refresh();
+
+  } catch (error) {
+    console.error("Excel import error:", error);
+
+    setError(
+      error instanceof Error
+        ? error.message
+        : "Excel upload failed."
+    );
+
+  } finally {
+    setImporting(false);
+    event.target.value = "";
+  }
+};
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>
   ) => {
@@ -1454,7 +1551,7 @@ export default function AddProductPage() {
               TOP BAR
           ================================================= */}
 
-          <div className="topbar">
+          {/* <div className="topbar">
             <div>
               <span className="eyebrow">
                 PRODUCT MANAGEMENT
@@ -1476,8 +1573,51 @@ export default function AddProductPage() {
             >
               My Products
             </Link>
-          </div>
+          </div> */}
+<div className="topbar">
+  <div>
+    <span className="eyebrow">
+      PRODUCT MANAGEMENT
+    </span>
 
+    <h1>Add Product</h1>
+
+    <p>
+      Create a new product listing
+      for the Advixio marketplace.
+    </p>
+  </div>
+
+  <div className="header-actions">
+
+    <input
+      ref={excelInputRef}
+      type="file"
+      accept=".xlsx,.xls"
+      onChange={handleExcelImport}
+      style={{ display: "none" }}
+    />
+
+    <button
+      type="button"
+      className="import-button"
+      onClick={() => excelInputRef.current?.click()}
+      disabled={importing}
+    >
+      {importing
+        ? "Importing Excel..."
+        : "↑ Import Excel"}
+    </button>
+
+    <Link
+      href="/dashboard/products"
+      className="marketplace-button"
+    >
+      My Products
+    </Link>
+
+  </div>
+</div>
           {/* =================================================
               FORM
           ================================================= */}
