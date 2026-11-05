@@ -1871,7 +1871,9 @@ const handleExcelImport = async (
                     <option value="Piece">
                       Piece
                     </option>
-
+<option value="Square">
+                      Sq ft
+                    </option>
                     <option value="Kg">
                       Kg
                     </option>
