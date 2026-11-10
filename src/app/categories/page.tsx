@@ -584,7 +584,9 @@ export default function CategoriesPage() {
           <div className="categories-grid">
             {paginatedCategories.map((category, index) => (
               <Link
-                href={`/categories/${category.slug}`}
+                
+href={`/products?category=${encodeURIComponent(category.slug)}`}
+
                 key={category._id}
                 className="category-card"
               >

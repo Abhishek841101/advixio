@@ -1,64 +1,128 @@
 
+
+"use client";
+
+import { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
 
 export default function Hero() {
+  const firstLine = "Find the right ";
+  const secondLine = "suppliers &";
+  const thirdLine = "products for your business.";
+
+  const fullText = firstLine + secondLine + thirdLine;
+  const [typedText, setTypedText] = useState("");
+
+  useEffect(() => {
+    let index = 0;
+
+    const typingInterval = setInterval(() => {
+      index++;
+      setTypedText(fullText.slice(0, index));
+
+      if (index >= fullText.length) {
+        clearInterval(typingInterval);
+      }
+    }, 75);
+
+    return () => clearInterval(typingInterval);
+  }, []);
+
+  const firstText = typedText.slice(0, firstLine.length);
+  const secondText = typedText.slice(
+    firstLine.length,
+    firstLine.length + secondLine.length
+  );
+  const thirdText = typedText.slice(
+    firstLine.length + secondLine.length
+  );
+
   return (
-    <section className="hero">
+    <section className="hero hero-redesign">
 
-      <div className="hero-overlay" />
+      {/* Moving background glow */}
+      <div className="hero-decoration hero-decoration-one" />
+      <div className="hero-decoration hero-decoration-two" />
 
-      <div className="hero-content container">
+      {/* Floating particles */}
+      <div className="hero-particles" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
+
+      {/* Floating glass cards */}
+      <div className="hero-floating-label hero-label-left">
+        <span className="floating-icon">✓</span>
+        Verified Suppliers
+      </div>
+
+      <div className="hero-floating-label hero-label-right">
+        <span className="floating-icon">▣</span>
+        1M+ Products
+      </div>
+
+      <div className="hero-floating-label hero-label-bottom-left">
+        <span className="floating-icon">⌕</span>
+        Smart Search
+      </div>
+
+      <div className="hero-floating-label hero-label-bottom-right">
+        <span className="floating-icon">✓</span>
+        Direct Enquiry
+      </div>
+
+      <div className="hero-content">
 
         <div className="hero-badge">
           <span className="hero-badge-dot" />
-          INDIA'S #1 B2B BUSINESS MARKETPLACE
+          INDIA'S B2B BUSINESS DISCOVERY MARKETPLACE
         </div>
 
-        <h1>
-          Find the Right
+        {/* Typing heading */}
+        <h1 className="typing-heading">
+          {firstText}
+          <span className="hero-highlight">{secondText}</span>
           <br />
-
-          <span className="hero-highlight">
-            Products &amp; Suppliers
-          </span>
-
-          <br />
-
-          for Your Business
+          <span className="hero-highlight">{thirdText}</span>
+          <span className="typing-cursor">|</span>
         </h1>
 
         <p className="hero-description">
-          Discover manufacturers, suppliers, products and business services
-          from across India in one place.
+          Discover manufacturers, wholesalers, distributors and trusted
+          suppliers. Explore products and connect directly with businesses
+          across India.
         </p>
 
         <SearchBar />
 
-        <div className="hero-stats">
+        <div className="hero-actions">
+          <a href="#categories" className="hero-primary-action">
+            Explore Categories <span>→</span>
+          </a>
 
-          <div className="hero-stat">
-            <strong>1,50,000+</strong>
-            <span>Verified Suppliers</span>
-          </div>
+          <a href="#post" className="hero-secondary-action">
+            Post Your Product Free
+          </a>
+        </div>
 
-          <div className="hero-stat-divider" />
-
-          <div className="hero-stat">
-            <strong>1,200+</strong>
-            <span>Industries</span>
-          </div>
-
-          <div className="hero-stat-divider" />
-
-          <div className="hero-stat verified-stat">
-            <strong>✓</strong>
-            <span>GST Verified</span>
-          </div>
-
+        <div className="hero-trust-points">
+          <span>✓ Manufacturers</span>
+          <span>✓ Wholesalers</span>
+          <span>✓ Distributors</span>
+          <span>✓ Service Providers</span>
         </div>
 
       </div>
-
     </section>
   );
 }

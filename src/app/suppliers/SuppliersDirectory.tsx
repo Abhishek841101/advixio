@@ -43,14 +43,52 @@ function getInitial(name: string) {
   return name.trim().charAt(0).toUpperCase() || "S";
 }
 
+function getInitials(name: string) {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((word) => word.charAt(0))
+    .join("")
+    .toUpperCase() || "S";
+}
+
 function formatNumber(value: number) {
   return new Intl.NumberFormat("en-IN").format(value);
+}
+
+function SupplierIcon({ type }: { type: "location" | "products" | "company" }) {
+  if (type === "location") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" />
+        <circle cx="12" cy="10" r="2.5" />
+      </svg>
+    );
+  }
+
+  if (type === "company") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <rect x="4" y="3" width="16" height="18" rx="2" />
+        <path d="M9 7h2m2 0h2M9 11h2m2 0h2M9 15h2m2 0h2M10 21v-3h4v3" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="m12 2 9 5-9 5-9-5 9-5Z" />
+      <path d="m3 7 9 5 9-5M3 7v10l9 5 9-5V7M12 12v10" />
+    </svg>
+  );
 }
 
 export default function SuppliersDirectory() {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [sort, setSort] = useState("default");
 
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
@@ -58,7 +96,7 @@ export default function SuppliersDirectory() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Debounce search to avoid making an API request for every keystroke.
+  // Debounced search
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setPage(1);
@@ -68,6 +106,7 @@ export default function SuppliersDirectory() {
     return () => window.clearTimeout(timer);
   }, [searchInput]);
 
+  // Fetch suppliers
   const loadSuppliers = useCallback(
     async (signal: AbortSignal) => {
       setLoading(true);
@@ -119,6 +158,7 @@ export default function SuppliersDirectory() {
             ? err.message
             : "Something went wrong. Please try again."
         );
+
         setSuppliers([]);
         setPagination(null);
       } finally {
@@ -144,6 +184,25 @@ export default function SuppliersDirectory() {
     setPage(1);
   };
 
+  const retry = () => {
+    setPage((current) => current);
+    setSearch((current) => `${current} `);
+  };
+
+  const sortedSuppliers = [...suppliers].sort((a, b) => {
+    if (sort === "az") {
+      return (a.companyName || a.name).localeCompare(
+        b.companyName || b.name
+      );
+    }
+
+    if (sort === "products") {
+      return (b.productCount || 0) - (a.productCount || 0);
+    }
+
+    return 0;
+  });
+
   const firstResult =
     pagination && pagination.total > 0
       ? (pagination.page - 1) * pagination.limit + 1
@@ -153,390 +212,403 @@ export default function SuppliersDirectory() {
     ? Math.min(pagination.page * pagination.limit, pagination.total)
     : 0;
 
+  const goToPage = (nextPage: number) => {
+    setPage(nextPage);
+
+    document
+      .getElementById("supplier-directory")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
-    <>
+    <div className="supplier-directory-page">
       <Navbar />
 
-      <main className="min-h-screen bg-[#f6f8fc] text-slate-900">
-        {/* Hero */}
-        <section className="relative overflow-hidden bg-[#0b1530]">
-          <div className="pointer-events-none absolute -right-20 -top-28 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-40 left-1/4 h-80 w-80 rounded-full bg-indigo-500/20 blur-3xl" />
+      {/* HERO */}
+      <section className="sd-hero">
+        <div className="sd-hero-circle" />
 
-          <div className="relative mx-auto max-w-7xl px-5 py-14 sm:py-20">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-2 text-xs font-semibold tracking-wide text-blue-200">
-                <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                ADVIXIO BUSINESS DIRECTORY
-              </div>
-
-              <h1 className="mt-6 text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
-                Find suppliers.
-                <span className="block text-blue-400">
-                  Build better business.
-                </span>
-              </h1>
-
-              <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-                Search supplier companies by name or location and discover
-                businesses offering products for your requirements.
-              </p>
-
-              <a
-                href="#supplier-directory"
-                className="mt-8 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-500"
-              >
-                Explore directory <span aria-hidden="true">→</span>
-              </a>
+        <div className="sd-container sd-hero-inner">
+          <div className="sd-hero-content">
+            <div className="sd-eyebrow">
+              <span className="sd-dot" />
+              Advixio360 supplier network
             </div>
 
-            <div className="mt-12 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4">
-                <p className="text-sm text-slate-400">Total suppliers</p>
-                <p className="mt-2 text-2xl font-bold text-white">
-                  {pagination ? formatNumber(pagination.total) : "—"}
-                </p>
-              </div>
+            <h1>
+              Find the right suppliers.
+              <br />
+              <span>Build better business.</span>
+            </h1>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4">
-                <p className="text-sm text-slate-400">Current page</p>
-                <p className="mt-2 text-2xl font-bold text-white">
-                  {pagination
-                    ? `${pagination.page} / ${Math.max(pagination.totalPages, 1)}`
-                    : "—"}
-                </p>
-              </div>
-
-              <div className="col-span-2 rounded-2xl border border-white/10 bg-white/[0.06] p-4 sm:col-span-1">
-                <p className="text-sm text-slate-400">Results per page</p>
-                <p className="mt-2 text-2xl font-bold text-white">
-                  {PAGE_SIZE}
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Directory */}
-        <section
-          id="supplier-directory"
-          className="mx-auto max-w-7xl scroll-mt-6 px-4 py-10 sm:px-5 sm:py-14"
-        >
-          <div className="mb-7">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-700">
-              Supplier discovery
+            <p>
+              Explore businesses, compare product offerings and discover
+              supplier partners for your next sourcing requirement. One
+              directory to move your business forward.
             </p>
 
-            <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
-              Supplier directory
-            </h2>
-
-            <p className="mt-2 text-sm leading-6 text-slate-600 sm:text-base">
-              Find a company, check its location, and explore its listed
-              products.
-            </p>
-          </div>
-
-          {/* Search */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4">
-            <label
-              htmlFor="supplier-search"
-              className="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Search suppliers
-            </label>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <div className="relative min-w-0 flex-1">
-                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg text-slate-400">
-                  ⌕
-                </span>
-
-                <input
-                  id="supplier-search"
-                  type="search"
-                  value={searchInput}
-                  onChange={(event) => setSearchInput(event.target.value)}
-                  placeholder="Company, supplier name, city or state..."
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-11 pr-10 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
-                />
-
-                {searchInput && (
-                  <button
-                    type="button"
-                    onClick={clearSearch}
-                    aria-label="Clear search"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1 text-sm text-slate-500 hover:bg-slate-200"
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-
-              <Link
-                href="/products"
-                className="inline-flex shrink-0 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-              >
-                Browse products →
-              </Link>
-            </div>
-
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+            <div className="sd-hero-points">
               <span>
-                {search
-                  ? `Searching for "${search}"`
-                  : "Search by company or location"}
+                <i>✓</i> Discover businesses
               </span>
-
-              {pagination && !loading && (
-                <span>
-                  Showing {formatNumber(firstResult)}–{formatNumber(lastResult)}{" "}
-                  of {formatNumber(pagination.total)}
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Results */}
-          <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div className="flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-4 sm:px-6">
-              <div>
-                <h3 className="font-bold text-slate-900">
-                  {search ? "Search results" : "All suppliers"}
-                </h3>
-                <p className="mt-1 text-xs text-slate-500">
-                  Company information and active product listings
-                </p>
-              </div>
-
-              {loading && (
-                <span className="inline-flex items-center gap-2 text-xs font-medium text-blue-700">
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-blue-600" />
-                  Loading
-                </span>
-              )}
+              <span>
+                <i>✓</i> Explore product ranges
+              </span>
+              <span>
+                <i>✓</i> Connect with suppliers
+              </span>
             </div>
 
-            {error ? (
-              <div className="px-5 py-14 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-red-50 text-xl text-red-600">
-                  !
-                </div>
-                <h3 className="mt-4 font-bold">Unable to load suppliers</h3>
-                <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-600">
-                  {error}
-                </p>
+            <div className="sd-searchbox">
+              <span className="sd-search-icon">⌕</span>
+
+              <input
+                type="search"
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    setSearch(searchInput.trim());
+                    setPage(1);
+                  }
+                }}
+                placeholder="Search supplier, product category or city..."
+                aria-label="Search suppliers"
+              />
+
+              {searchInput && (
                 <button
                   type="button"
-                  onClick={() => {
-                    setPage((current) => current);
-                    setSearch((current) => `${current}`);
-                  }}
-                  className="mt-5 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                  className="sd-clear-search"
+                  onClick={clearSearch}
                 >
-                  Retry
+                  Clear
                 </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch(searchInput.trim());
+                  setPage(1);
+                }}
+              >
+                Find suppliers →
+              </button>
+            </div>
+
+            <div className="sd-hero-note">
+              Search by company name, city or state
+            </div>
+          </div>
+
+          {/* Hero Side Card */}
+          <aside className="sd-hero-side">
+            <div className="sd-side-head">
+              <div>
+                <small>Your sourcing network</small>
+                <strong>Find your next partner</strong>
               </div>
-            ) : loading && suppliers.length === 0 ? (
-              <div className="divide-y divide-slate-100">
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="flex animate-pulse items-center gap-4 px-4 py-5 sm:px-6"
-                  >
-                    <div className="h-11 w-11 shrink-0 rounded-xl bg-slate-200" />
-                    <div className="min-w-0 flex-1">
-                      <div className="h-4 w-1/2 rounded bg-slate-200" />
-                      <div className="mt-2 h-3 w-1/3 rounded bg-slate-100" />
-                    </div>
-                    <div className="hidden h-8 w-24 rounded-lg bg-slate-100 sm:block" />
+
+              <div className="sd-side-icon">
+                <SupplierIcon type="company" />
+              </div>
+            </div>
+
+            <div className="sd-steps">
+              <div className="sd-step">
+                <div className="sd-step-number">01</div>
+                <div>
+                  <b>Discover companies</b>
+                  <small>Browse businesses in the directory</small>
+                </div>
+              </div>
+
+              <div className="sd-step">
+                <div className="sd-step-number">02</div>
+                <div>
+                  <b>Review their offerings</b>
+                  <small>Explore products and categories</small>
+                </div>
+              </div>
+
+              <div className="sd-step">
+                <div className="sd-step-number">03</div>
+                <div>
+                  <b>Find the right fit</b>
+                  <small>Review supplier details and location</small>
+                </div>
+              </div>
+
+              <div className="sd-step">
+                <div className="sd-step-number">04</div>
+                <div>
+                  <b>Move your sourcing forward</b>
+                  <small>Shortlist suppliers for your requirement</small>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {/* DIRECTORY */}
+      <main className="sd-main" id="supplier-directory">
+        <div className="sd-intro">
+          <div>
+            <div className="sd-section-label">Discover your partners</div>
+            <h2>Supplier directory</h2>
+            <p>
+              Explore listed businesses, review supplier information and
+              discover companies relevant to your sourcing needs.
+            </p>
+          </div>
+
+          <div className="sd-total">
+            <div className="sd-total-icon">
+              <SupplierIcon type="company" />
+            </div>
+
+            <div>
+              <strong>
+                {pagination ? formatNumber(pagination.total) : "—"}
+              </strong>
+              <small>Suppliers listed</small>
+            </div>
+          </div>
+        </div>
+
+        {/* TOOLBAR */}
+        <div className="sd-toolbar">
+          <div className="sd-toolbar-left">
+            <div className="sd-tool-icon">⌕</div>
+
+            <div>
+              <b>{search ? "Search results" : "All listed suppliers"}</b>
+              <small>
+                {loading
+                  ? "Loading suppliers..."
+                  : `Showing ${formatNumber(suppliers.length)} suppliers on this page`}
+              </small>
+            </div>
+          </div>
+
+          <div className="sd-toolbar-controls">
+            <select
+              className="sd-sort"
+              value={sort}
+              onChange={(event) => setSort(event.target.value)}
+              aria-label="Sort suppliers"
+            >
+              <option value="default">Sort: Featured</option>
+              <option value="az">Name: A to Z</option>
+              <option value="products">Most products</option>
+            </select>
+          </div>
+        </div>
+
+        {/* ERROR */}
+        {error && (
+          <div className="sd-error">
+            <strong>Unable to load suppliers</strong>
+            <p>{error}</p>
+            <button type="button" onClick={retry}>
+              Try again
+            </button>
+          </div>
+        )}
+
+        {/* LOADING */}
+        {loading && suppliers.length === 0 && !error && (
+          <div className="sd-grid">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div className="sd-skeleton" key={index}>
+                <div className="sd-skeleton-top">
+                  <div className="sd-skeleton-avatar" />
+                  <div className="sd-skeleton-lines">
+                    <span />
+                    <span />
                   </div>
-                ))}
+                </div>
+                <span className="sd-skeleton-line" />
+                <span className="sd-skeleton-line short" />
+                <span className="sd-skeleton-bottom" />
               </div>
-            ) : suppliers.length === 0 ? (
-              <div className="px-5 py-16 text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-2xl">
-                  ⌕
-                </div>
-                <h3 className="mt-4 text-lg font-bold text-slate-900">
-                  {search ? "No matching suppliers" : "No suppliers available"}
-                </h3>
-                <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
-                  {search
-                    ? "Try another company name, city or state."
-                    : "Suppliers with active products will appear here."}
-                </p>
-                {search && (
-                  <button
-                    type="button"
-                    onClick={clearSearch}
-                    className="mt-5 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700"
-                  >
-                    Clear search
-                  </button>
-                )}
-              </div>
-            ) : (
-              <>
-                {/* Column headings */}
-                <div className="hidden grid-cols-[minmax(0,1.7fr)_minmax(130px,1fr)_100px_130px] items-center gap-4 border-b border-slate-100 px-6 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500 md:grid">
-                  <span>Company</span>
-                  <span>Location</span>
-                  <span>Products</span>
-                  <span className="text-right">Profile</span>
-                </div>
+            ))}
+          </div>
+        )}
 
-                <div className="divide-y divide-slate-100">
-                  {suppliers.map((supplier) => {
-                    const companyName =
-                      supplier.companyName?.trim() ||
-                      supplier.name ||
-                      "Supplier";
+        {/* EMPTY */}
+        {!loading && !error && suppliers.length === 0 && (
+          <div className="sd-empty">
+            <div className="sd-empty-icon">⌕</div>
+            <h3>
+              {search ? "No matching suppliers" : "No suppliers available"}
+            </h3>
+            <p>
+              {search
+                ? "Try another company name, city or state."
+                : "Suppliers with active products will appear here."}
+            </p>
 
-                    const location = [
-                      supplier.city?.trim(),
-                      supplier.state?.trim(),
-                    ]
-                      .filter(Boolean)
-                      .join(", ");
-
-                    const profileSlug = supplier.slug || supplier._id;
-
-                    return (
-                      <article
-                        key={supplier._id}
-                        className="grid grid-cols-1 gap-4 px-4 py-5 transition hover:bg-blue-50/40 sm:px-6 md:grid-cols-[minmax(0,1.7fr)_minmax(130px,1fr)_100px_130px] md:items-center md:gap-4"
-                      >
-                        {/* Company */}
-                        <div className="flex min-w-0 items-center gap-3">
-                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-blue-100 bg-blue-50 text-base font-bold text-blue-800">
-                            {getInitial(companyName)}
-                          </div>
-
-                          <div className="min-w-0">
-                            <h4 className="break-words font-semibold text-slate-900">
-                              {companyName}
-                            </h4>
-                            <p className="mt-1 break-words text-xs text-slate-500">
-                              Contact: {supplier.name || "Not provided"}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Location */}
-                        <div className="flex items-start gap-2 text-sm text-slate-600">
-                          <span aria-hidden="true">📍</span>
-                          <div>
-                            <p className="text-xs font-medium text-slate-400 md:hidden">
-                              LOCATION
-                            </p>
-                            <span>{location || "Location not provided"}</span>
-                          </div>
-                        </div>
-
-                        {/* Product count */}
-                        <div className="flex items-center justify-between md:block">
-                          <p className="text-xs font-medium text-slate-400 md:hidden">
-                            ACTIVE PRODUCTS
-                          </p>
-                          <div>
-                            <span className="font-bold tabular-nums text-slate-900">
-                              {formatNumber(supplier.productCount || 0)}
-                            </span>
-                            <span className="ml-1 text-xs text-slate-500 md:hidden">
-                              products
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Profile */}
-                        <div className="md:text-right">
-                          <Link
-                            href={`/suppliers/${encodeURIComponent(profileSlug)}`}
-                            className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 md:w-auto"
-                            aria-label={`View ${companyName} supplier profile`}
-                          >
-                            View profile <span aria-hidden="true">→</span>
-                          </Link>
-                        </div>
-                      </article>
-                    );
-                  })}
-                </div>
-              </>
+            {search && (
+              <button type="button" onClick={clearSearch}>
+                Clear search
+              </button>
             )}
           </div>
+        )}
 
-          {/* Pagination */}
-          {!error && pagination && pagination.total > 0 && (
-            <nav
-              aria-label="Supplier pagination"
-              className="mt-6 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <p className="text-sm text-slate-600">
-                Page{" "}
-                <span className="font-semibold text-slate-900">
-                  {pagination.page}
-                </span>{" "}
-                of{" "}
-                <span className="font-semibold text-slate-900">
-                  {Math.max(pagination.totalPages, 1)}
-                </span>
-              </p>
+        {/* SUPPLIER CARDS */}
+        {!error && suppliers.length > 0 && (
+          <div className="sd-grid">
+            {sortedSuppliers.map((supplier, index) => {
+              const companyName =
+                supplier.companyName?.trim() || supplier.name || "Supplier";
 
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  disabled={!pagination.hasPrevPage || loading}
-                  onClick={() => {
-                    setPage((current) => Math.max(1, current - 1));
-                    document
-                      .getElementById("supplier-directory")
-                      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                  }}
-                  className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  ← Previous
-                </button>
+              const location = [
+                supplier.city?.trim(),
+                supplier.state?.trim(),
+              ]
+                .filter(Boolean)
+                .join(", ");
 
-                <button
-                  type="button"
-                  disabled={!pagination.hasNextPage || loading}
-                  onClick={() => {
-                    setPage((current) => current + 1);
-                    document
-                      .getElementById("supplier-directory")
-                      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                  }}
-                  className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  Next →
-                </button>
-              </div>
-            </nav>
-          )}
+              const profileSlug = supplier.slug || supplier._id;
 
-          <div className="mt-8 flex flex-col justify-between gap-4 rounded-2xl border border-blue-100 bg-blue-50/70 p-5 sm:flex-row sm:items-center sm:p-6">
+              return (
+                <article className="sd-supplier-card" key={supplier._id}>
+                  <div className="sd-card-top">
+                    <div className="sd-avatar">
+                      {getInitials(companyName)}
+                    </div>
+
+                    <div className="sd-name-wrap">
+                      <div className="sd-meta">
+                        <span className="sd-supplier-id">
+                          SUPPLIER {String(firstResult + index).padStart(2, "0")}
+                        </span>
+                        <span className="sd-listed">Listed</span>
+                      </div>
+
+                      <h3>{companyName}</h3>
+                      <div className="sd-subtitle">
+                        {supplier.name || "Registered supplier"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="sd-description">
+                    Discover products and business offerings from{" "}
+                    {companyName}.
+                  </p>
+
+                  <div className="sd-divider" />
+
+                  <div className="sd-details">
+                    <div className="sd-detail">
+                      <div className="sd-detail-icon">
+                        <SupplierIcon type="location" />
+                      </div>
+
+                      <div className="sd-detail-text">
+                        <label>LOCATION</label>
+                        <strong>{location || "Not provided"}</strong>
+                      </div>
+                    </div>
+
+                    <div className="sd-detail">
+                      <div className="sd-detail-icon">
+                        <SupplierIcon type="company" />
+                      </div>
+
+                      <div className="sd-detail-text">
+                        <label>COMPANY</label>
+                        <strong>{companyName}</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="sd-card-bottom">
+                    <div className="sd-box-icon">
+                      <SupplierIcon type="products" />
+                    </div>
+
+                    <div className="sd-count">
+                      <strong>
+                        {formatNumber(supplier.productCount || 0)}
+                      </strong>
+                      <small>Listed products</small>
+                    </div>
+
+                    <Link
+                      href={`/suppliers/${encodeURIComponent(profileSlug)}`}
+                      className="sd-view-btn"
+                      aria-label={`View ${companyName} supplier profile`}
+                    >
+                      View profile <span>→</span>
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+
+        {/* PAGINATION */}
+        {!error && pagination && pagination.total > 0 && (
+          <div className="sd-pagination">
             <div>
-              <h3 className="font-bold text-slate-900">
-                Looking for a specific product?
-              </h3>
-              <p className="mt-1 text-sm leading-6 text-slate-600">
-                Browse available products to find options for your business.
-              </p>
+              <strong>
+                Page {pagination.page} of {Math.max(pagination.totalPages, 1)}
+              </strong>
+              <small>
+                Showing {formatNumber(firstResult)}–{formatNumber(lastResult)}{" "}
+                of {formatNumber(pagination.total)} suppliers
+              </small>
             </div>
 
-            <Link
-              href="/products"
-              className="inline-flex shrink-0 items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-blue-800 ring-1 ring-blue-200 transition hover:bg-blue-100"
-            >
-              Browse products →
-            </Link>
+            <div className="sd-pages">
+              <button
+                type="button"
+                className="sd-page-btn"
+                disabled={!pagination.hasPrevPage || loading}
+                onClick={() => goToPage(Math.max(1, page - 1))}
+              >
+                ← Previous
+              </button>
+
+              <span className="sd-current-page">{pagination.page}</span>
+
+              <button
+                type="button"
+                className="sd-page-btn next"
+                disabled={!pagination.hasNextPage || loading}
+                onClick={() => goToPage(page + 1)}
+              >
+                Next →
+              </button>
+            </div>
           </div>
+        )}
+
+        {/* BOTTOM CTA */}
+        <section className="sd-bottom-cta">
+          <div>
+            <span className="sd-cta-tag">EXPLORE MORE</span>
+            <h2>Looking for a specific product?</h2>
+            <p>
+              Browse the product directory and discover options that match
+              your business requirements.
+            </p>
+          </div>
+
+          <Link href="/products" className="sd-cta-button">
+            Browse products →
+          </Link>
         </section>
       </main>
 
       <Footer />
-    </>
+    </div>
   );
 }

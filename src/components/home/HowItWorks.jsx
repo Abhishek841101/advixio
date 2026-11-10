@@ -1,72 +1,61 @@
+
 const steps = [
   {
     number: "01",
-    icon: "📝",
-    title: "Post Your Requirement",
+    icon: "⌕",
+    title: "Search",
     description:
-      "Tell us what products or services you need and share your requirements.",
+      "Search for products, suppliers, manufacturers or services.",
   },
   {
     number: "02",
-    icon: "💬",
-    title: "Receive Supplier Quotes",
+    icon: "▦",
+    title: "Explore & Compare",
     description:
-      "Connect with verified suppliers and receive competitive quotes for your requirement.",
+      "Review business profiles, products, locations and details.",
   },
   {
     number: "03",
-    icon: "🤝",
-    title: "Compare & Connect",
+    icon: "➜",
+    title: "Send Enquiry",
     description:
-      "Compare suppliers, negotiate directly and choose the right business partner.",
+      "Contact relevant businesses or share your requirement.",
+  },
+  {
+    number: "04",
+    icon: "✓",
+    title: "Connect & Grow",
+    description:
+      "Discuss your requirements and build valuable business connections.",
   },
 ];
 
-export default function HowItWorks() {
+export default function HowAdvixioWorks() {
   return (
-    <section className="how-it-works">
-      <div className="container">
+    <section className="how-advixio-section">
+      <div className="how-advixio-container">
 
-        <div className="how-header">
-          <span className="section-label">
-            SIMPLE &amp; FAST
-          </span>
-
-          <h2>How Advixio Works</h2>
-
+        <div className="how-advixio-heading">
+          <h2>How Advixio360 Works</h2>
           <p>
-            Find the right suppliers and get your business requirements
-            fulfilled in three simple steps.
+            A simple four-step journey from discovery to business connection.
           </p>
         </div>
 
-        <div className="steps-container">
-          {steps.map((step, index) => (
-            <div className="step-wrapper" key={step.number}>
-
-              <div className="step-card">
-
-                <div className="step-top">
-                  <span className="step-number">
-                    {step.number}
-                  </span>
-
-                  <div className="step-icon">
-                    {step.icon}
-                  </div>
-                </div>
-
-                <h3>{step.title}</h3>
-
-                <p>{step.description}</p>
+        <div className="how-advixio-grid">
+          {steps.map((step) => (
+            <div className="how-advixio-card" key={step.number}>
+              <div className="how-advixio-step">
+                STEP {step.number}
               </div>
 
-              {index < steps.length - 1 && (
-                <div className="step-arrow">
-                  →
-                </div>
-              )}
+              <div className="how-advixio-icon">
+                <span>{step.icon}</span>
+              </div>
 
+              <h3>{step.title}</h3>
+
+              <p>{step.description}</p>
             </div>
           ))}
         </div>

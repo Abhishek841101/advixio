@@ -1,3 +1,6 @@
+
+import Link from "next/link";
+
 export default function Footer() {
   const styles = {
     footer: {
@@ -121,49 +124,65 @@ export default function Footer() {
     },
   };
 
-  const footerLink = (href, text) => (
-    <a
-      href={href}
-      className="footer-redesign-link"
-      style={styles.link}
-    >
-      {text}
-    </a>
-  );
+  // Footer links helper
+  const footerLink = (href, text) => {
+    if (
+      href.startsWith("mailto:") ||
+      href.startsWith("tel:") ||
+      href === "#"
+    ) {
+      return (
+        <a
+          key={text}
+          href={href}
+          className="footer-redesign-link"
+          style={styles.link}
+        >
+          {text}
+        </a>
+      );
+    }
+
+    return (
+      <Link
+        key={text}
+        href={href}
+        className="footer-redesign-link"
+        style={styles.link}
+      >
+        {text}
+      </Link>
+    );
+  };
 
   return (
     <footer className="footer" style={styles.footer}>
       {/* Main Footer */}
-      <div
-        className="footer-main container"
-        style={styles.main}
-      >
+      <div className="footer-main container" style={styles.main}>
         {/* Brand */}
         <div className="footer-brand">
-          <a href="/" className="footer-logo" style={styles.logo}>
-            
-<img
-  src="/footerLogo.png"
-  alt="Advixio360 Logo"
-  className="footer-logo-icon"
-  width={42}
-  height={42}
-  style={{
-    display: "block",
-    width: "42px",
-    height: "42px",
-    marginRight: "5px",
-    objectFit: "contain",
-    borderRadius: "8px",
-  }}
-/>
-
+          <Link href="/" className="footer-logo" style={styles.logo}>
+            <img
+              src="/footerLogo.png"
+              alt="Advixio360 Logo"
+              className="footer-logo-icon"
+              width={42}
+              height={42}
+              style={{
+                display: "block",
+                width: "42px",
+                height: "42px",
+                marginRight: "5px",
+                objectFit: "contain",
+                borderRadius: "8px",
+              }}
+            />
 
             <span>
               Advixio
               <span style={styles.logoAccent}>360</span>
             </span>
-          </a>
+          </Link>
 
           <p style={styles.description}>
             India&apos;s trusted B2B sourcing platform connecting verified
@@ -171,19 +190,20 @@ export default function Footer() {
             across the nation.
           </p>
 
-          <div
-            className="social-links"
-            style={styles.socialLinks}
-          >
+          {/* Social Links */}
+          <div className="social-links" style={styles.socialLinks}>
             <a href="#" aria-label="LinkedIn" style={styles.social}>
               in
             </a>
+
             <a href="#" aria-label="X" style={styles.social}>
               𝕏
             </a>
+
             <a href="#" aria-label="Facebook" style={styles.social}>
               f
             </a>
+
             <a href="#" aria-label="Instagram" style={styles.social}>
               ◎
             </a>
@@ -191,21 +211,19 @@ export default function Footer() {
         </div>
 
         {/* Quick Links */}
-        
-<div className="footer-column">
-  <h3 style={styles.heading}>Quick Links</h3>
+        <div className="footer-column">
+          <h3 style={styles.heading}>Quick Links</h3>
 
-  <div style={styles.links}>
-    {footerLink("/", "Home")}
-    {footerLink("/about", "About Us")}
-    {footerLink("/blogs", "Blogs")}
-    {footerLink("/products", "Products")}
-    {footerLink("/contact", "Contact Us")}
-  </div>
-</div>
+          <div style={styles.links}>
+            {footerLink("/", "Home")}
+            {footerLink("/about", "About Us")}
+            {footerLink("/blogs", "Blogs")}
+            {footerLink("/products", "Products")}
+            {footerLink("/contact", "Contact Us")}
+          </div>
+        </div>
 
-
-        {/* Categories */}
+        {/* Popular Categories */}
         <div className="footer-column">
           <h3 style={styles.heading}>Popular Categories</h3>
 
@@ -233,9 +251,9 @@ export default function Footer() {
             )}
           </div>
 
-          <a href="/contact" style={styles.contactButton}>
+          <Link href="/contact" style={styles.contactButton}>
             Get in Touch <span aria-hidden="true">→</span>
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -260,9 +278,23 @@ export default function Footer() {
             </p>
           </div>
 
+          {/* Legal Links */}
           <div style={styles.bottomLinks}>
-            {footerLink("#", "Terms of Service")}
-            {footerLink("#", "Privacy Policy")}
+            <Link
+              href="/terms-and-conditions"
+              className="footer-redesign-link"
+              style={styles.link}
+            >
+              Terms of Service
+            </Link>
+
+            <Link
+              href="/privacy-policy"
+              className="footer-redesign-link"
+              style={styles.link}
+            >
+              Privacy Policy
+            </Link>
           </div>
         </div>
       </div>

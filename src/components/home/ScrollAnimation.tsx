@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from "react";
@@ -14,22 +15,23 @@ export default function ScrollAnimation() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("active");
+            entry.target.classList.add("scroll-reveal", "is-revealed", "active");
+          } else {
+            entry.target.classList.remove("is-revealed", "active");
           }
         });
       },
       {
-        threshold: 0.1,
+        threshold: 0.12,
       }
     );
 
     sections.forEach((section) => {
+      section.classList.add("scroll-reveal");
       observer.observe(section);
     });
 
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
   return null;

@@ -1,82 +1,84 @@
+
 const features = [
   {
     icon: "✓",
-    title: "Verified Suppliers",
+    title: "Verified Business Profiles",
     description:
-      "Every supplier undergoes strict GST and credential verification before listing.",
-    type: "green",
+      "Discover businesses with structured profiles and verification information.",
   },
   {
-    icon: "◇",
-    title: "Bulk Pricing",
+    icon: "⌕",
+    title: "Easy Product Discovery",
     description:
-      "Get direct manufacturer pricing and volume discounts without middlemen.",
-    type: "blue",
+      "Search products and suppliers by category, location and business type.",
   },
   {
-    icon: "🚚",
-    title: "Pan-India Network",
+    icon: "↗",
+    title: "Direct Supplier Connection",
     description:
-      "Source from anywhere in India with our extensive nationwide supplier base.",
-    type: "orange",
+      "Move from discovery to enquiry without unnecessary complexity.",
   },
   {
-    icon: "♧",
-    title: "Free RFQ Posting",
+    icon: "▣",
+    title: "Detailed Listings",
     description:
-      "Post your requirements for free and let the right suppliers come to you.",
-    type: "purple",
+      "See products, business information, location and useful supplier details.",
+  },
+  {
+    icon: "＋",
+    title: "Free Product Posting",
+    description:
+      "Give suppliers a simple way to showcase products and reach buyers.",
+  },
+  {
+    icon: "◎",
+    title: "Local + Pan-India Reach",
+    description:
+      "Discover businesses near you while exploring suppliers across India.",
   },
 ];
 
-export default function WhyChoose() {
+export default function WhyChooseAdvixio() {
   return (
-    <section className="why-choose">
-      <div className="container">
+    <section className="why-advixio-section">
+      <div className="why-advixio-container">
 
-        {/* Header */}
-        <div className="why-header">
-          <span className="section-label">
-            WHY ADVIXIO
-          </span>
+        {/* Section Heading */}
+        <div className="why-advixio-heading">
+          
 
-          <h2>
-            Why Choose Advixio?
-          </h2>
+          <h2>Why Choose Advixio360?</h2>
 
           <p>
-            Everything you need to source smarter,
-            faster and better.
+            Built to make B2B business discovery simpler,
+            clearer and more accessible.
           </p>
         </div>
 
-
-        {/* Features */}
-        <div className="why-grid">
-
-          {features.map((feature) => (
+        {/* Feature Cards */}
+        <div className="why-advixio-grid">
+          {features.map((feature, index) => (
             <div
-              className="why-card"
+              className="why-advixio-card"
               key={feature.title}
+              style={{
+                animationDelay: `${index * 100}ms`,
+              }}
             >
-
-              <div
-                className={`why-icon ${feature.type}`}
-              >
-                {feature.icon}
+              <div className="why-advixio-icon">
+                <span>{feature.icon}</span>
               </div>
 
-              <h3>
-                {feature.title}
-              </h3>
+              <div className="why-advixio-card-content">
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
+              </div>
 
-              <p>
-                {feature.description}
-              </p>
-
+              <span className="why-advixio-card-number">
+                0{index + 1}
+              </span>
             </div>
           ))}
-
         </div>
 
       </div>

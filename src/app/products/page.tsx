@@ -9,6 +9,12 @@ import Footer from "@/components/layout/Footer";
 import ProductGrid from "@/components/products/ProductGrid";
 import { categories } from "@/data/categories";
 
+const getCategoryFromUrl = () => {
+  if (typeof window === "undefined") return "";
+
+  return new URLSearchParams(window.location.search).get("category") || "";
+};
+
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
@@ -95,12 +101,29 @@ export default function ProductsPage() {
 
   const [search, setSearch] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  
   const [selectedSuppliers, setSelectedSuppliers] = useState<string[]>([]);
   const [sort, setSort] = useState("relevance");
   const [showAllCategories, setShowAllCategories] = useState(false);
 
   // PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Apply category from URL on first load and browser back/forward.
+  useEffect(() => {
+    const applyUrlCategory = () => {
+      const slug = new URLSearchParams(window.location.search).get("category") || "";
+      const matchedCategory = categories.find((category) => category.slug === slug);
+
+      setSelectedCategories(matchedCategory ? [matchedCategory.name] : []);
+      setCurrentPage(1);
+    };
+
+    applyUrlCategory();
+    window.addEventListener("popstate", applyUrlCategory);
+
+    return () => window.removeEventListener("popstate", applyUrlCategory);
+  }, []);
 
   /* =========================================
      FETCH PRODUCTS FROM BACKEND
@@ -164,14 +187,40 @@ export default function ProductsPage() {
      CATEGORY FILTER
   ========================================= */
 
-  const toggleCategory = (category: string) => {
-    setSelectedCategories((current) => {
-      if (current.includes(category)) {
-        return current.filter((item) => item !== category);
-      }
+  
+const toggleCategory = (categoryName: string) => {
+  const nextCategories = selectedCategories.includes(categoryName)
+    ? selectedCategories.filter((name) => name !== categoryName)
+    : [...selectedCategories, categoryName];
 
-      return [...current, category];
-    });
+  setSelectedCategories(nextCategories);
+  setCurrentPage(1);
+
+  const url = new URL(window.location.href);
+
+  if (nextCategories.length === 1) {
+    const matched = categories.find(
+      (category) => category.name === nextCategories[0]
+    );
+
+    if (matched) {
+      url.searchParams.set("category", matched.slug);
+    }
+  } else {
+    url.searchParams.delete("category");
+  }
+
+  window.history.replaceState(null, "", url.toString());
+};
+
+
+  const clearCategoryFilter = () => {
+    setSelectedCategories([]);
+    setCurrentPage(1);
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete("category");
+    window.history.replaceState(null, "", url.toString());
   };
 
   /* =========================================
@@ -198,6 +247,10 @@ export default function ProductsPage() {
     setSearch("");
     setSort("relevance");
     setCurrentPage(1);
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete("category");
+    window.history.replaceState(null, "", url.toString());
   };
 
   /* =========================================
@@ -231,10 +284,10 @@ export default function ProductsPage() {
       result = result.filter((product) => {
         return selectedCategories.some(
           (category) =>
-            product.category?.name?.toLowerCase() ===
-              category.toLowerCase() ||
-            product.subcategory?.toLowerCase() ===
-              category.toLowerCase()
+            product.category?.name?.toLowerCase() === category.toLowerCase() ||
+            product.category?.slug?.toLowerCase() ===
+              categories.find((item) => item.name === category)?.slug?.toLowerCase() ||
+            product.subcategory?.toLowerCase() === category.toLowerCase()
         );
       });
     }
@@ -535,7 +588,7 @@ export default function ProductsPage() {
       {selectedCategories.length > 0 && (
         <button
           type="button"
-          onClick={() => setSelectedCategories([])}
+          onClick={clearCategoryFilter}
         >
           Clear
         </button>
@@ -637,7 +690,7 @@ export default function ProductsPage() {
         {selectedCategories.length > 0 && (
           <button
             type="button"
-            onClick={() => setSelectedCategories([])}
+            onClick={clearCategoryFilter}
           >
             Clear
           </button>
