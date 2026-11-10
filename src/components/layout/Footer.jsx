@@ -192,21 +192,54 @@ export default function Footer() {
 
           {/* Social Links */}
           <div className="social-links" style={styles.socialLinks}>
-            <a href="#" aria-label="LinkedIn" style={styles.social}>
-              in
-            </a>
+  
 
-            <a href="#" aria-label="X" style={styles.social}>
-              𝕏
-            </a>
+           <div className="social-links" style={styles.socialLinks}>
+  {/* Facebook */}
+  <a
+    href="https://www.facebook.com/profile.php?id=61595198248553"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Facebook"
+    style={styles.social}
+  >
+    f
+  </a>
 
-            <a href="#" aria-label="Facebook" style={styles.social}>
-              f
-            </a>
+  {/* Instagram */}
+  <a
+    href="https://www.instagram.com/advixio360/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Instagram"
+    style={styles.social}
+  >
+    ig
+  </a>
 
-            <a href="#" aria-label="Instagram" style={styles.social}>
-              ◎
-            </a>
+  {/* LinkedIn */}
+  <a
+    href="https://www.linkedin.com/company/advixio360/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="LinkedIn"
+    style={styles.social}
+  >
+    in
+  </a>
+   {/* X (Twitter) */}
+  <a
+    href="https://x.com/Advixio360"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="X (Twitter)"
+    style={styles.social}
+  >
+    𝕏
+  </a>
+</div>
+
+ 
           </div>
         </div>
 
@@ -241,8 +274,8 @@ export default function Footer() {
 
           <div style={styles.links}>
             {footerLink(
-              "mailto:advixio12@gmail.com",
-              "advixio12@gmail.com"
+              "mailto:support@advixio360.com",
+              "support@advixio360.com"
             )}
 
             {footerLink(

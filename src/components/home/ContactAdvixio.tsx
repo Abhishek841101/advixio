@@ -63,11 +63,11 @@ Thank you.
 
             <div className="contact-support-links">
               <a
-                href="mailto:advixio12@gmail.com"
+                href="mailto:support@advixio360.com"
                 className="contact-support-email"
               >
                 <span>✉</span>
-                advixio12@gmail.com
+                support@advixio360.com
               </a>
 
               <a

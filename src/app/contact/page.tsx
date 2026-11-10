@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-const EMAIL = "advixio12@gmail.com";
+const EMAIL = "support@advixio360.com";
 const PHONE = "+918530955850";
 const WHATSAPP = "918530955850";
 
