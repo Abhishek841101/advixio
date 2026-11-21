@@ -77,7 +77,7 @@ function BrandMark() {
     <span className="sd-brandmark">
       <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
         <path d="M7 27 17 8h7L14 27H7Z" fill="white" />
-        <path d="M18 27 28 8h5L23 27h-5Z" fill="#8CC7FF" />
+        <path d="M18 27 28 8h5L23 27h-5Z" fill="#93C5FD" />
         <path d="M7 30h26" stroke="white" strokeWidth="3" strokeLinecap="round" />
         <path d="M25 18 34 30" stroke="white" strokeWidth="3" strokeLinecap="round" />
       </svg>

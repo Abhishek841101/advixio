@@ -65,20 +65,20 @@ const initialForm: FormState = {
 const inputStyle = {
   width: "100%",
   boxSizing: "border-box" as const,
-  border: "1px solid #dbe3ef",
+  border: "1px solid #BFDBFE",
   borderRadius: "10px",
   padding: "13px 14px",
-  background: "#ffffff",
-  color: "#0f172a",
+  background: "#FFFFFF",
+  color: "#1E3A8A",
   fontSize: "14px",
-  outlineColor: "#2563eb",
+  outlineColor: "#2563EB",
 };
 
 const labelStyle = {
   display: "block",
   fontSize: "14px",
   fontWeight: 700,
-  color: "#1e293b",
+  color: "#1E3A8A",
   marginBottom: "8px",
 };
 
@@ -86,18 +86,18 @@ const primaryButtonStyle = {
   border: 0,
   borderRadius: "10px",
   padding: "14px 20px",
-  background: "#2563eb",
-  color: "#ffffff",
+  background: "#2563EB",
+  color: "#FFFFFF",
   fontSize: "14px",
   fontWeight: 800,
   cursor: "pointer",
 };
 
 const toolbarButtonStyle = {
-  border: "1px solid #dbe3ef",
+  border: "1px solid #BFDBFE",
   borderRadius: "7px",
-  background: "#ffffff",
-  color: "#1e293b",
+  background: "#FFFFFF",
+  color: "#1E3A8A",
   padding: "8px 10px",
   fontSize: "13px",
   fontWeight: 700,
@@ -179,7 +179,7 @@ function RichTextEditor({
 }: RichTextEditorProps) {
   const [fontSize, setFontSize] = useState("16px");
   const [fontFamily, setFontFamily] = useState("Arial");
-  const [textColor, setTextColor] = useState("#1e293b");
+  const [textColor, setTextColor] = useState("#1E3A8A");
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -234,7 +234,7 @@ function RichTextEditor({
 
   if (!editor) {
     return (
-      <div style={{ ...inputStyle, minHeight: "320px", color: "#64748b" }}>
+      <div style={{ ...inputStyle, minHeight: "320px", color: "#EA580C" }}>
         Loading article editor...
       </div>
     );
@@ -280,10 +280,10 @@ function RichTextEditor({
   return (
     <div
       style={{
-        border: "1px solid #cbd5e1",
+        border: "1px solid #BFDBFE",
         borderRadius: "12px",
         overflow: "hidden",
-        background: "#ffffff",
+        background: "#FFFFFF",
       }}
     >
       <div
@@ -293,8 +293,8 @@ function RichTextEditor({
           alignItems: "center",
           gap: "7px",
           padding: "12px",
-          background: "#f8fafc",
-          borderBottom: "1px solid #e2e8f0",
+          background: "#FFFFFF",
+          borderBottom: "1px solid #BFDBFE",
         }}
       >
         <button type="button" style={toolbarButtonStyle} disabled={disabled}
@@ -414,7 +414,7 @@ function RichTextEditor({
           min-height: 360px;
           padding: 22px;
           outline: none;
-          color: #1e293b;
+          color: #1E3A8A;
           font-family: Arial, sans-serif;
           font-size: 16px;
           line-height: 1.85;
@@ -427,9 +427,9 @@ function RichTextEditor({
         .blog-rich-editor .tiptap ul, .blog-rich-editor .tiptap ol { padding-left: 1.5rem; margin: .8em 0; }
         .blog-rich-editor .tiptap img { display: block; max-width: 100%; height: auto; border-radius: 12px; margin: 20px auto; }
         .blog-rich-editor .tiptap video { display: block; width: 100%; max-width: 100%; border-radius: 12px; margin: 20px 0; }
-        .blog-rich-editor .tiptap a { color: #2563eb; text-decoration: underline; }
-        .blog-rich-editor .tiptap blockquote { border-left: 4px solid #93c5fd; padding-left: 1rem; color: #475569; margin: 1rem 0; }
-        .blog-rich-editor .tiptap p.is-editor-empty:first-child::before { color: #94a3b8; content: "Start writing your article. Use the toolbar to format text or insert media..."; float: left; height: 0; pointer-events: none; }
+        .blog-rich-editor .tiptap a { color: #2563EB; text-decoration: underline; }
+        .blog-rich-editor .tiptap blockquote { border-left: 4px solid #93C5FD; padding-left: 1rem; color: #9A3412; margin: 1rem 0; }
+        .blog-rich-editor .tiptap p.is-editor-empty:first-child::before { color: #FB923C; content: "Start writing your article. Use the toolbar to format text or insert media..."; float: left; height: 0; pointer-events: none; }
       `}</style>
     </div>
   );
@@ -575,8 +575,8 @@ export default function CreateBlogPage() {
     <main
       style={{
         minHeight: "100vh",
-        background: "#f8fafc",
-        color: "#0f172a",
+        background: "#FFFFFF",
+        color: "#1E3A8A",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
     >
@@ -584,25 +584,25 @@ export default function CreateBlogPage() {
 
       <section
         style={{
-          background: "linear-gradient(120deg, #020617, #0b1f4b 60%, #173e86)",
-          color: "#ffffff",
+          background: "linear-gradient(120deg, #172554, #172554 60%, #1E3A8A)",
+          color: "#FFFFFF",
           padding: "48px 20px",
         }}
       >
         <div style={{ maxWidth: "900px", margin: "0 auto" }}>
           <Link
             href="/blogs"
-            style={{ color: "#bfdbfe", fontSize: "14px", textDecoration: "none", fontWeight: 700 }}
+            style={{ color: "#FFEDD5", fontSize: "14px", textDecoration: "none", fontWeight: 700 }}
           >
             ← Back to Blogs
           </Link>
-          <p style={{ color: "#67e8f9", fontWeight: 800, letterSpacing: "2px", fontSize: "12px", marginTop: "28px" }}>
+          <p style={{ color: "#60A5FA", fontWeight: 800, letterSpacing: "2px", fontSize: "12px", marginTop: "28px" }}>
             ADVIXIO360 COMMUNITY
           </p>
           <h1 style={{ fontSize: "clamp(32px, 5vw, 46px)", margin: "12px 0", lineHeight: 1.15 }}>
             Create a Blog
           </h1>
-          <p style={{ color: "#dbeafe", lineHeight: 1.8, maxWidth: "680px" }}>
+          <p style={{ color: "#FFEDD5", lineHeight: 1.8, maxWidth: "680px" }}>
             Write and format your article, insert images and videos inside the article, and publish your business knowledge on Advixio360.
           </p>
         </div>
@@ -613,33 +613,33 @@ export default function CreateBlogPage() {
           style={{
             maxWidth: "1000px",
             margin: "0 auto",
-            background: "#ffffff",
-            border: "1px solid #e2e8f0",
+            background: "#FFFFFF",
+            border: "1px solid #BFDBFE",
             borderRadius: "18px",
             padding: "clamp(20px, 4vw, 36px)",
-            boxShadow: "0 10px 35px rgba(15,23,42,0.05)",
+            boxShadow: "0 10px 35px rgba(23, 37, 84, 0.05)",
           }}
         >
           {successSlug ? (
             <div role="status">
-              <div style={{ width: "54px", height: "54px", borderRadius: "50%", background: "#d1fae5", color: "#047857", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px", fontWeight: 800 }}>
+              <div style={{ width: "54px", height: "54px", borderRadius: "50%", background: "#FED7AA", color: "#1E3A8A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px", fontWeight: 800 }}>
                 ✓
               </div>
-              <h2 style={{ color: "#047857", fontSize: "27px", marginTop: "20px" }}>
+              <h2 style={{ color: "#1E3A8A", fontSize: "27px", marginTop: "20px" }}>
                 Blog published successfully!
               </h2>
-              <p style={{ color: "#475569", lineHeight: 1.8 }}>{successMessage}</p>
+              <p style={{ color: "#9A3412", lineHeight: 1.8 }}>{successMessage}</p>
               <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginTop: "24px" }}>
                 <button type="button" onClick={() => router.push(`/blogs/${successSlug}`)} style={primaryButtonStyle}>
                   Read Published Blog
                 </button>
-                <Link href="/blogs" style={{ ...primaryButtonStyle, background: "#eaf1fb", color: "#1d4ed8", textDecoration: "none", display: "inline-flex", alignItems: "center" }}>
+                <Link href="/blogs" style={{ ...primaryButtonStyle, background: "#93C5FD", color: "#1D4ED8", textDecoration: "none", display: "inline-flex", alignItems: "center" }}>
                   View All Blogs
                 </Link>
                 <button
                   type="button"
                   onClick={() => { setSuccessSlug(""); setSuccessMessage(""); }}
-                  style={{ ...primaryButtonStyle, background: "#0f172a" }}
+                  style={{ ...primaryButtonStyle, background: "#1E3A8A" }}
                 >
                   Create Another Blog
                 </button>
@@ -659,7 +659,7 @@ export default function CreateBlogPage() {
                   placeholder="Enter a clear, descriptive article title"
                   style={inputStyle}
                 />
-                <small style={{ color: "#64748b" }}>{form.title.length}/200 characters</small>
+                <small style={{ color: "#EA580C" }}>{form.title.length}/200 characters</small>
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 240px), 1fr))", gap: "20px", marginBottom: "24px" }}>
@@ -703,19 +703,19 @@ export default function CreateBlogPage() {
                   placeholder="Explain what readers will learn from this article."
                   style={{ ...inputStyle, resize: "vertical" }}
                 />
-                <small style={{ color: "#64748b" }}>{form.excerpt.length}/500 characters</small>
+                <small style={{ color: "#EA580C" }}>{form.excerpt.length}/500 characters</small>
               </div>
 
-              <div style={{ marginBottom: "28px", padding: "20px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "12px" }}>
-                <h2 style={{ fontSize: "18px", margin: "0 0 8px", color: "#10244e" }}>Cover image</h2>
-                <p style={{ fontSize: "13px", color: "#64748b", lineHeight: 1.7 }}>
+              <div style={{ marginBottom: "28px", padding: "20px", background: "#FFFFFF", border: "1px solid #BFDBFE", borderRadius: "12px" }}>
+                <h2 style={{ fontSize: "18px", margin: "0 0 8px", color: "#172554" }}>Cover image</h2>
+                <p style={{ fontSize: "13px", color: "#EA580C", lineHeight: 1.7 }}>
                   Optional. JPG, PNG or WEBP; maximum 10 MB. This is the blog thumbnail/cover image. Add other images inside the article editor.
                 </p>
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
                   onChange={handleCoverChange}
-                  style={{ ...inputStyle, padding: "10px", background: "#ffffff" }}
+                  style={{ ...inputStyle, padding: "10px", background: "#FFFFFF" }}
                 />
                 {coverImage && (
                   <div style={{ marginTop: "14px" }}>
@@ -727,13 +727,13 @@ export default function CreateBlogPage() {
                         style={{ display: "block", width: "100%", maxWidth: "320px", maxHeight: "220px", objectFit: "cover", borderRadius: "10px", marginBottom: "10px" }}
                       />
                     )}
-                    <p style={{ fontSize: "13px", color: "#334155" }}>
+                    <p style={{ fontSize: "13px", color: "#1E3A8A" }}>
                       {coverImage.name} · {formatFileSize(coverImage.size)}
                     </p>
                     <button
                       type="button"
                       onClick={() => setCoverImage(null)}
-                      style={{ ...primaryButtonStyle, padding: "9px 13px", background: "#fee2e2", color: "#b91c1c" }}
+                      style={{ ...primaryButtonStyle, padding: "9px 13px", background: "#FED7AA", color: "#C2410C" }}
                     >
                       Remove cover
                     </button>
@@ -748,16 +748,16 @@ export default function CreateBlogPage() {
                   onChange={(value) => update("content", value)}
                   disabled={loading}
                 />
-                <small style={{ color: "#64748b", display: "block", marginTop: "8px" }}>
+                <small style={{ color: "#EA580C", display: "block", marginTop: "8px" }}>
                   {form.content.length.toLocaleString()} / {MAX_CONTENT_LENGTH.toLocaleString()} characters. Use + Image or + Video in the editor toolbar to insert media at the cursor.
                 </small>
-                <p style={{ color: "#b45309", fontSize: "12px", lineHeight: 1.6, marginTop: "8px" }}>
+                <p style={{ color: "#C2410C", fontSize: "12px", lineHeight: 1.6, marginTop: "8px" }}>
                   Note: In this version, inline media is inserted using an existing public HTTP/HTTPS URL. Direct upload from your computer into the editor will be connected to your Cloudinary backend in the next step.
                 </p>
               </div>
 
-              <div style={{ marginBottom: "28px", padding: "20px", border: "1px solid #dbeafe", background: "#eff6ff", borderRadius: "12px" }}>
-                <h2 style={{ fontSize: "18px", margin: "0 0 18px", color: "#10244e" }}>SEO settings (optional)</h2>
+              <div style={{ marginBottom: "28px", padding: "20px", border: "1px solid #FFEDD5", background: "#FFEDD5", borderRadius: "12px" }}>
+                <h2 style={{ fontSize: "18px", margin: "0 0 18px", color: "#172554" }}>SEO settings (optional)</h2>
                 <div style={{ marginBottom: "18px" }}>
                   <label htmlFor="metaTitle" style={labelStyle}>SEO title</label>
                   <input id="metaTitle" maxLength={200} value={form.metaTitle} onChange={(event) => update("metaTitle", event.target.value)} placeholder="Leave blank to use the article title" style={inputStyle} />
@@ -769,34 +769,34 @@ export default function CreateBlogPage() {
                 <div style={{ marginBottom: "18px" }}>
                   <label htmlFor="keywords" style={labelStyle}>SEO keywords</label>
                   <input id="keywords" value={form.keywords} onChange={(event) => update("keywords", event.target.value)} placeholder="B2B sourcing, procurement, business growth" style={inputStyle} />
-                  <small style={{ color: "#64748b" }}>Separate keywords with commas.</small>
+                  <small style={{ color: "#EA580C" }}>Separate keywords with commas.</small>
                 </div>
                 <div>
                   <label htmlFor="tags" style={labelStyle}>Article tags</label>
                   <input id="tags" value={form.tags} onChange={(event) => update("tags", event.target.value)} placeholder="Suppliers, Marketing, Business" style={inputStyle} />
-                  <small style={{ color: "#64748b" }}>Separate tags with commas.</small>
+                  <small style={{ color: "#EA580C" }}>Separate tags with commas.</small>
                 </div>
               </div>
 
               {error && (
-                <p role="alert" style={{ color: "#b91c1c", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "9px", padding: "13px", lineHeight: 1.7, overflowWrap: "anywhere" }}>
+                <p role="alert" style={{ color: "#C2410C", background: "#FFFFFF", border: "1px solid #FFEDD5", borderRadius: "9px", padding: "13px", lineHeight: 1.7, overflowWrap: "anywhere" }}>
                   {error}
                 </p>
               )}
 
-              <p style={{ color: "#64748b", fontSize: "13px", lineHeight: 1.8, margin: "20px 0" }}>
+              <p style={{ color: "#EA580C", fontSize: "13px", lineHeight: 1.8, margin: "20px 0" }}>
                 By publishing, you confirm that you have permission to publish this content and media. Published articles are public immediately. Only upload content you have rights to use.
               </p>
 
               <button
                 type="submit"
                 disabled={loading}
-                style={{ ...primaryButtonStyle, width: "100%", background: loading ? "#94a3b8" : "#2563eb", cursor: loading ? "wait" : "pointer", fontSize: "15px" }}
+                style={{ ...primaryButtonStyle, width: "100%", background: loading ? "#FB923C" : "#2563EB", cursor: loading ? "wait" : "pointer", fontSize: "15px" }}
               >
                 {loading ? "Publishing article..." : "Publish Blog"}
               </button>
               {loading && (
-                <p style={{ textAlign: "center", color: "#64748b", fontSize: "13px", lineHeight: 1.7 }}>
+                <p style={{ textAlign: "center", color: "#EA580C", fontSize: "13px", lineHeight: 1.7 }}>
                   Please keep this page open while your article is being published.
                 </p>
               )}

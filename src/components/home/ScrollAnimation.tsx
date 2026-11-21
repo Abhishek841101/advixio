@@ -16,8 +16,10 @@ export default function ScrollAnimation() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("scroll-reveal", "is-revealed", "active");
-          } else {
-            entry.target.classList.remove("is-revealed", "active");
+            // Reveal once — never remove the classes again, otherwise the
+            // section re-enters its hidden state on every threshold crossing
+            // and the long fade/slide transition restarts, causing vibration.
+            observer.unobserve(entry.target);
           }
         });
       },

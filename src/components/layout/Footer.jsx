@@ -4,8 +4,8 @@ import Link from "next/link";
 export default function Footer() {
   const styles = {
     footer: {
-      background: "linear-gradient(135deg, #0d1022 0%, #151832 100%)",
-      color: "#ffffff",
+      background: "linear-gradient(135deg, #1E3A8A 0%, #1E3A8A 100%)",
+      color: "#FFFFFF",
       paddingTop: "65px",
       fontFamily: "inherit",
     },
@@ -21,7 +21,7 @@ export default function Footer() {
       display: "inline-flex",
       alignItems: "center",
       gap: "2px",
-      color: "#ffffff",
+      color: "#FFFFFF",
       fontSize: "36px",
       fontWeight: 800,
       letterSpacing: "-1.5px",
@@ -29,20 +29,20 @@ export default function Footer() {
     },
 
     logoAccent: {
-      color: "#a78bfa",
+      color: "#93C5FD",
     },
 
     description: {
       maxWidth: "360px",
       marginTop: "22px",
-      color: "#b8bfd3",
+      color: "#93C5FD",
       fontSize: "17px",
       lineHeight: 1.9,
     },
 
     heading: {
       marginBottom: "24px",
-      color: "#ffffff",
+      color: "#FFFFFF",
       fontSize: "21px",
       fontWeight: 750,
     },
@@ -54,7 +54,7 @@ export default function Footer() {
     },
 
     link: {
-      color: "#b8bfd3",
+      color: "#93C5FD",
       textDecoration: "none",
       fontSize: "17px",
       lineHeight: 1.6,
@@ -74,10 +74,10 @@ export default function Footer() {
       height: "44px",
       alignItems: "center",
       justifyContent: "center",
-      border: "1px solid rgba(255,255,255,0.15)",
+      border: "1px solid rgba(255, 255, 255, 0.15)",
       borderRadius: "12px",
-      background: "rgba(255,255,255,0.05)",
-      color: "#ffffff",
+      background: "rgba(255, 255, 255, 0.05)",
+      color: "#FFFFFF",
       textDecoration: "none",
       fontSize: "18px",
       fontWeight: 700,
@@ -90,15 +90,15 @@ export default function Footer() {
       marginTop: "25px",
       padding: "14px 21px",
       borderRadius: "10px",
-      background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
-      color: "#ffffff",
+      background: "linear-gradient(135deg, #3B82F6, #2563EB)",
+      color: "#FFFFFF",
       textDecoration: "none",
       fontSize: "16px",
       fontWeight: 650,
     },
 
     bottom: {
-      borderTop: "1px solid rgba(255,255,255,0.12)",
+      borderTop: "1px solid rgba(255, 255, 255, 0.12)",
       padding: "25px 0",
     },
 
@@ -112,7 +112,7 @@ export default function Footer() {
 
     bottomText: {
       margin: 0,
-      color: "#a5aec4",
+      color: "#60A5FA",
       fontSize: "15px",
       lineHeight: 1.8,
     },
@@ -192,54 +192,48 @@ export default function Footer() {
 
           {/* Social Links */}
           <div className="social-links" style={styles.socialLinks}>
-  
+            {/* Facebook */}
+            <a
+              href="https://www.facebook.com/profile.php?id=61595198248553"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              style={styles.social}
+            >
+              f
+            </a>
 
-           <div className="social-links" style={styles.socialLinks}>
-  {/* Facebook */}
-  <a
-    href="https://www.facebook.com/profile.php?id=61595198248553"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Facebook"
-    style={styles.social}
-  >
-    f
-  </a>
+            {/* Instagram */}
+            <a
+              href="https://www.instagram.com/advixio360/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              style={styles.social}
+            >
+              ig
+            </a>
 
-  {/* Instagram */}
-  <a
-    href="https://www.instagram.com/advixio360/"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Instagram"
-    style={styles.social}
-  >
-    ig
-  </a>
-
-  {/* LinkedIn */}
-  <a
-    href="https://www.linkedin.com/company/advixio360/"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="LinkedIn"
-    style={styles.social}
-  >
-    in
-  </a>
-   {/* X (Twitter) */}
-  <a
-    href="https://x.com/Advixio360"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="X (Twitter)"
-    style={styles.social}
-  >
-    𝕏
-  </a>
-</div>
-
- 
+            {/* LinkedIn */}
+            <a
+              href="https://www.linkedin.com/company/advixio360/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              style={styles.social}
+            >
+              in
+            </a>
+            {/* X (Twitter) */}
+            <a
+              href="https://x.com/Advixio360"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="X (Twitter)"
+              style={styles.social}
+            >
+              𝕏
+            </a>
           </div>
         </div>
 
@@ -312,7 +306,7 @@ export default function Footer() {
           </div>
 
           {/* Legal Links */}
-          <div style={styles.bottomLinks}>
+          <div className="footer-bottom-links" style={styles.bottomLinks}>
             <Link
               href="/terms-and-conditions"
               className="footer-redesign-link"

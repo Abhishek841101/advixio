@@ -324,7 +324,7 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F6F7FB]">
+      <div className="flex min-h-screen items-center justify-center bg-[#FFFFFF]">
         <div className="text-center">
           <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-indigo-100 border-t-indigo-600" />
           <p className="mt-4 text-sm font-medium text-slate-500">
@@ -336,7 +336,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F6F7FB] text-slate-800">
+    <div className="min-h-screen bg-[#FFFFFF] text-slate-800">
       {/* MOBILE OVERLAY */}
       {sidebarOpen && (
         <button
@@ -348,7 +348,7 @@ export default function AdminDashboard() {
 
       {/* SIDEBAR */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col bg-[#171A35] text-white transition-transform duration-300 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col bg-[#1E3A8A] text-white transition-transform duration-300 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >

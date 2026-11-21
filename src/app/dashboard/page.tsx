@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 type User = {
-  id: string;
+  id?: string;
   _id?: string;
   name: string;
   email: string;
@@ -40,18 +40,14 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Load latest user profile from backend
   const loadUserProfile = async () => {
     try {
       const token = localStorage.getItem("advixio_token");
-
       if (!token) return;
 
       const response = await fetch(`${API_URL}/auth/profile`, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
       });
 
@@ -69,40 +65,28 @@ export default function DashboardPage() {
       }
 
       setUser(result.data);
-
-      // Save latest profile including profile image
-      localStorage.setItem(
-        "advixio_user",
-        JSON.stringify(result.data)
-      );
-    } catch (error) {
-      console.error("Failed to load profile:", error);
+      localStorage.setItem("advixio_user", JSON.stringify(result.data));
+    } catch (err) {
+      console.error("Failed to load profile:", err);
     }
   };
 
-  // Load supplier products
   const loadProducts = async () => {
     try {
       setLoading(true);
       setError("");
 
       const token = localStorage.getItem("advixio_token");
-
       if (!token) {
         window.location.href = "/login";
         return;
       }
 
-      const response = await fetch(
-        `${API_URL}/products/my-listings`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          cache: "no-store",
-        }
-      );
+      const response = await fetch(`${API_URL}/products/my-listings`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+      });
 
       const result = await response.json();
 
@@ -114,36 +98,22 @@ export default function DashboardPage() {
       }
 
       if (!response.ok || !result.success) {
-        throw new Error(
-          result.message || "Failed to load products."
-        );
+        throw new Error(result.message || "Failed to load products.");
       }
 
       setProducts(result.data || []);
     } catch (err) {
       console.error(err);
-
       setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to load dashboard."
+        err instanceof Error ? err.message : "Failed to load dashboard."
       );
     } finally {
       setLoading(false);
     }
   };
 
-  // Logout
-  const logout = () => {
-    localStorage.removeItem("advixio_token");
-    localStorage.removeItem("advixio_user");
-    window.location.href = "/";
-  };
-
-  // Load cached user first, then fetch latest data
   useEffect(() => {
     const storedUser = localStorage.getItem("advixio_user");
-
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
@@ -154,394 +124,312 @@ export default function DashboardPage() {
 
     loadUserProfile();
     loadProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // User initials fallback
-  const initials = user?.name
-    ? user.name
-        .split(" ")
-        .filter(Boolean)
-        .map((word) => word[0])
-        .slice(0, 2)
-        .join("")
-        .toUpperCase()
-    : "A";
+  const initials = useMemo(() => {
+    if (!user?.name) return "A";
+    return user.name
+      .split(" ")
+      .filter(Boolean)
+      .map((word) => word[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
+  }, [user?.name]);
+
+  const activeCount = products.filter((p) => p.status === "active").length;
+  const categoryCount = new Set(
+    products.map((p) => p.category?.slug).filter(Boolean)
+  ).size;
+
+  const recentProducts = [...products]
+    .sort((a, b) => {
+      const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return db - da;
+    })
+    .slice(0, 5);
 
   return (
-    <main className="dashboard-page">
-      <div className="dashboard-container">
+    <>
+      <div className="sd-page-head">
+        <div>
+          <h1>Good morning, {user?.name || "Supplier"} 👋</h1>
+          <p>Manage your products, profile, and business activity.</p>
+        </div>
+        <div className="sd-actions">
+          <Link href="/products" className="sd-btn">
+            Browse Marketplace
+          </Link>
+          <Link href="/dashboard/products/add" className="sd-btn sd-btn-primary">
+            ＋ Add Product
+          </Link>
+        </div>
+      </div>
 
-        <div className="dashboard-topbar">
-          <div>
-            <span className="dashboard-eyebrow">
-              ADVIXIO SUPPLIER
-            </span>
+      <div className="sd-profile-progress">
+        <div className="sd-progress-info">
+          <strong>Business Profile</strong>
+          <p>
+            {user?.companyName
+              ? `${user.companyName}${user.city ? ` · ${user.city}` : ""}`
+              : "Complete your business details to build buyer trust"}
+          </p>
+        </div>
+        <div className="sd-progress-track">
+          <i
+            style={{
+              width: user?.companyName && user?.phone ? "85%" : "45%",
+            }}
+          />
+        </div>
+        <div className="sd-progress-value">
+          {user?.companyName && user?.phone ? "85%" : "45%"}
+        </div>
+      </div>
 
-            <h1>
-              Welcome back, {user?.name || "Supplier"} 👋
-            </h1>
-
-            <p>
-              Manage your products and business activity.
-            </p>
+      <div className="sd-stats four">
+        <div className="sd-stat-card">
+          <div className="sd-stat-top">
+            <span className="sd-stat-label">TOTAL PRODUCTS</span>
+            <span className="sd-stat-icon">📦</span>
           </div>
-
-          <div className="dashboard-top-actions">
-            <Link
-              href="/products"
-              className="dashboard-marketplace-button"
-            >
-              Browse Marketplace
-            </Link>
-
-            <Link
-              href="/dashboard/products/add"
-              className="dashboard-add-button"
-            >
-              + Add Product
-            </Link>
+          <div className="sd-stat-value">{loading ? "…" : products.length}</div>
+          <div className="sd-stat-change neutral">Listed by your business</div>
+        </div>
+        <div className="sd-stat-card">
+          <div className="sd-stat-top">
+            <span className="sd-stat-label">ACTIVE PRODUCTS</span>
+            <span className="sd-stat-icon">✓</span>
+          </div>
+          <div className="sd-stat-value">{loading ? "…" : activeCount}</div>
+          <div className="sd-stat-change neutral">Currently visible</div>
+        </div>
+        <div className="sd-stat-card">
+          <div className="sd-stat-top">
+            <span className="sd-stat-label">CATEGORIES</span>
+            <span className="sd-stat-icon">🏷</span>
+          </div>
+          <div className="sd-stat-value">{loading ? "…" : categoryCount}</div>
+          <div className="sd-stat-change neutral">Used in listings</div>
+        </div>
+        <div className="sd-stat-card">
+          <div className="sd-stat-top">
+            <span className="sd-stat-label">ACCOUNT</span>
+            <span className="sd-stat-icon">🏢</span>
+          </div>
+          <div className="sd-stat-value">{user ? "Active" : "—"}</div>
+          <div className="sd-stat-change neutral">
+            {user?.companyName ? "Company profile set" : "Complete profile"}
           </div>
         </div>
+      </div>
 
-        <div className="dashboard-layout">
+      <div className="sd-grid-main">
+        <div>
+          <section className="sd-card">
+            <div className="sd-card-head">
+              <div>
+                <h2>Quick Actions</h2>
+                <p>Manage your supplier account</p>
+              </div>
+            </div>
+            <div className="sd-quick-grid">
+              <Link href="/dashboard/products/add" className="sd-quick">
+                <div className="sd-quick-icon">＋</div>
+                <strong>Add Product</strong>
+                <span>List a new item</span>
+              </Link>
+              <Link href="/dashboard/products" className="sd-quick">
+                <div className="sd-quick-icon">📦</div>
+                <strong>My Products</strong>
+                <span>View and manage</span>
+              </Link>
+              <Link href="/dashboard/profile" className="sd-quick">
+                <div className="sd-quick-icon">👤</div>
+                <strong>My Profile</strong>
+                <span>Company & contact</span>
+              </Link>
+              <Link href="/dashboard/requirements" className="sd-quick">
+                <div className="sd-quick-icon">📋</div>
+                <strong>Requirements</strong>
+                <span>Buyer requests</span>
+              </Link>
+            </div>
+          </section>
 
-          <aside className="dashboard-sidebar">
+          <section className="sd-card">
+            <div className="sd-card-head">
+              <div>
+                <h2>Recent Products</h2>
+                <p>Your latest listings</p>
+              </div>
+              <Link href="/dashboard/products" className="sd-link">
+                View All →
+              </Link>
+            </div>
 
-            <div className="dashboard-profile-card">
+            {error ? <div className="sd-error">{error}</div> : null}
 
-              <div className="dashboard-avatar">
+            {loading ? (
+              <div className="sd-loading">Loading your products...</div>
+            ) : recentProducts.length === 0 ? (
+              <div className="sd-empty">
+                No products listed yet.{" "}
+                <Link href="/dashboard/products/add" className="sd-link">
+                  Add your first product →
+                </Link>
+              </div>
+            ) : (
+              <div className="sd-table-wrap">
+                <table className="sd-table">
+                  <thead>
+                    <tr>
+                      <th>PRODUCT</th>
+                      <th>CATEGORY</th>
+                      <th>PRICE</th>
+                      <th>STATUS</th>
+                      <th>ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentProducts.map((product) => (
+                      <tr key={product._id}>
+                        <td>
+                          <div className="sd-product-cell">
+                            <div className="sd-prod-img">📦</div>
+                            <div>
+                              <strong>{product.name}</strong>
+                              <span>{product.shortDescription || "—"}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>{product.category?.name || "Uncategorized"}</td>
+                        <td>
+                          {product.price
+                            ? `₹${Number(product.price).toLocaleString("en-IN")}${
+                                product.unit ? ` / ${product.unit}` : ""
+                              }`
+                            : "Price on request"}
+                        </td>
+                        <td>
+                          <span
+                            className={`sd-status ${
+                              product.status === "active" ? "published" : "pending"
+                            }`}
+                          >
+                            {product.status || "active"}
+                          </span>
+                        </td>
+                        <td>
+                          <Link
+                            href={`/dashboard/products/${product._id}/edit`}
+                            className="sd-link"
+                          >
+                            Edit
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+        </div>
+
+        <div>
+          <div className="sd-profile-box">
+            <div className="sd-profile-company">
+              <div className="sd-avatar">
                 {user?.profileImage ? (
-                  <img
-                    src={user.profileImage}
-                    alt={user.name || "Profile"}
-                    className="h-full w-full rounded-full object-cover"
-                  />
+                  <img src={user.profileImage} alt={user.name || "Profile"} />
                 ) : (
                   initials
                 )}
               </div>
-
-              <h2>
-                {user?.name || "User"}
-              </h2>
-
-              <p className="dashboard-profile-company">
-                {user?.companyName || "Business Account"}
-              </p>
-
-              <span className="dashboard-verified">
-                ✓ Active Account
+              <div>
+                <strong>{user?.companyName || user?.name || "Your Business"}</strong>
+                <span>
+                  {[user?.city, user?.state].filter(Boolean).join(", ") ||
+                    "Location not set"}
+                </span>
+              </div>
+            </div>
+            <div className="sd-profile-stat">
+              <span>
+                Products<br />
+                <b>{loading ? "…" : products.length}</b>
               </span>
-
-              <div className="dashboard-profile-divider" />
-
-              <div className="dashboard-profile-info">
-
-                <div>
-                  <span>Email</span>
-                  <strong>{user?.email || "-"}</strong>
-                </div>
-
-                <div>
-                  <span>Phone</span>
-                  <strong>{user?.phone || "-"}</strong>
-                </div>
-
-                <div>
-                  <span>Location</span>
-                  <strong>
-                    {user?.city || "-"}
-                    {user?.state
-                      ? `, ${user.state}`
-                      : ""}
-                  </strong>
-                </div>
-
-              </div>
-
-              <Link
-                href="/dashboard/profile"
-                className="dashboard-edit-profile"
-              >
-                View Profile
-              </Link>
-
+              <span>
+                Active<br />
+                <b>{loading ? "…" : activeCount}</b>
+              </span>
+              <span>
+                Email<br />
+                <b>{user?.email ? "Set" : "—"}</b>
+              </span>
             </div>
+          </div>
 
-            <div className="dashboard-sidebar-menu">
-
-              <Link
-                href="/dashboard"
-                className="dashboard-menu-active"
-              >
-                📊 Dashboard
-              </Link>
-
-              <Link href="/dashboard/products">
-                📦 My Products
-              </Link>
-
-              <Link href="/dashboard/products/add">
-                ➕ Add Product
-              </Link>
-
-              <Link href="/dashboard/requirements">
-                📋 My Requirements
-              </Link>
-
-              <Link href="/dashboard/profile">
-                👤 My Profile
-              </Link>
-
-              <Link href="/dashboard/settings">
-                ⚙️ Settings
-              </Link>
-
-              <button
-                type="button"
-                onClick={logout}
-                className="dashboard-logout"
-              >
-                ↪ Logout
-              </button>
-
-            </div>
-
-          </aside>
-
-          <section className="dashboard-content">
-
-            <div className="dashboard-stats">
-
-              <div className="dashboard-stat-card">
-                <div className="dashboard-stat-icon">
-                  📦
-                </div>
-
-                <div>
-                  <span>Total Products</span>
-                  <strong>
-                    {loading ? "..." : products.length}
-                  </strong>
-                  <small>Your listed products</small>
-                </div>
+          <section className="sd-card">
+            <div className="sd-card-head">
+              <div>
+                <h2>Account Details</h2>
+                <p>Your supplier information</p>
               </div>
-
-              <div className="dashboard-stat-card">
-                <div className="dashboard-stat-icon">
-                  ✓
-                </div>
-
-                <div>
-                  <span>Active Products</span>
-                  <strong>
-                    {loading
-                      ? "..."
-                      : products.filter(
-                          (product) =>
-                            product.status === "active"
-                        ).length}
-                  </strong>
-                  <small>Currently visible</small>
-                </div>
-              </div>
-
-              <div className="dashboard-stat-card">
-                <div className="dashboard-stat-icon">
-                  🏷️
-                </div>
-
-                <div>
-                  <span>Categories</span>
-                  <strong>
-                    {loading
-                      ? "..."
-                      : new Set(
-                          products
-                            .map(
-                              (product) =>
-                                product.category?.slug
-                            )
-                            .filter(Boolean)
-                        ).size}
-                  </strong>
-                  <small>Used in your products</small>
-                </div>
-              </div>
-
-              <div className="dashboard-stat-card">
-                <div className="dashboard-stat-icon">
-                  🏢
-                </div>
-
-                <div>
-                  <span>Business</span>
-                  <strong>
-                    {user?.companyName ? "✓" : "—"}
-                  </strong>
-                  <small>Company profile</small>
-                </div>
-              </div>
-
             </div>
-
-            <div className="dashboard-section-header">
-              <span>QUICK ACTIONS</span>
-              <h2>Manage Your Business</h2>
+            <div className="sd-verify">
+              <div className="sd-verify-icon">✓</div>
+              <div>
+                <strong>Email</strong>
+                <span>{user?.email || "—"}</span>
+              </div>
             </div>
-
-            <div className="dashboard-action-grid">
-
-              <Link
-                href="/dashboard/products/add"
-                className="dashboard-action-card dashboard-action-primary"
-              >
-                <div className="dashboard-action-icon">
-                  +
-                </div>
-
-                <div>
-                  <h3>Add New Product</h3>
-                  <p>
-                    List a new product on the Advixio
-                    marketplace.
-                  </p>
-                </div>
-
-                <span>→</span>
+            <div className="sd-verify">
+              <div className="sd-verify-icon">✓</div>
+              <div>
+                <strong>Phone</strong>
+                <span>{user?.phone || "Not provided"}</span>
+              </div>
+            </div>
+            <div className="sd-verify">
+              <div className="sd-verify-icon">✓</div>
+              <div>
+                <strong>Company</strong>
+                <span>{user?.companyName || "Not provided"}</span>
+              </div>
+            </div>
+            <div style={{ marginTop: 12 }}>
+              <Link href="/dashboard/profile" className="sd-link">
+                View / Edit Profile →
               </Link>
-
-              <Link
-                href="/dashboard/products"
-                className="dashboard-action-card"
-              >
-                <div className="dashboard-action-icon">
-                  📦
-                </div>
-
-                <div>
-                  <h3>My Products</h3>
-                  <p>
-                    View, edit and delete your listed
-                    products.
-                  </p>
-                </div>
-
-                <span>→</span>
-              </Link>
-
-              <Link
-                href="/dashboard/profile"
-                className="dashboard-action-card"
-              >
-                <div className="dashboard-action-icon">
-                  👤
-                </div>
-
-                <div>
-                  <h3>Business Profile</h3>
-                  <p>
-                    Manage your company and contact
-                    information.
-                  </p>
-                </div>
-
-                <span>→</span>
-              </Link>
-
             </div>
+          </section>
 
-            <div className="dashboard-panel dashboard-recent-panel">
-
-              <div className="dashboard-panel-header">
-                <div>
-                  <span>PRODUCTS</span>
-                  <h2>Recent Products</h2>
-                </div>
-
-                <Link href="/dashboard/products">
-                  View All
-                </Link>
+          <section className="sd-card">
+            <div className="sd-card-head">
+              <div>
+                <h2>Buyer Requirements</h2>
+                <p>Relevant opportunities</p>
               </div>
-
-              {error && (
-                <div className="dashboard-error">
-                  {error}
-                </div>
-              )}
-
-              {loading ? (
-                <div className="dashboard-loading">
-                  Loading your products...
-                </div>
-              ) : products.length === 0 ? (
-                <div className="dashboard-empty-state">
-                  <div>📦</div>
-
-                  <h3>
-                    No products listed yet
-                  </h3>
-
-                  <p>
-                    Start selling by adding your first
-                    product to the Advixio marketplace.
-                  </p>
-
-                  <Link href="/dashboard/products/add">
-                    Add Your First Product →
-                  </Link>
-                </div>
-              ) : (
-                <div className="dashboard-product-list">
-
-                  {products
-                    .slice(0, 5)
-                    .map((product) => (
-                      <div
-                        key={product._id}
-                        className="dashboard-product-row"
-                      >
-
-                        <div className="dashboard-product-icon">
-                          📦
-                        </div>
-
-                        <div className="dashboard-product-info">
-                          <strong>
-                            {product.name}
-                          </strong>
-
-                          <span>
-                            {product.category?.name ||
-                              "Uncategorized"}
-                          </span>
-                        </div>
-
-                        <div className="dashboard-product-price">
-                          {product.price
-                            ? `₹${Number(
-                                product.price
-                              ).toLocaleString("en-IN")}`
-                            : "Price on request"}
-                        </div>
-
-                        <Link
-                          href={`/dashboard/products/${product._id}/edit`}
-                        >
-                          Edit
-                        </Link>
-
-                      </div>
-                    ))}
-
-                </div>
-              )}
-
             </div>
-
+            <div className="sd-requirement">
+              <div className="sd-req-head">
+                <strong>Explore buyer requests</strong>
+                <span className="sd-status new">NEW</span>
+              </div>
+              <div className="sd-req-body">
+                View and respond to requirements that match your products.
+              </div>
+              <Link href="/dashboard/requirements" className="sd-req-btn">
+                Open Requirements
+              </Link>
+            </div>
           </section>
         </div>
       </div>
-    </main>
+    </>
   );
 }

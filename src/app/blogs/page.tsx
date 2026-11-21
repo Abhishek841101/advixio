@@ -22,8 +22,8 @@
 //       "Discover practical digital marketing strategies to increase brand awareness, reach your target audience, and generate quality leads.",
 //     date: "Apr 12, 2026",
 //     read: "6 min read",
-//     color: "#0284c7",
-//     bg: "linear-gradient(135deg, #082f49, #0284c7, #67e8f9)",
+//     color: "#1D4ED8",
+//     bg: "linear-gradient(135deg, #172554, #1D4ED8, #60A5FA)",
 //     symbol: "↗",
 //   },
 //   {
@@ -34,8 +34,8 @@
 //       "Learn how better supplier discovery and procurement planning can help businesses save time and resources.",
 //     date: "Apr 8, 2026",
 //     read: "5 min read",
-//     color: "#059669",
-//     bg: "linear-gradient(135deg, #064e3b, #10b981, #a7f3d0)",
+//     color: "#1E3A8A",
+//     bg: "linear-gradient(135deg, #172554, #2563EB, #93C5FD)",
 //     symbol: "◇",
 //   },
 //   {
@@ -46,8 +46,8 @@
 //       "Explore ways to connect with business buyers, build trust and generate meaningful opportunities.",
 //     date: "Apr 2, 2026",
 //     read: "7 min read",
-//     color: "#9333ea",
-//     bg: "linear-gradient(135deg, #3b0764, #9333ea, #e9d5ff)",
+//     color: "#3B82F6",
+//     bg: "linear-gradient(135deg, #172554, #3B82F6, #FFEDD5)",
 //     symbol: "◎",
 //   },
 //   {
@@ -58,8 +58,8 @@
 //       "Understand what to consider when evaluating suppliers and building a dependable sourcing network.",
 //     date: "Mar 28, 2026",
 //     read: "4 min read",
-//     color: "#ea580c",
-//     bg: "linear-gradient(135deg, #7c2d12, #f97316, #fed7aa)",
+//     color: "#EA580C",
+//     bg: "linear-gradient(135deg, #9A3412, #EA580C, #FDBA74)",
 //     symbol: "⌁",
 //   },
 //   {
@@ -70,8 +70,8 @@
 //       "Explore how digital marketplaces and e-commerce platforms are transforming the way businesses buy and sell.",
 //     date: "Mar 22, 2026",
 //     read: "6 min read",
-//     color: "#2563eb",
-//     bg: "linear-gradient(135deg, #172554, #2563eb, #93c5fd)",
+//     color: "#2563EB",
+//     bg: "linear-gradient(135deg, #172554, #2563EB, #93C5FD)",
 //     symbol: "▥",
 //   },
 //   {
@@ -82,8 +82,8 @@
 //       "Learn practical tips to improve communication, manage risks and create long-term value with your suppliers.",
 //     date: "Mar 15, 2026",
 //     read: "5 min read",
-//     color: "#0e7490",
-//     bg: "linear-gradient(135deg, #164e63, #0891b2, #a5f3fc)",
+//     color: "#1E3A8A",
+//     bg: "linear-gradient(135deg, #172554, #1E3A8A, #93C5FD)",
 //     symbol: "↔",
 //   },
 // ];
@@ -111,8 +111,8 @@
 
 //   const page = {
 //     minHeight: "100vh",
-//     background: "#f8fafc",
-//     color: "#0f172a",
+//     background: "#FFFFFF",
+//     color: "#1E3A8A",
 //     fontFamily: "Arial, Helvetica, sans-serif",
 //   };
 
@@ -142,8 +142,8 @@
 //       <section
 //         style={{
 //           background:
-//             "radial-gradient(ellipse at 90% 20%, rgba(59,130,246,0.42), transparent 35%), linear-gradient(120deg, #020617 0%, #0b1f4b 55%, #173e86 100%)",
-//           color: "#ffffff",
+//             "radial-gradient(ellipse at 90% 20%, rgba(59, 130, 246, 0.42), transparent 35%), linear-gradient(120deg, #172554 0%, #172554 55%, #1E3A8A 100%)",
+//           color: "#FFFFFF",
 //           overflow: "hidden",
 //         }}
 //       >
@@ -166,13 +166,13 @@
 //               gap: "9px",
 //               padding: "12px 20px",
 //               borderRadius: "10px",
-//               background: "#ffffff",
-//               color: "#1d4ed8",
-//               border: "1px solid rgba(255,255,255,0.75)",
+//               background: "#FFFFFF",
+//               color: "#1D4ED8",
+//               border: "1px solid rgba(255, 255, 255, 0.75)",
 //               textDecoration: "none",
 //               fontSize: "14px",
 //               fontWeight: 800,
-//               boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
+//               boxShadow: "0 8px 24px rgba(23, 37, 84, 0.18)",
 //               whiteSpace: "nowrap",
 //             }}
 //           >
@@ -201,7 +201,7 @@
 //           <div>
 //             <p
 //               style={{
-//                 color: "#67e8f9",
+//                 color: "#60A5FA",
 //                 fontSize: "13px",
 //                 fontWeight: 800,
 //                 letterSpacing: "2px",
@@ -217,14 +217,14 @@
 //                 lineHeight: 1.12,
 //                 letterSpacing: "-1.8px",
 //                 margin: "0 0 22px",
-//                 color: "#ffffff",
+//                 color: "#FFFFFF",
 //                 fontWeight: 800,
 //               }}
 //             >
 //               Ideas, insights & practical knowledge for{" "}
 //               <span
 //                 style={{
-//                   background: "linear-gradient(90deg, #38bdf8, #818cf8)",
+//                   background: "linear-gradient(90deg, #3B82F6, #93C5FD)",
 //                   WebkitBackgroundClip: "text",
 //                   WebkitTextFillColor: "transparent",
 //                 }}
@@ -235,7 +235,7 @@
 
 //             <p
 //               style={{
-//                 color: "#dbeafe",
+//                 color: "#FFEDD5",
 //                 fontSize: "16px",
 //                 lineHeight: 1.9,
 //                 maxWidth: "600px",
@@ -269,12 +269,12 @@
 //                   }}
 //                   style={{
 //                     ...buttonStyle,
-//                     background: "rgba(255,255,255,0.06)",
-//                     border: "1px solid #38bdf8",
-//                     color: "#ffffff",
+//                     background: "rgba(255, 255, 255, 0.06)",
+//                     border: "1px solid #3B82F6",
+//                     color: "#FFFFFF",
 //                   }}
 //                 >
-//                   <span style={{ color: "#38bdf8", marginRight: "7px" }}>
+//                   <span style={{ color: "#3B82F6", marginRight: "7px" }}>
 //                     {symbol}
 //                   </span>
 //                   {label}
@@ -297,18 +297,18 @@
 //                 width: "100%",
 //                 maxWidth: "430px",
 //                 padding: "40px 28px",
-//                 border: "1px solid rgba(147,197,253,0.4)",
+//                 border: "1px solid rgba(147, 197, 253, 0.4)",
 //                 borderRadius: "28px",
 //                 background:
-//                   "linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03))",
-//                 boxShadow: "0 25px 80px rgba(0,0,0,0.25)",
+//                   "linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03))",
+//                 boxShadow: "0 25px 80px rgba(23, 37, 84, 0.25)",
 //                 transform: "rotate(-2deg)",
 //               }}
 //             >
 //               <div
 //                 style={{ display: "flex", gap: "7px", marginBottom: "30px" }}
 //               >
-//                 {["#fb7185", "#fbbf24", "#34d399"].map((color) => (
+//                 {["#FB923C", "#EA580C", "#2563EB"].map((color) => (
 //                   <span
 //                     key={color}
 //                     style={{
@@ -323,7 +323,7 @@
 
 //               <p
 //                 style={{
-//                   color: "#93c5fd",
+//                   color: "#93C5FD",
 //                   fontSize: "12px",
 //                   letterSpacing: "2px",
 //                   fontWeight: 700,
@@ -336,7 +336,7 @@
 //                 style={{
 //                   fontSize: "clamp(28px, 4vw, 42px)",
 //                   lineHeight: 1.2,
-//                   color: "#ffffff",
+//                   color: "#FFFFFF",
 //                   margin: "15px 0",
 //                 }}
 //               >
@@ -351,7 +351,7 @@
 //                   display: "flex",
 //                   alignItems: "end",
 //                   gap: "12px",
-//                   borderBottom: "1px solid rgba(255,255,255,0.3)",
+//                   borderBottom: "1px solid rgba(255, 255, 255, 0.3)",
 //                   padding: "0 12px",
 //                 }}
 //               >
@@ -363,7 +363,7 @@
 //                       flex: 1,
 //                       borderRadius: "6px 6px 0 0",
 //                       background:
-//                         "linear-gradient(180deg, #67e8f9, #2563eb)",
+//                         "linear-gradient(180deg, #60A5FA, #2563EB)",
 //                     }}
 //                   />
 //                 ))}
@@ -371,7 +371,7 @@
 
 //               <p
 //                 style={{
-//                   color: "#bfdbfe",
+//                   color: "#FFEDD5",
 //                   fontSize: "13px",
 //                   marginTop: "16px",
 //                 }}
@@ -404,11 +404,11 @@
 //                   style={{
 //                     ...buttonStyle,
 //                     background:
-//                       activeCategory === category ? "#2563eb" : "#eaf1fb",
-//                     color: activeCategory === category ? "#ffffff" : "#334155",
+//                       activeCategory === category ? "#2563EB" : "#93C5FD",
+//                     color: activeCategory === category ? "#FFFFFF" : "#1E3A8A",
 //                     boxShadow:
 //                       activeCategory === category
-//                         ? "0 5px 15px rgba(37,99,235,0.2)"
+//                         ? "0 5px 15px rgba(37, 99, 235, 0.2)"
 //                         : "none",
 //                   }}
 //                 >
@@ -428,12 +428,12 @@
 //                 maxWidth: "300px",
 //                 boxSizing: "border-box" as const,
 //                 padding: "13px 17px",
-//                 border: "1px solid #cbd5e1",
+//                 border: "1px solid #BFDBFE",
 //                 borderRadius: "30px",
 //                 outline: "none",
 //                 fontSize: "14px",
-//                 color: "#0f172a",
-//                 background: "#ffffff",
+//                 color: "#1E3A8A",
+//                 background: "#FFFFFF",
 //               }}
 //             />
 //           </div>
@@ -450,11 +450,11 @@
 //               <article
 //                 key={article.id}
 //                 style={{
-//                   background: "#ffffff",
-//                   border: "1px solid #e5edf6",
+//                   background: "#FFFFFF",
+//                   border: "1px solid #BFDBFE",
 //                   borderRadius: "15px",
 //                   overflow: "hidden",
-//                   boxShadow: "0 5px 22px rgba(15,23,42,0.055)",
+//                   boxShadow: "0 5px 22px rgba(30, 58, 138, 0.08)",
 //                   transition: "transform 0.2s ease, box-shadow 0.2s ease",
 //                 }}
 //               >
@@ -471,9 +471,9 @@
 //                   <span
 //                     style={{
 //                       fontSize: "86px",
-//                       color: "rgba(255,255,255,0.85)",
+//                       color: "rgba(255, 255, 255, 0.85)",
 //                       fontWeight: 800,
-//                       textShadow: "0 8px 25px rgba(0,0,0,0.15)",
+//                       textShadow: "0 8px 25px rgba(23, 37, 84, 0.15)",
 //                     }}
 //                   >
 //                     {article.symbol}
@@ -484,7 +484,7 @@
 //                       position: "absolute",
 //                       left: "15px",
 //                       top: "15px",
-//                       background: "#ffffff",
+//                       background: "#FFFFFF",
 //                       color: article.color,
 //                       padding: "7px 12px",
 //                       borderRadius: "20px",
@@ -500,7 +500,7 @@
 //                   <p
 //                     style={{
 //                       fontSize: "12px",
-//                       color: "#64748b",
+//                       color: "#EA580C",
 //                       margin: "0 0 12px",
 //                     }}
 //                   >
@@ -511,7 +511,7 @@
 //                     style={{
 //                       fontSize: "20px",
 //                       lineHeight: 1.45,
-//                       color: "#10244e",
+//                       color: "#172554",
 //                       margin: "0 0 12px",
 //                       fontWeight: 800,
 //                     }}
@@ -521,7 +521,7 @@
 
 //                   <p
 //                     style={{
-//                       color: "#64748b",
+//                       color: "#EA580C",
 //                       fontSize: "14px",
 //                       lineHeight: 1.8,
 //                       marginBottom: "20px",
@@ -556,15 +556,15 @@
 //           {filteredArticles.length === 0 && (
 //             <div
 //               style={{
-//                 background: "#ffffff",
+//                 background: "#FFFFFF",
 //                 padding: "45px 20px",
 //                 marginTop: "25px",
 //                 textAlign: "center",
 //                 borderRadius: "15px",
-//                 color: "#475569",
+//                 color: "#9A3412",
 //               }}
 //             >
-//               <h3 style={{ color: "#0f172a" }}>No articles found</h3>
+//               <h3 style={{ color: "#1E3A8A" }}>No articles found</h3>
 //               <p>Try a different keyword or category.</p>
 //               <button
 //                 onClick={() => {
@@ -573,8 +573,8 @@
 //                 }}
 //                 style={{
 //                   ...buttonStyle,
-//                   background: "#2563eb",
-//                   color: "#ffffff",
+//                   background: "#2563EB",
+//                   color: "#FFFFFF",
 //                 }}
 //               >
 //                 Clear Filters
@@ -597,20 +597,20 @@
 //           >
 //             <div
 //               style={{
-//                 background: "linear-gradient(135deg, #dbeafe, #eff6ff)",
-//                 border: "1px solid #bfdbfe",
+//                 background: "linear-gradient(135deg, #FFEDD5, #FFEDD5)",
+//                 border: "1px solid #FFEDD5",
 //                 borderRadius: "18px",
 //                 padding: "28px",
 //               }}
 //             >
 //               <div style={{ fontSize: "30px" }}>✉</div>
 
-//               <h2 style={{ color: "#10244e", fontSize: "22px" }}>
+//               <h2 style={{ color: "#172554", fontSize: "22px" }}>
 //                 Get the latest insights
 //               </h2>
 
 //               <p
-//                 style={{ color: "#475569", lineHeight: 1.8, fontSize: "14px" }}
+//                 style={{ color: "#9A3412", lineHeight: 1.8, fontSize: "14px" }}
 //               >
 //                 Stay informed with business ideas, practical guides and fresh
 //                 perspectives from Advixio360.
@@ -637,9 +637,9 @@
 //                     boxSizing: "border-box" as const,
 //                     padding: "13px",
 //                     borderRadius: "9px",
-//                     border: "1px solid #cbd5e1",
-//                     background: "#ffffff",
-//                     color: "#0f172a",
+//                     border: "1px solid #BFDBFE",
+//                     background: "#FFFFFF",
+//                     color: "#1E3A8A",
 //                     marginBottom: "12px",
 //                   }}
 //                 />
@@ -650,8 +650,8 @@
 //                     ...buttonStyle,
 //                     width: "100%",
 //                     borderRadius: "9px",
-//                     background: "linear-gradient(90deg, #3b82f6, #1d4ed8)",
-//                     color: "#ffffff",
+//                     background: "linear-gradient(90deg, #3B82F6, #1D4ED8)",
+//                     color: "#FFFFFF",
 //                   }}
 //                 >
 //                   Subscribe →
@@ -659,7 +659,7 @@
 //               </form>
 
 //               {subscribed && (
-//                 <p style={{ color: "#047857", fontSize: "13px" }}>
+//                 <p style={{ color: "#1E3A8A", fontSize: "13px" }}>
 //                   Thanks! This demo form does not yet save subscriptions to a
 //                   server.
 //                 </p>
@@ -668,7 +668,7 @@
 
 //             <div
 //               style={{
-//                 background: "linear-gradient(135deg, #0f2460, #2563eb)",
+//                 background: "linear-gradient(135deg, #172554, #2563EB)",
 //                 borderRadius: "18px",
 //                 padding: "32px",
 //                 display: "flex",
@@ -679,7 +679,7 @@
 //             >
 //               <p
 //                 style={{
-//                   color: "#bfdbfe",
+//                   color: "#FFEDD5",
 //                   fontWeight: 800,
 //                   fontSize: "12px",
 //                   letterSpacing: "2px",
@@ -692,14 +692,14 @@
 //                 style={{
 //                   fontSize: "clamp(26px, 4vw, 35px)",
 //                   lineHeight: 1.3,
-//                   color: "#ffffff",
+//                   color: "#FFFFFF",
 //                   margin: "8px 0",
 //                 }}
 //               >
 //                 Ready to grow your business?
 //               </h2>
 
-//               <p style={{ color: "#dbeafe", lineHeight: 1.8 }}>
+//               <p style={{ color: "#FFEDD5", lineHeight: 1.8 }}>
 //                 Turn your digital presence into real opportunities with
 //                 Advixio360.
 //               </p>
@@ -708,8 +708,8 @@
 //                 href="/contact"
 //                 style={{
 //                   ...buttonStyle,
-//                   background: "#ffffff",
-//                   color: "#1d4ed8",
+//                   background: "#FFFFFF",
+//                   color: "#1D4ED8",
 //                   textDecoration: "none",
 //                   display: "inline-block",
 //                   marginTop: "12px",
@@ -796,27 +796,27 @@ function estimateReadingTime(content?: string) {
 function getCategoryColor(category: string) {
   const colors: Record<string, { color: string; bg: string }> = {
     "Business Growth": {
-      color: "#0284c7",
-      bg: "linear-gradient(135deg, #082f49, #0284c7, #67e8f9)",
+      color: "#1D4ED8",
+      bg: "linear-gradient(135deg, #172554, #1D4ED8, #60A5FA)",
     },
     Procurement: {
-      color: "#059669",
-      bg: "linear-gradient(135deg, #064e3b, #10b981, #a7f3d0)",
+      color: "#1E3A8A",
+      bg: "linear-gradient(135deg, #172554, #2563EB, #93C5FD)",
     },
     "B2B Marketing": {
-      color: "#9333ea",
-      bg: "linear-gradient(135deg, #3b0764, #9333ea, #e9d5ff)",
+      color: "#3B82F6",
+      bg: "linear-gradient(135deg, #172554, #3B82F6, #FFEDD5)",
     },
     Sourcing: {
-      color: "#ea580c",
-      bg: "linear-gradient(135deg, #7c2d12, #f97316, #fed7aa)",
+      color: "#EA580C",
+      bg: "linear-gradient(135deg, #9A3412, #EA580C, #FDBA74)",
     },
   };
 
   return (
     colors[category] || {
-      color: "#2563eb",
-      bg: "linear-gradient(135deg, #172554, #2563eb, #93c5fd)",
+      color: "#2563EB",
+      bg: "linear-gradient(135deg, #172554, #2563EB, #93C5FD)",
     }
   );
 }
@@ -917,8 +917,8 @@ export default function Blogs() {
 
   const page: React.CSSProperties = {
     minHeight: "100vh",
-    background: "#f8fafc",
-    color: "#0f172a",
+    background: "#FFFFFF",
+    color: "#1E3A8A",
     fontFamily: "Arial, Helvetica, sans-serif",
   };
 
@@ -948,8 +948,8 @@ export default function Blogs() {
       <section
         style={{
           background:
-            "radial-gradient(ellipse at 90% 20%, rgba(59,130,246,0.42), transparent 35%), linear-gradient(120deg, #020617 0%, #0b1f4b 55%, #173e86 100%)",
-          color: "#ffffff",
+            "radial-gradient(ellipse at 90% 20%, rgba(59, 130, 246, 0.42), transparent 35%), linear-gradient(120deg, #172554 0%, #172554 55%, #1E3A8A 100%)",
+          color: "#FFFFFF",
           overflow: "hidden",
         }}
       >
@@ -972,13 +972,13 @@ export default function Blogs() {
               gap: "9px",
               padding: "12px 20px",
               borderRadius: "10px",
-              background: "#ffffff",
-              color: "#1d4ed8",
-              border: "1px solid rgba(255,255,255,0.75)",
+              background: "#FFFFFF",
+              color: "#1D4ED8",
+              border: "1px solid rgba(255, 255, 255, 0.75)",
               textDecoration: "none",
               fontSize: "14px",
               fontWeight: 800,
-              boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
+              boxShadow: "0 8px 24px rgba(23, 37, 84, 0.18)",
               whiteSpace: "nowrap",
             }}
           >
@@ -1004,7 +1004,7 @@ export default function Blogs() {
           <div>
             <p
               style={{
-                color: "#67e8f9",
+                color: "#60A5FA",
                 fontSize: "13px",
                 fontWeight: 800,
                 letterSpacing: "2px",
@@ -1020,14 +1020,14 @@ export default function Blogs() {
                 lineHeight: 1.12,
                 letterSpacing: "-1.8px",
                 margin: "0 0 22px",
-                color: "#ffffff",
+                color: "#FFFFFF",
                 fontWeight: 800,
               }}
             >
               Ideas, insights & practical knowledge for{" "}
               <span
                 style={{
-                  background: "linear-gradient(90deg, #38bdf8, #818cf8)",
+                  background: "linear-gradient(90deg, #3B82F6, #93C5FD)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
@@ -1038,7 +1038,7 @@ export default function Blogs() {
 
             <p
               style={{
-                color: "#dbeafe",
+                color: "#FFEDD5",
                 fontSize: "16px",
                 lineHeight: 1.9,
                 maxWidth: "600px",
@@ -1073,12 +1073,12 @@ export default function Blogs() {
                   }}
                   style={{
                     ...buttonStyle,
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid #38bdf8",
-                    color: "#ffffff",
+                    background: "rgba(255, 255, 255, 0.06)",
+                    border: "1px solid #3B82F6",
+                    color: "#FFFFFF",
                   }}
                 >
-                  <span style={{ color: "#38bdf8", marginRight: "7px" }}>
+                  <span style={{ color: "#3B82F6", marginRight: "7px" }}>
                     {symbol}
                   </span>
                   {label}
@@ -1101,18 +1101,18 @@ export default function Blogs() {
                 width: "100%",
                 maxWidth: "430px",
                 padding: "40px 28px",
-                border: "1px solid rgba(147,197,253,0.4)",
+                border: "1px solid rgba(147, 197, 253, 0.4)",
                 borderRadius: "28px",
                 background:
-                  "linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03))",
-                boxShadow: "0 25px 80px rgba(0,0,0,0.25)",
+                  "linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03))",
+                boxShadow: "0 25px 80px rgba(23, 37, 84, 0.25)",
                 transform: "rotate(-2deg)",
               }}
             >
               <div
                 style={{ display: "flex", gap: "7px", marginBottom: "30px" }}
               >
-                {["#fb7185", "#fbbf24", "#34d399"].map((color) => (
+                {["#FB923C", "#EA580C", "#2563EB"].map((color) => (
                   <span
                     key={color}
                     style={{
@@ -1127,7 +1127,7 @@ export default function Blogs() {
 
               <p
                 style={{
-                  color: "#93c5fd",
+                  color: "#93C5FD",
                   fontSize: "12px",
                   letterSpacing: "2px",
                   fontWeight: 700,
@@ -1140,7 +1140,7 @@ export default function Blogs() {
                 style={{
                   fontSize: "clamp(28px, 4vw, 42px)",
                   lineHeight: 1.2,
-                  color: "#ffffff",
+                  color: "#FFFFFF",
                   margin: "15px 0",
                 }}
               >
@@ -1155,7 +1155,7 @@ export default function Blogs() {
                   display: "flex",
                   alignItems: "end",
                   gap: "12px",
-                  borderBottom: "1px solid rgba(255,255,255,0.3)",
+                  borderBottom: "1px solid rgba(255, 255, 255, 0.3)",
                   padding: "0 12px",
                 }}
               >
@@ -1167,7 +1167,7 @@ export default function Blogs() {
                       flex: 1,
                       borderRadius: "6px 6px 0 0",
                       background:
-                        "linear-gradient(180deg, #67e8f9, #2563eb)",
+                        "linear-gradient(180deg, #60A5FA, #2563EB)",
                     }}
                   />
                 ))}
@@ -1175,7 +1175,7 @@ export default function Blogs() {
 
               <p
                 style={{
-                  color: "#bfdbfe",
+                  color: "#FFEDD5",
                   fontSize: "13px",
                   marginTop: "16px",
                 }}
@@ -1209,12 +1209,12 @@ export default function Blogs() {
                   style={{
                     ...buttonStyle,
                     background:
-                      activeCategory === category ? "#2563eb" : "#eaf1fb",
+                      activeCategory === category ? "#2563EB" : "#93C5FD",
                     color:
-                      activeCategory === category ? "#ffffff" : "#334155",
+                      activeCategory === category ? "#FFFFFF" : "#1E3A8A",
                     boxShadow:
                       activeCategory === category
-                        ? "0 5px 15px rgba(37,99,235,0.2)"
+                        ? "0 5px 15px rgba(37, 99, 235, 0.2)"
                         : "none",
                   }}
                 >
@@ -1234,12 +1234,12 @@ export default function Blogs() {
                 maxWidth: "300px",
                 boxSizing: "border-box",
                 padding: "13px 17px",
-                border: "1px solid #cbd5e1",
+                border: "1px solid #BFDBFE",
                 borderRadius: "30px",
                 outline: "none",
                 fontSize: "14px",
-                color: "#0f172a",
-                background: "#ffffff",
+                color: "#1E3A8A",
+                background: "#FFFFFF",
               }}
             />
           </div>
@@ -1249,20 +1249,20 @@ export default function Blogs() {
             <div
               role="status"
               style={{
-                background: "#ffffff",
-                border: "1px solid #e5edf6",
+                background: "#FFFFFF",
+                border: "1px solid #BFDBFE",
                 borderRadius: "15px",
                 padding: "55px 20px",
                 textAlign: "center",
-                color: "#475569",
+                color: "#9A3412",
               }}
             >
               <div
                 style={{
                   width: "36px",
                   height: "36px",
-                  border: "4px solid #dbeafe",
-                  borderTopColor: "#2563eb",
+                  border: "4px solid #FFEDD5",
+                  borderTopColor: "#2563EB",
                   borderRadius: "50%",
                   margin: "0 auto 16px",
                   animation: "advixioBlogSpin 0.8s linear infinite",
@@ -1282,15 +1282,15 @@ export default function Blogs() {
             <div
               role="alert"
               style={{
-                background: "#fff7ed",
-                border: "1px solid #fed7aa",
+                background: "#FFEDD5",
+                border: "1px solid #FDBA74",
                 borderRadius: "15px",
                 padding: "28px",
-                color: "#9a3412",
+                color: "#9A3412",
                 textAlign: "center",
               }}
             >
-              <h2 style={{ marginTop: 0, color: "#9a3412" }}>
+              <h2 style={{ marginTop: 0, color: "#9A3412" }}>
                 Unable to load articles
               </h2>
               <p style={{ lineHeight: 1.8, overflowWrap: "anywhere" }}>
@@ -1301,8 +1301,8 @@ export default function Blogs() {
                 onClick={() => window.location.reload()}
                 style={{
                   ...buttonStyle,
-                  background: "#2563eb",
-                  color: "#ffffff",
+                  background: "#2563EB",
+                  color: "#FFFFFF",
                 }}
               >
                 Try Again
@@ -1315,7 +1315,7 @@ export default function Blogs() {
             <>
               <p
                 style={{
-                  color: "#64748b",
+                  color: "#EA580C",
                   fontSize: "14px",
                   marginBottom: "22px",
                 }}
@@ -1340,11 +1340,11 @@ export default function Blogs() {
                     <article
                       key={article._id}
                       style={{
-                        background: "#ffffff",
-                        border: "1px solid #e5edf6",
+                        background: "#FFFFFF",
+                        border: "1px solid #BFDBFE",
                         borderRadius: "15px",
                         overflow: "hidden",
-                        boxShadow: "0 5px 22px rgba(15,23,42,0.055)",
+                        boxShadow: "0 5px 22px rgba(30, 58, 138, 0.08)",
                         transition:
                           "transform 0.2s ease, box-shadow 0.2s ease",
                         display: "flex",
@@ -1383,7 +1383,7 @@ export default function Blogs() {
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
-                              color: "rgba(255,255,255,0.9)",
+                              color: "rgba(255, 255, 255, 0.9)",
                               fontSize: "72px",
                               fontWeight: 800,
                             }}
@@ -1397,13 +1397,13 @@ export default function Blogs() {
                             position: "absolute",
                             left: "15px",
                             top: "15px",
-                            background: "#ffffff",
+                            background: "#FFFFFF",
                             color: categoryStyle.color,
                             padding: "7px 12px",
                             borderRadius: "20px",
                             fontSize: "11px",
                             fontWeight: 800,
-                            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                            boxShadow: "0 2px 8px rgba(23, 37, 84, 0.08)",
                           }}
                         >
                           {article.category}
@@ -1421,7 +1421,7 @@ export default function Blogs() {
                         <p
                           style={{
                             fontSize: "12px",
-                            color: "#64748b",
+                            color: "#EA580C",
                             margin: "0 0 12px",
                           }}
                         >
@@ -1434,7 +1434,7 @@ export default function Blogs() {
                           style={{
                             fontSize: "20px",
                             lineHeight: 1.45,
-                            color: "#10244e",
+                            color: "#172554",
                             margin: "0 0 12px",
                             fontWeight: 800,
                             overflowWrap: "anywhere",
@@ -1453,7 +1453,7 @@ export default function Blogs() {
 
                         <p
                           style={{
-                            color: "#64748b",
+                            color: "#EA580C",
                             fontSize: "14px",
                             lineHeight: 1.8,
                             margin: "0 0 18px",
@@ -1470,7 +1470,7 @@ export default function Blogs() {
                         {article.author && (
                           <p
                             style={{
-                              color: "#64748b",
+                              color: "#EA580C",
                               fontSize: "12px",
                               margin: "0 0 18px",
                             }}
@@ -1504,16 +1504,16 @@ export default function Blogs() {
               {filteredArticles.length === 0 && (
                 <div
                   style={{
-                    background: "#ffffff",
-                    border: "1px solid #e5edf6",
+                    background: "#FFFFFF",
+                    border: "1px solid #BFDBFE",
                     padding: "45px 20px",
                     marginTop: "25px",
                     textAlign: "center",
                     borderRadius: "15px",
-                    color: "#475569",
+                    color: "#9A3412",
                   }}
                 >
-                  <h3 style={{ color: "#0f172a" }}>No articles found</h3>
+                  <h3 style={{ color: "#1E3A8A" }}>No articles found</h3>
                   <p>Try a different keyword or category.</p>
                   <button
                     type="button"
@@ -1523,8 +1523,8 @@ export default function Blogs() {
                     }}
                     style={{
                       ...buttonStyle,
-                      background: "#2563eb",
-                      color: "#ffffff",
+                      background: "#2563EB",
+                      color: "#FFFFFF",
                     }}
                   >
                     Clear Filters
@@ -1549,8 +1549,8 @@ export default function Blogs() {
           >
             <div
               style={{
-                background: "linear-gradient(135deg, #dbeafe, #eff6ff)",
-                border: "1px solid #bfdbfe",
+                background: "linear-gradient(135deg, #FFEDD5, #FFEDD5)",
+                border: "1px solid #FFEDD5",
                 borderRadius: "18px",
                 padding: "28px",
               }}
@@ -1559,12 +1559,12 @@ export default function Blogs() {
                 ✉
               </div>
 
-              <h2 style={{ color: "#10244e", fontSize: "22px" }}>
+              <h2 style={{ color: "#172554", fontSize: "22px" }}>
                 Get the latest insights
               </h2>
 
               <p
-                style={{ color: "#475569", lineHeight: 1.8, fontSize: "14px" }}
+                style={{ color: "#9A3412", lineHeight: 1.8, fontSize: "14px" }}
               >
                 Stay informed with business ideas, practical guides and fresh
                 perspectives from Advixio360.
@@ -1591,9 +1591,9 @@ export default function Blogs() {
                     boxSizing: "border-box",
                     padding: "13px",
                     borderRadius: "9px",
-                    border: "1px solid #cbd5e1",
-                    background: "#ffffff",
-                    color: "#0f172a",
+                    border: "1px solid #BFDBFE",
+                    background: "#FFFFFF",
+                    color: "#1E3A8A",
                     marginBottom: "12px",
                   }}
                 />
@@ -1604,8 +1604,8 @@ export default function Blogs() {
                     ...buttonStyle,
                     width: "100%",
                     borderRadius: "9px",
-                    background: "linear-gradient(90deg, #3b82f6, #1d4ed8)",
-                    color: "#ffffff",
+                    background: "linear-gradient(90deg, #3B82F6, #1D4ED8)",
+                    color: "#FFFFFF",
                   }}
                 >
                   Subscribe →
@@ -1613,7 +1613,7 @@ export default function Blogs() {
               </form>
 
               {subscribed && (
-                <p style={{ color: "#047857", fontSize: "13px" }}>
+                <p style={{ color: "#1E3A8A", fontSize: "13px" }}>
                   Thanks! This demo form does not yet save subscriptions to a
                   server.
                 </p>
@@ -1622,7 +1622,7 @@ export default function Blogs() {
 
             <div
               style={{
-                background: "linear-gradient(135deg, #0f2460, #2563eb)",
+                background: "linear-gradient(135deg, #172554, #2563EB)",
                 borderRadius: "18px",
                 padding: "32px",
                 display: "flex",
@@ -1633,7 +1633,7 @@ export default function Blogs() {
             >
               <p
                 style={{
-                  color: "#bfdbfe",
+                  color: "#FFEDD5",
                   fontWeight: 800,
                   fontSize: "12px",
                   letterSpacing: "2px",
@@ -1646,14 +1646,14 @@ export default function Blogs() {
                 style={{
                   fontSize: "clamp(26px, 4vw, 35px)",
                   lineHeight: 1.3,
-                  color: "#ffffff",
+                  color: "#FFFFFF",
                   margin: "8px 0",
                 }}
               >
                 Ready to grow your business?
               </h2>
 
-              <p style={{ color: "#dbeafe", lineHeight: 1.8 }}>
+              <p style={{ color: "#FFEDD5", lineHeight: 1.8 }}>
                 Turn your digital presence into real opportunities with
                 Advixio360.
               </p>
@@ -1662,8 +1662,8 @@ export default function Blogs() {
                 href="/contact"
                 style={{
                   ...buttonStyle,
-                  background: "#ffffff",
-                  color: "#1d4ed8",
+                  background: "#FFFFFF",
+                  color: "#1D4ED8",
                   textDecoration: "none",
                   display: "inline-block",
                   marginTop: "12px",

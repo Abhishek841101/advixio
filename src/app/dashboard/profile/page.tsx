@@ -64,11 +64,6 @@ const emptyProfile: Profile = {
   pincode: "",
 };
 
-/* =========================================
-   REUSABLE PROFILE FIELD
-   IMPORTANT: Keep this outside ProfilePage.
-========================================= */
-
 type ProfileFieldProps = {
   label: string;
   value?: string;
@@ -77,6 +72,7 @@ type ProfileFieldProps = {
   type?: string;
   multiline?: boolean;
   disabled?: boolean;
+  fullWidth?: boolean;
   editing: ProfileSection | null;
   form: Profile;
   onChange: (field: keyof Profile, value: string) => void;
@@ -90,21 +86,16 @@ function ProfileField({
   type = "text",
   multiline = false,
   disabled = false,
+  fullWidth = false,
   editing,
   form,
   onChange,
 }: ProfileFieldProps) {
-  const isEditing =
-    editing !== null && !disabled && field !== undefined;
-
-  const inputClass =
-    "profile-input w-full min-w-0 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50";
+  const isEditing = editing !== null && !disabled && field !== undefined;
 
   return (
-    <div className="min-w-0 space-y-2">
-      <label className="block text-sm font-semibold text-slate-700">
-        {label}
-      </label>
+    <div className={`sd-field${fullWidth ? " full" : ""}`}>
+      <label>{label}</label>
 
       {isEditing ? (
         multiline ? (
@@ -113,10 +104,7 @@ function ProfileField({
             onChange={(e) => onChange(field, e.target.value)}
             placeholder={placeholder || `Enter ${label.toLowerCase()}`}
             rows={4}
-            maxLength={
-              field === "businessDescription" ? 1000 : undefined
-            }
-            className={`${inputClass} min-h-28 resize-y`}
+            maxLength={field === "businessDescription" ? 1000 : undefined}
           />
         ) : (
           <input
@@ -125,28 +113,18 @@ function ProfileField({
             onChange={(e) => onChange(field, e.target.value)}
             placeholder={placeholder || `Enter ${label.toLowerCase()}`}
             maxLength={field === "name" ? 100 : undefined}
-            className={inputClass}
           />
         )
       ) : (
-        <div className="flex min-h-12 w-full min-w-0 items-center rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
-          <span className="min-w-0 break-words [overflow-wrap:anywhere]">
-            {value || (
-              <span className="font-normal text-slate-400">
-                Not provided
-              </span>
-            )}
+        <div className={`sd-field-display${value ? "" : " muted"}`}>
+          <span className={value ? "" : "sd-placeholder"}>
+            {value || "Not provided"}
           </span>
         </div>
       )}
     </div>
   );
 }
-
-/* =========================================
-   SECTION ACTIONS
-   IMPORTANT: Keep this outside ProfilePage.
-========================================= */
 
 type SectionActionsProps = {
   section: ProfileSection;
@@ -168,23 +146,23 @@ function SectionActions({
       <button
         type="button"
         onClick={() => onEdit(section)}
-        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-2.5 text-sm font-bold text-indigo-700 transition hover:bg-indigo-100"
+        className="sd-btn"
       >
-        <Pencil size={15} />
+        <Pencil size={14} />
         Edit
       </button>
     );
   }
 
   return (
-    <div className="flex shrink-0 flex-wrap items-center gap-2">
+    <div className="sd-actions">
       <button
         type="button"
         onClick={onCancel}
         disabled={saving}
-        className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 disabled:opacity-60 sm:px-4"
+        className="sd-btn"
       >
-        <X size={15} />
+        <X size={14} />
         Cancel
       </button>
 
@@ -192,43 +170,29 @@ function SectionActions({
         type="submit"
         form={`profile-${section}`}
         disabled={saving}
-        className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-3 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-700 disabled:opacity-60 sm:px-4"
+        className="sd-btn sd-btn-primary"
       >
-        {saving ? (
-          <Loader2 size={16} className="animate-spin" />
-        ) : (
-          <Save size={16} />
-        )}
+        {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
         {saving ? "Saving..." : "Save"}
       </button>
     </div>
   );
 }
 
-/* =========================================
-   MAIN PROFILE PAGE
-========================================= */
-
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile>(emptyProfile);
   const [form, setForm] = useState<Profile>(emptyProfile);
-
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState("");
-
   const [editing, setEditing] = useState<ProfileSection | null>(null);
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
-
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -240,26 +204,19 @@ export default function ProfilePage() {
     setSuccess(isError ? "" : message);
   };
 
-  /* =========================================
-     LOAD PROFILE
-  ========================================= */
-
   const loadProfile = async () => {
     try {
       setLoading(true);
       setError("");
 
       const currentToken = localStorage.getItem("advixio_token");
-
       if (!currentToken) {
         window.location.href = "/login";
         return;
       }
 
       const response = await fetch(`${API_URL}/auth/profile`, {
-        headers: {
-          Authorization: `Bearer ${currentToken}`,
-        },
+        headers: { Authorization: `Bearer ${currentToken}` },
         cache: "no-store",
       });
 
@@ -277,13 +234,8 @@ export default function ProfilePage() {
       }
 
       const user: Profile = result.data;
-
       setProfile(user);
-      setForm({
-        ...emptyProfile,
-        ...user,
-      });
-
+      setForm({ ...emptyProfile, ...user });
       setImagePreview(user.profileImage || "");
       setProfileImage(null);
 
@@ -297,6 +249,7 @@ export default function ProfilePage() {
           companyName: user.companyName,
           city: user.city,
           state: user.state,
+          profileImage: user.profileImage,
         })
       );
     } catch (err) {
@@ -311,17 +264,11 @@ export default function ProfilePage() {
 
   useEffect(() => {
     loadProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* =========================================
-     FORM HANDLERS
-  ========================================= */
-
   const updateField = (field: keyof Profile, value: string) => {
-    setForm((previous) => ({
-      ...previous,
-      [field]: value,
-    }));
+    setForm((previous) => ({ ...previous, [field]: value }));
   };
 
   const startEditing = (section: ProfileSection) => {
@@ -339,13 +286,8 @@ export default function ProfilePage() {
     setError("");
   };
 
-  /* =========================================
-     SAVE PROFILE
-  ========================================= */
-
   const saveProfile = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     if (!editing) return;
 
     try {
@@ -365,17 +307,14 @@ export default function ProfilePage() {
       };
 
       const payload: Record<string, string> = {};
-
       fields[editing].forEach((field) => {
         payload[field] = String(form[field] ?? "").trim();
       });
 
       const formData = new FormData();
-
       Object.entries(payload).forEach(([key, value]) => {
         formData.append(key, value);
       });
-
       if (profileImage) {
         formData.append("profileImage", profileImage);
       }
@@ -402,13 +341,8 @@ export default function ProfilePage() {
       }
 
       const updatedProfile: Profile = result.data;
-
       setProfile(updatedProfile);
-      setForm({
-        ...emptyProfile,
-        ...updatedProfile,
-      });
-
+      setForm({ ...emptyProfile, ...updatedProfile });
       setImagePreview(updatedProfile.profileImage || "");
       setProfileImage(null);
 
@@ -422,6 +356,7 @@ export default function ProfilePage() {
           companyName: updatedProfile.companyName,
           city: updatedProfile.city,
           state: updatedProfile.state,
+          profileImage: updatedProfile.profileImage,
         })
       );
 
@@ -437,13 +372,8 @@ export default function ProfilePage() {
     }
   };
 
-  /* =========================================
-     CHANGE PASSWORD
-  ========================================= */
-
   const changePassword = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     setError("");
     setSuccess("");
 
@@ -459,7 +389,6 @@ export default function ProfilePage() {
 
     try {
       setChangingPassword(true);
-
       const response = await fetch(`${API_URL}/auth/change-password`, {
         method: "PUT",
         headers: {
@@ -478,7 +407,6 @@ export default function ProfilePage() {
         if (result.message?.toLowerCase().includes("current password")) {
           throw new Error(result.message);
         }
-
         localStorage.removeItem("advixio_token");
         localStorage.removeItem("advixio_user");
         window.location.href = "/login";
@@ -489,18 +417,11 @@ export default function ProfilePage() {
         throw new Error(result.message || "Password change failed");
       }
 
-      setPasswords({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-
+      setPasswords({ currentPassword: "", newPassword: "", confirmPassword: "" });
       setShowPasswordForm(false);
       showMessage("Password changed successfully. Please login again.");
-
       localStorage.removeItem("advixio_token");
       localStorage.removeItem("advixio_user");
-
       window.setTimeout(() => {
         window.location.href = "/login";
       }, 1500);
@@ -513,10 +434,6 @@ export default function ProfilePage() {
       setChangingPassword(false);
     }
   };
-
-  /* =========================================
-     PROFILE IMAGE
-  ========================================= */
 
   const handleImageChange = (file?: File) => {
     if (!file) return;
@@ -532,664 +449,562 @@ export default function ProfilePage() {
     }
 
     setProfileImage(file);
-
     const reader = new FileReader();
-
     reader.onload = () => {
       if (typeof reader.result === "string") {
         setImagePreview(reader.result);
       }
     };
-
     reader.readAsDataURL(file);
-
     setEditing("personal");
     setError("");
     setSuccess("");
   };
 
-  /* =========================================
-     INITIALS
-  ========================================= */
+  const initials = (profile.companyName || profile.name || "U")
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
 
-  const initials = profile.name
-    ? profile.name
-        .split(" ")
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((word) => word[0])
-        .join("")
-        .toUpperCase()
-    : "U";
+  const completionFields = [
+    profile.name,
+    profile.email,
+    profile.phone,
+    profile.companyName,
+    profile.businessType,
+    profile.gstNumber,
+    profile.businessDescription,
+    profile.address,
+    profile.city,
+    profile.state,
+    profile.pincode,
+    profile.profileImage,
+  ];
+  const completion = Math.round(
+    (completionFields.filter((v) => v && String(v).trim()).length /
+      completionFields.length) *
+      100
+  );
 
-  /* =========================================
-     LOADING
-  ========================================= */
+  const businessSubtitle = [
+    profile.businessType || "Supplier",
+    profile.city && profile.state ? `${profile.city}, ${profile.state}` : profile.city || profile.state,
+  ]
+    .filter(Boolean)
+    .join(" • ");
 
   if (loading) {
     return (
-      <main className="profile-page flex min-h-screen items-center justify-center bg-[#f6f7fb] px-4 py-8">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 size={35} className="animate-spin text-indigo-600" />
-          <p className="text-sm font-medium text-slate-500">
-            Loading your profile...
-          </p>
+      <div className="sd-loading" style={{ padding: "48px 20px" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+          <Loader2 size={32} className="animate-spin" />
+          <p>Loading your profile...</p>
         </div>
-      </main>
+      </div>
     );
   }
 
-  /* =========================================
-     MAIN UI
-  ========================================= */
-
   return (
-    <main className="profile-page min-h-screen w-full bg-[#f6f7fb] px-3 py-5 sm:px-6 sm:py-8 lg:px-8">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 sm:gap-7">
-
-        {/* HEADER */}
-        <header className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <Link
-              href="/dashboard"
-              className="mb-3 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-indigo-600"
-            >
-              <ArrowLeft size={16} />
-              Back to Dashboard
-            </Link>
-
-            <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
-              My Profile
-            </h1>
-
-            <p className="mt-2 text-sm leading-6 text-slate-500">
-              Manage your personal information and business account.
-            </p>
-          </div>
-
-          <button
-            onClick={loadProfile}
-            type="button"
-            className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-indigo-200 hover:text-indigo-600 sm:w-auto"
+    <div>
+      <div className="sd-page-head">
+        <div>
+          <Link
+            href="/dashboard"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              fontSize: 11,
+              fontWeight: 700,
+              color: "var(--sd-muted)",
+              marginBottom: 6,
+            }}
           >
-            <RefreshCw size={16} />
+            <ArrowLeft size={14} />
+            Back to Dashboard
+          </Link>
+          <h1>Business Profile</h1>
+          <p>Manage the public information buyers see about your company.</p>
+        </div>
+        <div className="sd-actions">
+          <button onClick={loadProfile} type="button" className="sd-btn">
+            <RefreshCw size={14} />
             Refresh
           </button>
-        </header>
+        </div>
+      </div>
 
-        {/* ALERTS */}
-        {error && (
-          <div className="flex min-w-0 items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-700 sm:p-4">
-            <AlertCircle size={19} className="mt-0.5 shrink-0" />
-            <span className="min-w-0 break-words">{error}</span>
-          </div>
-        )}
+      {error && (
+        <div className="sd-alert error">
+          <AlertCircle size={16} style={{ marginTop: 1, flex: "none" }} />
+          <span style={{ minWidth: 0, wordBreak: "break-word" }}>{error}</span>
+        </div>
+      )}
 
-        {success && (
-          <div className="flex min-w-0 items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm leading-6 text-emerald-700 sm:p-4">
-            <CheckCircle2 size={19} className="mt-0.5 shrink-0" />
-            <span className="min-w-0 break-words">{success}</span>
-          </div>
-        )}
+      {success && (
+        <div className="sd-alert success">
+          <CheckCircle2 size={16} style={{ marginTop: 1, flex: "none" }} />
+          <span style={{ minWidth: 0, wordBreak: "break-word" }}>{success}</span>
+        </div>
+      )}
 
-        {/* PROFILE OVERVIEW */}
-        <section className="profile-overview min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="h-16 bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-500 sm:h-24" />
-
-          <div className="px-4 pb-5 sm:px-7 sm:pb-6">
-            <div className="-mt-9 flex min-w-0 flex-col gap-4 sm:-mt-11 sm:flex-row sm:flex-wrap sm:items-end">
-              <div className="relative w-fit shrink-0">
-                <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-indigo-100 text-2xl font-extrabold text-indigo-700 shadow-sm sm:h-24 sm:w-24 sm:text-3xl">
-                  {imagePreview ? (
-                    <img
-                      src={imagePreview}
-                      alt="Profile"
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    initials
+      <div className="sd-form-layout">
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          <section className="sd-card" style={{ marginBottom: 0 }}>
+            <div className="sd-profile-editor">
+              <div className="sd-company-logo-large">
+                {imagePreview ? (
+                  <img src={imagePreview} alt="Profile" />
+                ) : (
+                  initials
+                )}
+              </div>
+              <div className="sd-editor-meta">
+                <h2>{profile.companyName || profile.name || "Your Business"}</h2>
+                <p>{businessSubtitle}</p>
+                <div style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                  <label
+                    htmlFor="profile-image"
+                    className="sd-btn"
+                    style={{ cursor: "pointer", margin: 0 }}
+                  >
+                    Change Logo
+                  </label>
+                  {profileImage && (
+                    <span className="sd-muted-note">New image selected — save Personal Information to upload.</span>
                   )}
                 </div>
-
-                <label
-                  htmlFor="profile-image"
-                  className="absolute -bottom-2 -right-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-indigo-600 text-white shadow-md transition hover:bg-indigo-700"
-                  title="Change profile photo"
-                >
-                  <Pencil size={15} />
-                </label>
-
                 <input
                   id="profile-image"
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
-                  className="hidden"
+                  style={{ display: "none" }}
                   onChange={(e) => {
                     handleImageChange(e.target.files?.[0]);
                     e.target.value = "";
                   }}
                 />
               </div>
-
-              <div className="min-w-0 flex-1 pb-1">
-                <h2 className="break-words text-xl font-extrabold text-slate-900">
-                  {profile.name || "Your Name"}
-                </h2>
-
-                <p className="mt-1 break-words text-sm text-slate-500">
-                  {profile.companyName || "Supplier Account"}
-                </p>
-              </div>
-
-              <div className="pb-1">
-                <span
-                  className={`inline-flex max-w-full items-center gap-2 rounded-full px-3 py-2 text-xs font-bold ${
-                    profile.isActive
-                      ? "bg-emerald-50 text-emerald-700"
-                      : "bg-red-50 text-red-700"
-                  }`}
-                >
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-current" />
-                  {profile.isActive ? "Active Account" : "Inactive Account"}
-                </span>
-              </div>
             </div>
-
-            <div className="mt-5 grid min-w-0 grid-cols-1 gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="flex min-w-0 items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
-                  <Mail size={18} />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs text-slate-400">Email Address</p>
-                  <p className="break-all text-sm font-semibold text-slate-700">
-                    {profile.email}
-                  </p>
+            <div className="sd-form-grid no-top" style={{ marginTop: 18 }}>
+              <div className="sd-field">
+                <label>Email Address</label>
+                <div className="sd-field-display">
+                  <span>{profile.email || "Not provided"}</span>
                 </div>
               </div>
-
-              <div className="flex min-w-0 items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                  <Phone size={18} />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs text-slate-400">Phone Number</p>
-                  <p className="break-words text-sm font-semibold text-slate-700">
+              <div className="sd-field">
+                <label>Phone Number</label>
+                <div className={`sd-field-display${profile.phone ? "" : " muted"}`}>
+                  <span className={profile.phone ? "" : "sd-placeholder"}>
                     {profile.phone || "Not provided"}
-                  </p>
+                  </span>
                 </div>
               </div>
-
-              <div className="flex min-w-0 items-center gap-3 sm:col-span-2 lg:col-span-1">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
-                  <MapPin size={18} />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs text-slate-400">Location</p>
-                  <p className="break-words text-sm font-semibold text-slate-700">
-                    {[profile.city, profile.state].filter(Boolean).join(", ") ||
-                      "Not provided"}
-                  </p>
+              <div className="sd-field full">
+                <label>Location</label>
+                <div className={`sd-field-display${profile.city || profile.state ? "" : " muted"}`}>
+                  <span className={profile.city || profile.state ? "" : "sd-placeholder"}>
+                    {[profile.city, profile.state].filter(Boolean).join(", ") || "Not provided"}
+                  </span>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* PERSONAL INFORMATION */}
-        <section className="profile-card min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-7">
-          <div className="mb-5 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
-                <UserRound size={21} />
-              </div>
-              <div className="min-w-0">
-                <h2 className="font-extrabold text-slate-900">
-                  Personal Information
-                </h2>
-                <p className="text-xs leading-5 text-slate-500">
-                  Your basic account information
-                </p>
-              </div>
-            </div>
-
-            <SectionActions
-              section="personal"
-              editing={editing}
-              saving={saving}
-              onEdit={startEditing}
-              onCancel={cancelEditing}
-            />
-          </div>
-
-          <form id="profile-personal" onSubmit={saveProfile}>
-            <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
-              <ProfileField
-                label="Full Name"
-                value={profile.name}
-                field="name"
-                editing={editing}
-                form={form}
-                onChange={updateField}
-              />
-
-              <ProfileField
-                label="Email Address"
-                value={profile.email}
-                disabled
-                editing={editing}
-                form={form}
-                onChange={updateField}
-              />
-
-              <ProfileField
-                label="Phone Number"
-                value={profile.phone}
-                field="phone"
-                placeholder="Enter your phone number"
-                editing={editing}
-                form={form}
-                onChange={updateField}
-              />
-            </div>
-
-            <p className="mt-4 text-xs leading-5 text-slate-400">
-              Email address cannot be edited here. Email changes require
-              verification.
+            <p className="sd-inline-help">
+              Contact details and logo can be updated in the Personal Information section below.
             </p>
-          </form>
-        </section>
+          </section>
 
-        {/* BUSINESS INFORMATION */}
-        <section className="profile-card min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-7">
-          <div className="mb-5 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
-                <Building2 size={21} />
+          <section className="sd-card" style={{ marginBottom: 0 }}>
+            <div className="sd-section-head">
+              <div className="sd-section-head-left">
+                <div className="sd-section-icon">
+                  <UserRound size={18} />
+                </div>
+                <div>
+                  <h2>Personal Information</h2>
+                  <p>Your basic account information</p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <h2 className="font-extrabold text-slate-900">
-                  Business Information
-                </h2>
-                <p className="text-xs leading-5 text-slate-500">
-                  Your company and business details
-                </p>
-              </div>
+              <SectionActions
+                section="personal"
+                editing={editing}
+                saving={saving}
+                onEdit={startEditing}
+                onCancel={cancelEditing}
+              />
             </div>
+            <form id="profile-personal" onSubmit={saveProfile}>
+              <div className="sd-form-grid">
+                <ProfileField
+                  label="Full Name"
+                  value={profile.name}
+                  field="name"
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
+                />
+                <ProfileField
+                  label="Email Address"
+                  value={profile.email}
+                  disabled
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
+                />
+                <ProfileField
+                  label="Phone Number"
+                  value={profile.phone}
+                  field="phone"
+                  placeholder="Enter your phone number"
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
+                />
+              </div>
+              <p className="sd-inline-help">
+                Email address cannot be edited here. Email changes require verification.
+              </p>
+            </form>
+          </section>
 
-            <SectionActions
-              section="business"
-              editing={editing}
-              saving={saving}
-              onEdit={startEditing}
-              onCancel={cancelEditing}
-            />
-          </div>
-
-          <form id="profile-business" onSubmit={saveProfile}>
-            <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
-              <ProfileField
-                label="Company Name"
-                value={profile.companyName}
-                field="companyName"
+          <section className="sd-card" style={{ marginBottom: 0 }}>
+            <div className="sd-section-head">
+              <div className="sd-section-head-left">
+                <div className="sd-section-icon violet">
+                  <Building2 size={18} />
+                </div>
+                <div>
+                  <h2>Business Information</h2>
+                  <p>Your company and business details</p>
+                </div>
+              </div>
+              <SectionActions
+                section="business"
                 editing={editing}
-                form={form}
-                onChange={updateField}
+                saving={saving}
+                onEdit={startEditing}
+                onCancel={cancelEditing}
               />
-
-              <ProfileField
-                label="Business Type"
-                value={profile.businessType}
-                field="businessType"
-                placeholder="Manufacturer / Trader / Distributor"
-                editing={editing}
-                form={form}
-                onChange={updateField}
-              />
-
-              <ProfileField
-                label="GST Number"
-                value={profile.gstNumber}
-                field="gstNumber"
-                placeholder="Enter GST number"
-                editing={editing}
-                form={form}
-                onChange={updateField}
-              />
-
-              <ProfileField
-                label="Company Slug"
-                value={profile.companySlug}
-                disabled
-                editing={editing}
-                form={form}
-                onChange={updateField}
-              />
-
-              <div className="min-w-0 sm:col-span-2">
+            </div>
+            <form id="profile-business" onSubmit={saveProfile}>
+              <div className="sd-form-grid">
+                <ProfileField
+                  label="Company Name"
+                  value={profile.companyName}
+                  field="companyName"
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
+                />
+                <ProfileField
+                  label="Business Type"
+                  value={profile.businessType}
+                  field="businessType"
+                  placeholder="Manufacturer / Trader / Distributor"
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
+                />
+                <ProfileField
+                  label="GST Number"
+                  value={profile.gstNumber}
+                  field="gstNumber"
+                  placeholder="Enter GST number"
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
+                />
+                <ProfileField
+                  label="Company Slug"
+                  value={profile.companySlug}
+                  disabled
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
+                />
                 <ProfileField
                   label="Business Description"
                   value={profile.businessDescription}
                   field="businessDescription"
                   multiline
+                  fullWidth
                   placeholder="Describe your company and products..."
                   editing={editing}
                   form={form}
                   onChange={updateField}
                 />
               </div>
-            </div>
-          </form>
-        </section>
+            </form>
+          </section>
 
-        {/* ADDRESS INFORMATION */}
-        <section className="profile-card min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-7">
-          <div className="mb-5 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                <MapPin size={21} />
+          <section className="sd-card" style={{ marginBottom: 0 }}>
+            <div className="sd-section-head">
+              <div className="sd-section-head-left">
+                <div className="sd-section-icon green">
+                  <MapPin size={18} />
+                </div>
+                <div>
+                  <h2>Address Information</h2>
+                  <p>Your business location</p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <h2 className="font-extrabold text-slate-900">
-                  Address Information
-                </h2>
-                <p className="text-xs leading-5 text-slate-500">
-                  Your business location
-                </p>
-              </div>
+              <SectionActions
+                section="address"
+                editing={editing}
+                saving={saving}
+                onEdit={startEditing}
+                onCancel={cancelEditing}
+              />
             </div>
-
-            <SectionActions
-              section="address"
-              editing={editing}
-              saving={saving}
-              onEdit={startEditing}
-              onCancel={cancelEditing}
-            />
-          </div>
-
-          <form id="profile-address" onSubmit={saveProfile}>
-            <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
-              <div className="min-w-0 sm:col-span-2">
+            <form id="profile-address" onSubmit={saveProfile}>
+              <div className="sd-form-grid">
                 <ProfileField
                   label="Complete Address"
                   value={profile.address}
                   field="address"
+                  fullWidth
                   placeholder="Building, street, area..."
                   editing={editing}
                   form={form}
                   onChange={updateField}
                 />
+                <ProfileField
+                  label="City"
+                  value={profile.city}
+                  field="city"
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
+                />
+                <ProfileField
+                  label="State"
+                  value={profile.state}
+                  field="state"
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
+                />
+                <ProfileField
+                  label="PIN Code"
+                  value={profile.pincode}
+                  field="pincode"
+                  placeholder="Enter PIN code"
+                  editing={editing}
+                  form={form}
+                  onChange={updateField}
+                />
               </div>
+            </form>
+          </section>
 
-              <ProfileField
-                label="City"
-                value={profile.city}
-                field="city"
-                editing={editing}
-                form={form}
-                onChange={updateField}
-              />
-
-              <ProfileField
-                label="State"
-                value={profile.state}
-                field="state"
-                editing={editing}
-                form={form}
-                onChange={updateField}
-              />
-
-              <ProfileField
-                label="PIN Code"
-                value={profile.pincode}
-                field="pincode"
-                placeholder="Enter PIN code"
-                editing={editing}
-                form={form}
-                onChange={updateField}
-              />
-            </div>
-          </form>
-        </section>
-
-        {/* ACCOUNT VERIFICATION */}
-        <section className="profile-card min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-7">
-          <div className="mb-5 flex min-w-0 items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-              <ShieldCheck size={21} />
-            </div>
-            <div className="min-w-0">
-              <h2 className="font-extrabold text-slate-900">
-                Account Verification
-              </h2>
-              <p className="text-xs leading-5 text-slate-500">
-                Your contact verification status
-              </p>
-            </div>
-          </div>
-
-          <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
-            <div className="flex min-w-0 flex-col gap-3 rounded-xl border border-slate-100 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex min-w-0 items-center gap-3">
-                <Mail size={20} className="shrink-0 text-slate-500" />
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-slate-800">
-                    Email Verification
-                  </p>
-                  <p className="break-all text-xs text-slate-400">
-                    {profile.email}
-                  </p>
+          <section className="sd-card" style={{ marginBottom: 0 }}>
+            <div className="sd-section-head" style={{ marginBottom: 14 }}>
+              <div className="sd-section-head-left">
+                <div className="sd-section-icon amber">
+                  <LockKeyhole size={18} />
+                </div>
+                <div>
+                  <h2>Account Security</h2>
+                  <p>Keep your account password secure</p>
                 </div>
               </div>
-
-              <span
-                className={`w-fit shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${
-                  profile.isEmailVerified
-                    ? "bg-emerald-100 text-emerald-700"
-                    : "bg-amber-100 text-amber-700"
-                }`}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowPasswordForm((previous) => !previous);
+                  setError("");
+                  setSuccess("");
+                }}
+                className="sd-btn"
               >
-                {profile.isEmailVerified ? "Verified" : "Pending"}
-              </span>
+                {showPasswordForm ? "Cancel" : "Change Password"}
+              </button>
             </div>
 
-            <div className="flex min-w-0 flex-col gap-3 rounded-xl border border-slate-100 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex min-w-0 items-center gap-3">
-                <Phone size={20} className="shrink-0 text-slate-500" />
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-slate-800">
-                    Phone Verification
-                  </p>
-                  <p className="break-words text-xs text-slate-400">
-                    {profile.phone || "No phone number"}
-                  </p>
-                </div>
-              </div>
-
-              <span
-                className={`w-fit shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${
-                  profile.isPhoneVerified
-                    ? "bg-emerald-100 text-emerald-700"
-                    : "bg-amber-100 text-amber-700"
-                }`}
-              >
-                {profile.isPhoneVerified ? "Verified" : "Pending"}
-              </span>
-            </div>
-          </div>
-
-          <p className="mt-4 text-xs leading-5 text-slate-400">
-            OTP verification will be required to verify your email and phone
-            number.
-          </p>
-        </section>
-
-        {/* SECURITY */}
-        <section className="profile-card min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-7">
-          <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
-                <LockKeyhole size={21} />
-              </div>
-              <div className="min-w-0">
-                <h2 className="font-extrabold text-slate-900">
-                  Account Security
-                </h2>
-                <p className="text-xs leading-5 text-slate-500">
-                  Keep your account password secure
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                setShowPasswordForm((previous) => !previous);
-                setError("");
-                setSuccess("");
-              }}
-              className="w-full shrink-0 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-2.5 text-sm font-bold text-indigo-700 transition hover:bg-indigo-100 sm:w-auto"
-            >
-              {showPasswordForm ? "Cancel" : "Change Password"}
-            </button>
-          </div>
-
-          {showPasswordForm && (
-            <form
-              onSubmit={changePassword}
-              className="mt-6 space-y-5 border-t border-slate-100 pt-6"
-            >
-              <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
-                {/* CURRENT PASSWORD */}
-                <div className="min-w-0 space-y-2 sm:col-span-2">
-                  <label className="text-sm font-semibold text-slate-700">
-                    Current Password
-                  </label>
-
-                  <div className="relative">
-                    <input
-                      required
-                      type={showCurrentPassword ? "text" : "password"}
-                      autoComplete="current-password"
-                      value={passwords.currentPassword}
-                      onChange={(e) =>
-                        setPasswords((previous) => ({
-                          ...previous,
-                          currentPassword: e.target.value,
-                        }))
-                      }
-                      placeholder="Enter current password"
-                      className="profile-input w-full min-w-0 rounded-xl border border-slate-200 px-4 py-3 pr-12 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
-                    />
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowCurrentPassword((previous) => !previous)
-                      }
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
-                    >
-                      {showCurrentPassword ? (
-                        <EyeOff size={18} />
-                      ) : (
-                        <Eye size={18} />
-                      )}
-                    </button>
+            {showPasswordForm && (
+              <form onSubmit={changePassword} style={{ borderTop: "1px solid var(--sd-border)", paddingTop: 18 }}>
+                <div className="sd-form-grid no-top">
+                  <div className="sd-field full">
+                    <label>Current Password</label>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        required
+                        type={showCurrentPassword ? "text" : "password"}
+                        autoComplete="current-password"
+                        value={passwords.currentPassword}
+                        onChange={(e) =>
+                          setPasswords((p) => ({ ...p, currentPassword: e.target.value }))
+                        }
+                        placeholder="Enter current password"
+                        style={{ paddingRight: 40 }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowCurrentPassword((p) => !p)}
+                        style={{
+                          position: "absolute",
+                          right: 10,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          border: 0,
+                          background: "transparent",
+                          color: "var(--sd-muted)",
+                          padding: 4,
+                        }}
+                        aria-label={showCurrentPassword ? "Hide password" : "Show password"}
+                      >
+                        {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                {/* NEW PASSWORD */}
-                <div className="min-w-0 space-y-2">
-                  <label className="text-sm font-semibold text-slate-700">
-                    New Password
-                  </label>
-
-                  <div className="relative">
+                  <div className="sd-field">
+                    <label>New Password</label>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        required
+                        minLength={8}
+                        type={showNewPassword ? "text" : "password"}
+                        autoComplete="new-password"
+                        value={passwords.newPassword}
+                        onChange={(e) =>
+                          setPasswords((p) => ({ ...p, newPassword: e.target.value }))
+                        }
+                        placeholder="Minimum 8 characters"
+                        style={{ paddingRight: 40 }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword((p) => !p)}
+                        style={{
+                          position: "absolute",
+                          right: 10,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          border: 0,
+                          background: "transparent",
+                          color: "var(--sd-muted)",
+                          padding: 4,
+                        }}
+                        aria-label={showNewPassword ? "Hide password" : "Show password"}
+                      >
+                        {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="sd-field">
+                    <label>Confirm New Password</label>
                     <input
                       required
                       minLength={8}
-                      type={showNewPassword ? "text" : "password"}
+                      type="password"
                       autoComplete="new-password"
-                      value={passwords.newPassword}
+                      value={passwords.confirmPassword}
                       onChange={(e) =>
-                        setPasswords((previous) => ({
-                          ...previous,
-                          newPassword: e.target.value,
-                        }))
+                        setPasswords((p) => ({ ...p, confirmPassword: e.target.value }))
                       }
-                      placeholder="Minimum 8 characters"
-                      className="profile-input w-full min-w-0 rounded-xl border border-slate-200 px-4 py-3 pr-12 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
+                      placeholder="Confirm new password"
                     />
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowNewPassword((previous) => !previous)
-                      }
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
-                    >
-                      {showNewPassword ? (
-                        <EyeOff size={18} />
-                      ) : (
-                        <Eye size={18} />
-                      )}
-                    </button>
                   </div>
                 </div>
-
-                {/* CONFIRM PASSWORD */}
-                <div className="min-w-0 space-y-2">
-                  <label className="text-sm font-semibold text-slate-700">
-                    Confirm New Password
-                  </label>
-
-                  <input
-                    required
-                    minLength={8}
-                    type="password"
-                    autoComplete="new-password"
-                    value={passwords.confirmPassword}
-                    onChange={(e) =>
-                      setPasswords((previous) => ({
-                        ...previous,
-                        confirmPassword: e.target.value,
-                      }))
-                    }
-                    placeholder="Confirm new password"
-                    className="profile-input w-full min-w-0 rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
-                  />
+                <div style={{ marginTop: 16 }}>
+                  <button
+                    type="submit"
+                    disabled={changingPassword}
+                    className="sd-btn sd-btn-primary"
+                  >
+                    {changingPassword ? <Loader2 size={14} className="animate-spin" /> : <LockKeyhole size={14} />}
+                    {changingPassword ? "Updating..." : "Update Password"}
+                  </button>
                 </div>
+              </form>
+            )}
+          </section>
+        </div>
+
+        <aside style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          <section className="sd-card" style={{ marginBottom: 0 }}>
+            <div className="sd-card-head" style={{ marginBottom: 8 }}>
+              <div>
+                <h2>Profile Completion</h2>
               </div>
+            </div>
+            <div className="sd-big-progress">
+              <b>{completion}%</b>
+              <div className="sd-progress-track">
+                <i style={{ width: `${completion}%` }} />
+              </div>
+            </div>
+            <p className="sd-muted-note">
+              {completion >= 100
+                ? "Your business profile is complete."
+                : "Add missing company, contact, and address details to improve buyer confidence."}
+            </p>
+          </section>
 
-              <button
-                type="submit"
-                disabled={changingPassword}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-indigo-700 disabled:opacity-60 sm:w-auto"
-              >
-                {changingPassword ? (
-                  <Loader2 size={17} className="animate-spin" />
-                ) : (
-                  <LockKeyhole size={17} />
-                )}
-                {changingPassword ? "Updating..." : "Update Password"}
-              </button>
-            </form>
-          )}
-        </section>
-
-        {/* FOOTER */}
-        <footer className="flex min-w-0 flex-col gap-3 pb-5 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>Advixio360 Supplier Account Management</p>
-
-          <Link
-            href="/dashboard"
-            className="font-semibold text-indigo-600 hover:text-indigo-800"
-          >
-            Return to Dashboard
-          </Link>
-        </footer>
+          <section className="sd-card" style={{ marginBottom: 0 }}>
+            <div className="sd-card-head" style={{ marginBottom: 8 }}>
+              <div>
+                <h2>Verification</h2>
+                <p>Account trust signals</p>
+              </div>
+            </div>
+            <div>
+              <div className="sd-verify-large">
+                <div className={`sd-verify-icon${profile.isEmailVerified ? "" : " pending"}`}>
+                  <ShieldCheck size={12} />
+                </div>
+                <div className="sd-verify-large-body">
+                  <h3>Email Verification</h3>
+                  <p>{profile.email || "No email address"}</p>
+                </div>
+                <span className={`sd-status ${profile.isEmailVerified ? "published" : "pending"}`}>
+                  {profile.isEmailVerified ? "Verified" : "Pending"}
+                </span>
+              </div>
+              <div className="sd-verify-large">
+                <div className={`sd-verify-icon${profile.isPhoneVerified ? "" : " pending"}`}>
+                  <ShieldCheck size={12} />
+                </div>
+                <div className="sd-verify-large-body">
+                  <h3>Phone Verification</h3>
+                  <p>{profile.phone || "No phone number"}</p>
+                </div>
+                <span className={`sd-status ${profile.isPhoneVerified ? "published" : "pending"}`}>
+                  {profile.isPhoneVerified ? "Verified" : "Pending"}
+                </span>
+              </div>
+              <div className="sd-verify-large">
+                <div className={`sd-verify-icon${profile.companyName && profile.businessType ? "" : " pending"}`}>
+                  <ShieldCheck size={12} />
+                </div>
+                <div className="sd-verify-large-body">
+                  <h3>Business Details</h3>
+                  <p>{profile.companyName && profile.businessType ? "Company information added" : "Add company name and type"}</p>
+                </div>
+                <span className={`sd-status ${profile.companyName && profile.businessType ? "published" : "pending"}`}>
+                  {profile.companyName && profile.businessType ? "Added" : "Pending"}
+                </span>
+              </div>
+              <div className="sd-verify-large">
+                <div className={`sd-verify-icon${profile.address && profile.city && profile.state ? "" : " pending"}`}>
+                  <ShieldCheck size={12} />
+                </div>
+                <div className="sd-verify-large-body">
+                  <h3>Address Details</h3>
+                  <p>{profile.address && profile.city && profile.state ? "Business location added" : "Add business address"}</p>
+                </div>
+                <span className={`sd-status ${profile.address && profile.city && profile.state ? "published" : "pending"}`}>
+                  {profile.address && profile.city && profile.state ? "Added" : "Pending"}
+                </span>
+              </div>
+            </div>
+          </section>
+        </aside>
       </div>
-    </main>
+    </div>
   );
 }

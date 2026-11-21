@@ -29,11 +29,11 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="contact-page min-h-screen overflow-hidden bg-[#080B14] text-white">
+    <main className="contact-page min-h-screen overflow-hidden bg-[#1E3A8A] text-white">
       <style jsx>{`
         .contact-page {
-          --accent: #8b7cff;
-          --muted: #a4a9bd;
+          --accent: #93C5FD;
+          --muted: #60A5FA;
         }
 
         .contact-grid {
@@ -133,8 +133,8 @@ export default function ContactPage() {
 
         .contact-link:hover {
           transform: translateY(-4px);
-          border-color: rgba(139, 124, 255, 0.65);
-          background: rgba(139, 124, 255, 0.09);
+          border-color: rgba(147, 197, 253, 0.65);
+          background: rgba(147, 197, 253, 0.09);
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -279,12 +279,12 @@ export default function ContactPage() {
               <br />
               start with
               <br />
-              <span className="bg-gradient-to-r from-[#B6A8FF] via-[#9182FF] to-[#71C8FF] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#FFEDD5] via-[#93C5FD] to-[#60A5FA] bg-clip-text text-transparent">
                 a conversation.
               </span>
             </h1>
 
-            <p className="mt-7 max-w-xl text-base leading-8 text-[#A4A9BD] sm:text-lg">
+            <p className="mt-7 max-w-xl text-base leading-8 text-[#60A5FA] sm:text-lg">
               Have a business idea, a question, or something we can help with?
               Reach the Advixio team directly. No complicated process, just a
               conversation.
@@ -295,7 +295,7 @@ export default function ContactPage() {
                 href={`https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Hello Advixio team, I would like to discuss a business enquiry.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex min-h-12 items-center gap-3 rounded-xl bg-[#8B7CFF] px-5 py-3 text-sm font-semibold text-[#080B14] transition duration-300 hover:-translate-y-1 hover:bg-[#A99EFF] hover:shadow-[0_12px_40px_rgba(139,124,255,0.25)]"
+                className="group inline-flex min-h-12 items-center gap-3 rounded-xl bg-[#93C5FD] px-5 py-3 text-sm font-semibold text-[#1E3A8A] transition duration-300 hover:-translate-y-1 hover:bg-[#FFEDD5] hover:shadow-[0_12px_40px_rgba(147, 197, 253, 0.25)]"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -362,10 +362,10 @@ export default function ContactPage() {
 
             <div className="contact-glow absolute h-64 w-64 rounded-full bg-violet-600/20 blur-[80px] sm:h-80 sm:w-80" />
 
-            <div className="contact-card relative z-10 flex h-56 w-56 flex-col items-center justify-center rounded-[36px] border border-white/15 shadow-[0_0_100px_rgba(139,124,255,0.14)] sm:h-64 sm:w-64">
+            <div className="contact-card relative z-10 flex h-56 w-56 flex-col items-center justify-center rounded-[36px] border border-white/15 shadow-[0_0_100px_rgba(147, 197, 253, 0.14)] sm:h-64 sm:w-64">
               <div className="absolute inset-3 rounded-[28px] border border-white/[0.06]" />
 
-              <div className="relative flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-[#A99AFF] to-[#6F61E8] text-[#080B14] shadow-[0_10px_50px_rgba(139,124,255,0.3)] sm:h-24 sm:w-24">
+              <div className="relative flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-[#FFEDD5] to-[#60A5FA] text-[#1E3A8A] shadow-[0_10px_50px_rgba(147, 197, 253, 0.3)] sm:h-24 sm:w-24">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -462,26 +462,26 @@ export default function ContactPage() {
               </span>
             </a>
 
-            <div className="absolute right-8 top-7 hidden h-3 w-3 rounded-full bg-sky-300 shadow-[0_0_24px_rgba(125,211,252,0.8)] sm:block" />
-            <div className="absolute bottom-10 left-10 hidden h-2 w-2 rounded-full bg-violet-300 shadow-[0_0_20px_rgba(167,139,250,0.8)] sm:block" />
+            <div className="absolute right-8 top-7 hidden h-3 w-3 rounded-full bg-sky-300 shadow-[0_0_24px_rgba(147, 197, 253, 0.8)] sm:block" />
+            <div className="absolute bottom-10 left-10 hidden h-2 w-2 rounded-full bg-violet-300 shadow-[0_0_20px_rgba(147, 197, 253, 0.8)] sm:block" />
           </div>
         </div>
       </section>
 
       {/* Contact channels */}
     {/* Contact channels */}
-<section className="relative border-t border-[#E5E7EB] bg-white">
+<section className="relative border-t border-[#BFDBFE] bg-white">
   <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
     <div className="contact-appear mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#4F46E5]">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#EA580C]">
           Choose your channel
         </p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#1A1A1A] sm:text-4xl">
+        <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#1E3A8A] sm:text-4xl">
           Reach us your way.
         </h2>
       </div>
-      <p className="max-w-md text-sm leading-7 text-[#6B7280]">
+      <p className="max-w-md text-sm leading-7 text-[#2563EB]">
         Choose the contact method that suits your enquiry. Each option
         opens directly on your device.
       </p>
@@ -519,11 +519,11 @@ export default function ContactPage() {
           href={item.href}
           target={item.icon === "whatsapp" ? "_blank" : undefined}
           rel={item.icon === "whatsapp" ? "noopener noreferrer" : undefined}
-          className="contact-appear group rounded-2xl border border-[#E5E7EB] bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50 sm:p-7"
+          className="contact-appear group rounded-2xl border border-[#BFDBFE] bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50 sm:p-7"
           style={{ animationDelay: `${index * 120}ms` }}
         >
           <div className="flex items-center justify-between">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#EEF0FF] text-[#4F46E5] transition group-hover:bg-[#4F46E5] group-hover:text-white">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFEDD5] text-[#EA580C] transition group-hover:bg-[#EA580C] group-hover:text-white">
               {item.icon === "email" && (
                 <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
                   <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.7" />
@@ -542,21 +542,21 @@ export default function ContactPage() {
                 </svg>
               )}
             </div>
-            <span className="text-xl text-[#9CA3AF] transition group-hover:translate-x-1 group-hover:text-[#4F46E5]">
+            <span className="text-xl text-[#93C5FD] transition group-hover:translate-x-1 group-hover:text-[#EA580C]">
               ↗
             </span>
           </div>
 
-          <h3 className="mt-6 text-xl font-semibold text-[#1A1A1A]">
+          <h3 className="mt-6 text-xl font-semibold text-[#1E3A8A]">
             {item.title}
           </h3>
-          <p className="mt-2 text-sm leading-6 text-[#6B7280]">
+          <p className="mt-2 text-sm leading-6 text-[#2563EB]">
             {item.description}
           </p>
-          <p className="mt-5 break-all text-sm font-semibold text-[#4F46E5]">
+          <p className="mt-5 break-all text-sm font-semibold text-[#EA580C]">
             {item.value}
           </p>
-          <div className="mt-6 border-t border-[#E5E7EB] pt-4 text-xs font-semibold uppercase tracking-wider text-[#4F46E5]">
+          <div className="mt-6 border-t border-[#BFDBFE] pt-4 text-xs font-semibold uppercase tracking-wider text-[#EA580C]">
             {item.action} →
           </div>
         </a>
@@ -567,7 +567,7 @@ export default function ContactPage() {
 
       {/* Message section */}
       
-<section className="relative isolate overflow-hidden border-t border-[#E5E7EB] bg-[#F9F9FB]">
+<section className="relative isolate overflow-hidden border-t border-[#BFDBFE] bg-[#FFFFFF]">
   {/* Animated background accents */}
   <div className="contact-grid pointer-events-none absolute inset-0 opacity-40" />
 
@@ -580,22 +580,22 @@ export default function ContactPage() {
     <div className="contact-message-intro">
       <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white px-4 py-2 shadow-sm">
         <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#10B981] opacity-60" />
-          <span className="relative h-2 w-2 rounded-full bg-[#10B981]" />
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2563EB] opacity-60" />
+          <span className="relative h-2 w-2 rounded-full bg-[#2563EB]" />
         </span>
-        <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#4F46E5]">
+        <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#EA580C]">
           Your message
         </span>
       </div>
 
-      <h2 className="mt-6 text-4xl font-extrabold leading-[1.12] tracking-tight text-[#1A1A1A] sm:text-5xl lg:text-[3.5rem]">
+      <h2 className="mt-6 text-4xl font-extrabold leading-[1.12] tracking-tight text-[#1E3A8A] sm:text-5xl lg:text-[3.5rem]">
         Tell us what&apos;s
-        <span className="mt-2 block bg-gradient-to-r from-[#4F46E5] via-[#6366F1] to-[#4338CA] bg-clip-text pb-1 text-transparent">
+        <span className="mt-2 block bg-gradient-to-r from-[#EA580C] via-[#60A5FA] to-[#EA580C] bg-clip-text pb-1 text-transparent">
           on your mind.
         </span>
       </h2>
 
-      <p className="mt-6 max-w-md text-sm leading-8 text-[#6B7280] sm:text-base">
+      <p className="mt-6 max-w-md text-sm leading-8 text-[#2563EB] sm:text-base">
         Have a question or a business requirement? Tell us about it.
         We&apos;re here to help you connect, explore opportunities, and
         move your business forward.
@@ -625,18 +625,18 @@ export default function ContactPage() {
         ].map((item, index) => (
           <div
             key={item.number}
-            className="group flex items-start gap-4 rounded-2xl border border-transparent p-3 transition-all duration-300 hover:translate-x-1 hover:border-indigo-100 hover:bg-white hover:shadow-[0_8px_25px_rgba(79,70,229,0.06)]"
+            className="group flex items-start gap-4 rounded-2xl border border-transparent p-3 transition-all duration-300 hover:translate-x-1 hover:border-indigo-100 hover:bg-white hover:shadow-[0_8px_25px_rgba(59, 130, 246, 0.06)]"
             style={{ animationDelay: `${index * 120}ms` }}
           >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-indigo-100 bg-[#EEF0FF] text-xs font-bold text-[#4F46E5] transition-all duration-300 group-hover:bg-[#4F46E5] group-hover:text-white">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-indigo-100 bg-[#FFEDD5] text-xs font-bold text-[#EA580C] transition-all duration-300 group-hover:bg-[#EA580C] group-hover:text-white">
               {item.number}
             </div>
 
             <div className="pt-0.5">
-              <h3 className="text-sm font-bold text-[#1A1A1A] transition-colors duration-300 group-hover:text-[#4F46E5]">
+              <h3 className="text-sm font-bold text-[#1E3A8A] transition-colors duration-300 group-hover:text-[#EA580C]">
                 {item.title}
               </h3>
-              <p className="mt-1 text-sm leading-6 text-[#6B7280]">
+              <p className="mt-1 text-sm leading-6 text-[#2563EB]">
                 {item.description}
               </p>
             </div>
@@ -650,23 +650,23 @@ export default function ContactPage() {
       {/* Gradient outline */}
       <div className="absolute -inset-[1px] rounded-[28px] bg-gradient-to-br from-indigo-200 via-white to-violet-200 opacity-90" />
 
-      <div className="relative rounded-[27px] border border-[#E5E7EB] bg-white p-5 shadow-[0_25px_80px_rgba(31,41,55,0.08)] sm:p-8 lg:p-9">
+      <div className="relative rounded-[27px] border border-[#BFDBFE] bg-white p-5 shadow-[0_25px_80px_rgba(30, 58, 138, 0.08)] sm:p-8 lg:p-9">
 
         {/* Form heading */}
-        <div className="mb-8 flex items-start justify-between gap-4 border-b border-[#E5E7EB] pb-6">
+        <div className="mb-8 flex items-start justify-between gap-4 border-b border-[#BFDBFE] pb-6">
           <div>
-            <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#4F46E5]">
+            <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#EA580C]">
               Let&apos;s connect
             </span>
-            <h3 className="mt-2 text-2xl font-extrabold tracking-tight text-[#1A1A1A] sm:text-3xl">
+            <h3 className="mt-2 text-2xl font-extrabold tracking-tight text-[#1E3A8A] sm:text-3xl">
               Send an enquiry
             </h3>
-            <p className="mt-2 text-sm leading-6 text-[#6B7280]">
+            <p className="mt-2 text-sm leading-6 text-[#2563EB]">
               Complete the form and prepare your email.
             </p>
           </div>
 
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-indigo-100 bg-[#EEF0FF] text-[#4F46E5] transition-transform duration-300 hover:rotate-[-8deg] hover:scale-105">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-indigo-100 bg-[#FFEDD5] text-[#EA580C] transition-transform duration-300 hover:rotate-[-8deg] hover:scale-105">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -689,9 +689,9 @@ export default function ContactPage() {
             <div className="contact-field">
               <label
                 htmlFor="contact-name"
-                className="mb-2 block text-sm font-semibold text-[#1A1A1A]"
+                className="mb-2 block text-sm font-semibold text-[#1E3A8A]"
               >
-                Your name <span className="text-[#4F46E5]">*</span>
+                Your name <span className="text-[#EA580C]">*</span>
               </label>
               <input
                 id="contact-name"
@@ -704,7 +704,7 @@ export default function ContactPage() {
                   setForm({ ...form, name: event.target.value })
                 }
                 placeholder="Full name"
-                className="contact-input w-full rounded-xl border border-[#E5E7EB] bg-[#F9F9FB] px-4 py-3.5 text-sm text-[#1A1A1A] outline-none transition-all duration-300 placeholder:text-gray-400 hover:border-indigo-200 focus:border-[#4F46E5] focus:bg-white focus:ring-4 focus:ring-indigo-100"
+                className="contact-input w-full rounded-xl border border-[#BFDBFE] bg-[#FFFFFF] px-4 py-3.5 text-sm text-[#1E3A8A] outline-none transition-all duration-300 placeholder:text-gray-400 hover:border-indigo-200 focus:border-[#EA580C] focus:bg-white focus:ring-4 focus:ring-indigo-100"
               />
             </div>
 
@@ -712,9 +712,9 @@ export default function ContactPage() {
             <div className="contact-field">
               <label
                 htmlFor="contact-email"
-                className="mb-2 block text-sm font-semibold text-[#1A1A1A]"
+                className="mb-2 block text-sm font-semibold text-[#1E3A8A]"
               >
-                Email address <span className="text-[#4F46E5]">*</span>
+                Email address <span className="text-[#EA580C]">*</span>
               </label>
               <input
                 id="contact-email"
@@ -728,7 +728,7 @@ export default function ContactPage() {
                   setForm({ ...form, email: event.target.value })
                 }
                 placeholder="you@example.com"
-                className="contact-input w-full rounded-xl border border-[#E5E7EB] bg-[#F9F9FB] px-4 py-3.5 text-sm text-[#1A1A1A] outline-none transition-all duration-300 placeholder:text-gray-400 hover:border-indigo-200 focus:border-[#4F46E5] focus:bg-white focus:ring-4 focus:ring-indigo-100"
+                className="contact-input w-full rounded-xl border border-[#BFDBFE] bg-[#FFFFFF] px-4 py-3.5 text-sm text-[#1E3A8A] outline-none transition-all duration-300 placeholder:text-gray-400 hover:border-indigo-200 focus:border-[#EA580C] focus:bg-white focus:ring-4 focus:ring-indigo-100"
               />
             </div>
           </div>
@@ -737,9 +737,9 @@ export default function ContactPage() {
           <div className="contact-field">
             <label
               htmlFor="contact-message"
-              className="mb-2 block text-sm font-semibold text-[#1A1A1A]"
+              className="mb-2 block text-sm font-semibold text-[#1E3A8A]"
             >
-              Your message <span className="text-[#4F46E5]">*</span>
+              Your message <span className="text-[#EA580C]">*</span>
             </label>
             <textarea
               id="contact-message"
@@ -753,9 +753,9 @@ export default function ContactPage() {
                 setForm({ ...form, message: event.target.value })
               }
               placeholder="Tell us about your question or business requirement..."
-              className="contact-input w-full resize-y rounded-xl border border-[#E5E7EB] bg-[#F9F9FB] px-4 py-3.5 text-sm leading-7 text-[#1A1A1A] outline-none transition-all duration-300 placeholder:text-gray-400 hover:border-indigo-200 focus:border-[#4F46E5] focus:bg-white focus:ring-4 focus:ring-indigo-100"
+              className="contact-input w-full resize-y rounded-xl border border-[#BFDBFE] bg-[#FFFFFF] px-4 py-3.5 text-sm leading-7 text-[#1E3A8A] outline-none transition-all duration-300 placeholder:text-gray-400 hover:border-indigo-200 focus:border-[#EA580C] focus:bg-white focus:ring-4 focus:ring-indigo-100"
             />
-            <p className="mt-2 text-right text-xs text-[#9CA3AF]">
+            <p className="mt-2 text-right text-xs text-[#93C5FD]">
               Minimum 10 characters
             </p>
           </div>
@@ -763,7 +763,7 @@ export default function ContactPage() {
           {/* Submit */}
           <button
             type="submit"
-            className="contact-submit group relative mt-2 inline-flex min-h-14 w-full items-center justify-center gap-3 overflow-hidden rounded-xl bg-gradient-to-r from-[#4F46E5] to-[#4338CA] px-5 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-200/60 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-200/80 focus:outline-none focus:ring-4 focus:ring-indigo-200 active:translate-y-0"
+            className="contact-submit group relative mt-2 inline-flex min-h-14 w-full items-center justify-center gap-3 overflow-hidden rounded-xl bg-gradient-to-r from-[#EA580C] to-[#EA580C] px-5 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-200/60 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-200/80 focus:outline-none focus:ring-4 focus:ring-indigo-200 active:translate-y-0"
           >
             <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
             <span className="relative">Prepare email</span>
@@ -785,7 +785,7 @@ export default function ContactPage() {
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              className="mt-0.5 h-4 w-4 shrink-0 text-[#10B981]"
+              className="mt-0.5 h-4 w-4 shrink-0 text-[#2563EB]"
               stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
@@ -794,7 +794,7 @@ export default function ContactPage() {
             >
               <path d="m5 12 4 4L19 6" />
             </svg>
-            <p className="text-center text-xs leading-5 text-[#6B7280]">
+            <p className="text-center text-xs leading-5 text-[#2563EB]">
               Your email application will open with your details prepared.
               You can review everything before sending.
             </p>
@@ -809,26 +809,26 @@ export default function ContactPage() {
 
 
       {/* Footer CTA */}
-      <section className="relative bg-[#F9F9FB] px-5 pb-12 sm:px-8 lg:px-10">
-  <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 rounded-2xl border border-[#E5E7EB] bg-white p-6 sm:flex-row sm:items-center sm:p-8">
+      <section className="relative bg-[#FFFFFF] px-5 pb-12 sm:px-8 lg:px-10">
+  <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 rounded-2xl border border-[#BFDBFE] bg-white p-6 sm:flex-row sm:items-center sm:p-8">
     <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4F46E5]">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#EA580C]">
         Advixio
       </p>
-      <h2 className="mt-2 text-xl font-semibold text-[#1A1A1A]">
+      <h2 className="mt-2 text-xl font-semibold text-[#1E3A8A]">
         Let&apos;s build better business connections.
       </h2>
     </div>
 
     <Link
       href="/products"
-      className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#4F46E5] px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#4338CA]"
+      className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#EA580C] px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#EA580C]"
     >
       Explore marketplace →
     </Link>
   </div>
 
-  <p className="mx-auto mt-8 max-w-7xl text-center text-xs text-[#6B7280]">
+  <p className="mx-auto mt-8 max-w-7xl text-center text-xs text-[#2563EB]">
     © {new Date().getFullYear()} Advixio. All rights reserved.
   </p>
 </section>

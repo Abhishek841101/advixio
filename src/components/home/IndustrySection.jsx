@@ -1,4 +1,6 @@
+"use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { categories } from "@/data/categories";
 
@@ -26,13 +28,54 @@ function CategoryIcon({ index }) {
       strokeLinejoin="round"
       aria-hidden="true"
     >
-      {icons[index]}
+      {icons[index % icons.length]}
     </svg>
   );
 }
 
 export default function IndustrySection() {
   const visibleCategories = categories.slice(0, 8);
+
+  const trackRef = useRef(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  const updateArrows = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    setCanScrollPrev(track.scrollLeft > 2);
+    setCanScrollNext(
+      track.scrollLeft < track.scrollWidth - track.clientWidth - 2
+    );
+  }, []);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return undefined;
+
+    updateArrows();
+    track.addEventListener("scroll", updateArrows, { passive: true });
+    window.addEventListener("resize", updateArrows);
+
+    return () => {
+      track.removeEventListener("scroll", updateArrows);
+      window.removeEventListener("resize", updateArrows);
+    };
+  }, [updateArrows]);
+
+  const scrollByCards = (direction) => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const card = track.querySelector(".industry-card");
+    const step = card ? card.offsetWidth + 16 : track.clientWidth * 0.8;
+
+    track.scrollBy({
+      left: direction * step * 2,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section className="industry-section" id="categories">
@@ -55,24 +98,59 @@ export default function IndustrySection() {
           </Link>
         </div>
 
-        <div className="industry-grid">
-          {visibleCategories.map((category, index) => (
-            <Link
-              href={`/products?category=${encodeURIComponent(category.slug)}`}
-              className="industry-card"
-              key={category.id}
-            >
-              <div className="industry-icon">
-                <CategoryIcon index={index} />
-              </div>
+        <div className="industry-carousel">
+          <button
+            type="button"
+            className="industry-carousel-arrow industry-carousel-prev"
+            aria-label="Scroll categories left"
+            disabled={!canScrollPrev}
+            onClick={() => scrollByCards(-1)}
+          >
+            ‹
+          </button>
 
-              <div className="industry-card-content">
-                <h3>{category.name}</h3>
-                <p>{category.description}</p>
-              </div>
-            </Link>
-          ))}
+          <div
+            className="industry-track"
+            ref={trackRef}
+            role="list"
+            aria-label="Business categories"
+          >
+            {visibleCategories.map((category, index) => (
+              <Link
+                href={`/products?category=${encodeURIComponent(category.slug)}`}
+                className="industry-card"
+                key={category.id}
+                role="listitem"
+              >
+                <div className="industry-icon">
+                  <CategoryIcon index={index} />
+                </div>
+
+                <div className="industry-card-content">
+                  <h3>{category.name}</h3>
+                  <p>{category.description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            className="industry-carousel-arrow industry-carousel-next"
+            aria-label="Scroll categories right"
+            disabled={!canScrollNext}
+            onClick={() => scrollByCards(1)}
+          >
+            ›
+          </button>
         </div>
+
+        <Link
+          href="/categories"
+          className="view-all-button mobile-view-all"
+        >
+          View All Categories →
+        </Link>
 
       </div>
     </section>

@@ -135,8 +135,8 @@ export default function ProductImageGallery({
           width: "100%",
           height: "460px",
           overflow: "hidden",
-          background: "#ffffff",
-          border: "1px solid #e5e7eb",
+          background: "#FFFFFF",
+          border: "1px solid #BFDBFE",
           borderRadius: "14px",
         }}
       >
@@ -193,13 +193,13 @@ export default function ProductImageGallery({
               padding: 0,
 
               border:
-                "1px solid #e5e7eb",
+                "1px solid #BFDBFE",
               borderRadius: "50%",
 
               background:
-                "rgba(255,255,255,0.96)",
+                "rgba(255, 255, 255, 0.96)",
 
-              color: "#1a1a1a",
+              color: "#1E3A8A",
 
               fontSize: "34px",
               fontWeight: "400",
@@ -210,7 +210,7 @@ export default function ProductImageGallery({
               zIndex: 20,
 
               boxShadow:
-                "0 4px 14px rgba(0,0,0,0.18)",
+                "0 4px 14px rgba(23, 37, 84, 0.18)",
             }}
           >
             ‹
@@ -243,13 +243,13 @@ export default function ProductImageGallery({
               padding: 0,
 
               border:
-                "1px solid #e5e7eb",
+                "1px solid #BFDBFE",
               borderRadius: "50%",
 
               background:
-                "rgba(255,255,255,0.96)",
+                "rgba(255, 255, 255, 0.96)",
 
-              color: "#1a1a1a",
+              color: "#1E3A8A",
 
               fontSize: "34px",
               fontWeight: "400",
@@ -260,7 +260,7 @@ export default function ProductImageGallery({
               zIndex: 20,
 
               boxShadow:
-                "0 4px 14px rgba(0,0,0,0.18)",
+                "0 4px 14px rgba(23, 37, 84, 0.18)",
             }}
           >
             ›
@@ -285,9 +285,9 @@ export default function ProductImageGallery({
                 "999px",
 
               background:
-                "rgba(0,0,0,0.65)",
+                "rgba(23, 37, 84, 0.65)",
 
-              color: "#ffffff",
+              color: "#FFFFFF",
 
               fontSize: "12px",
               fontWeight: 600,
@@ -334,12 +334,12 @@ export default function ProductImageGallery({
 
                   padding: "3px",
 
-                  background: "#ffffff",
+                  background: "#FFFFFF",
 
                   border:
                     activeIndex === index
-                      ? "2px solid #4f46e5"
-                      : "1px solid #e5e7eb",
+                      ? "2px solid #EA580C"
+                      : "1px solid #BFDBFE",
 
                   borderRadius: "9px",
 
@@ -410,8 +410,8 @@ export default function ProductImageGallery({
 
                   background:
                     activeIndex === index
-                      ? "#4f46e5"
-                      : "#d1d5db",
+                      ? "#EA580C"
+                      : "#BFDBFE",
 
                   cursor: "pointer",
 

@@ -81,27 +81,27 @@ export default function ServicesPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-[#F9F9FB] text-[#1A1A1A]">
+      <main className="min-h-screen bg-[#FFFFFF] text-[#1E3A8A]">
         {/* Hero */}
-        <section className="relative overflow-hidden border-b border-[#E5E7EB] bg-white">
-          <div className="pointer-events-none absolute -right-20 -top-28 h-80 w-80 rounded-full bg-[#EEF0FF] blur-3xl" />
+        <section className="relative overflow-hidden border-b border-[#BFDBFE] bg-white">
+          <div className="pointer-events-none absolute -right-20 -top-28 h-80 w-80 rounded-full bg-[#FFEDD5] blur-3xl" />
           <div className="pointer-events-none absolute -bottom-36 left-1/4 h-72 w-72 rounded-full bg-indigo-50 blur-3xl" />
 
           <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1.15fr_0.85fr] lg:px-10 lg:py-24">
             <div>
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-[#EEF0FF] px-4 py-2 text-sm font-semibold text-[#4F46E5]">
-                <span className="h-2 w-2 rounded-full bg-[#4F46E5]" />
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-[#FFEDD5] px-4 py-2 text-sm font-semibold text-[#EA580C]">
+                <span className="h-2 w-2 rounded-full bg-[#EA580C]" />
                 Business Services Directory
               </div>
 
-              <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-[#1A1A1A] sm:text-5xl lg:text-6xl">
+              <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-[#1E3A8A] sm:text-5xl lg:text-6xl">
                 Find the Right
-                <span className="block text-[#4F46E5]">
+                <span className="block text-[#EA580C]">
                   Services for Your Business
                 </span>
               </h1>
 
-              <p className="mt-6 max-w-2xl text-base leading-8 text-[#6B7280] sm:text-lg">
+              <p className="mt-6 max-w-2xl text-base leading-8 text-[#2563EB] sm:text-lg">
                 Discover business services, explore professional solutions, and
                 connect with service providers to support your business growth
                 with Advixio.
@@ -110,7 +110,7 @@ export default function ServicesPage() {
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/products"
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#4F46E5] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:-translate-y-0.5 hover:bg-[#4338CA]"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#EA580C] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:-translate-y-0.5 hover:bg-[#EA580C]"
                 >
                   Explore Marketplace
                   <svg
@@ -131,13 +131,13 @@ export default function ServicesPage() {
 
                 <Link
                   href="/contact"
-                  className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[#E5E7EB] bg-white px-6 py-3 text-sm font-semibold text-[#1A1A1A] transition hover:border-[#4F46E5] hover:text-[#4F46E5]"
+                  className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[#BFDBFE] bg-white px-6 py-3 text-sm font-semibold text-[#1E3A8A] transition hover:border-[#EA580C] hover:text-[#EA580C]"
                 >
                   Contact Us
                 </Link>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-[#6B7280]">
+              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-[#2563EB]">
                 <span className="flex items-center gap-2">
                   <svg
                     viewBox="0 0 20 20"
@@ -178,10 +178,10 @@ export default function ServicesPage() {
 
             {/* Hero visual */}
             <div className="relative mx-auto w-full max-w-lg">
-              <div className="rounded-3xl border border-[#E5E7EB] bg-white p-4 shadow-2xl shadow-indigo-100/60 sm:p-6">
-                <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-5">
+              <div className="rounded-3xl border border-[#BFDBFE] bg-white p-4 shadow-2xl shadow-indigo-100/60 sm:p-6">
+                <div className="flex items-center justify-between border-b border-[#BFDBFE] pb-5">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6B7280]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
                       Advixio Marketplace
                     </p>
                     <h2 className="mt-1 text-xl font-bold">
@@ -189,7 +189,7 @@ export default function ServicesPage() {
                     </h2>
                   </div>
 
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF0FF] text-[#4F46E5]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FFEDD5] text-[#EA580C]">
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"
@@ -237,24 +237,24 @@ export default function ServicesPage() {
                   ].map((item) => (
                     <div
                       key={item.title}
-                      className="rounded-2xl border border-[#E5E7EB] bg-[#F9F9FB] p-4 transition hover:border-indigo-200 hover:bg-[#EEF0FF]"
+                      className="rounded-2xl border border-[#BFDBFE] bg-[#FFFFFF] p-4 transition hover:border-indigo-200 hover:bg-[#FFEDD5]"
                     >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-sm font-bold text-[#4F46E5] shadow-sm">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-sm font-bold text-[#EA580C] shadow-sm">
                         {item.icon}
                       </div>
 
-                      <h3 className="mt-4 text-sm font-bold text-[#1A1A1A]">
+                      <h3 className="mt-4 text-sm font-bold text-[#1E3A8A]">
                         {item.title}
                       </h3>
 
-                      <p className="mt-1 text-xs leading-5 text-[#6B7280]">
+                      <p className="mt-1 text-xs leading-5 text-[#2563EB]">
                         {item.label}
                       </p>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-4 flex items-center gap-3 rounded-2xl bg-[#4F46E5] p-4 text-white">
+                <div className="mt-4 flex items-center gap-3 rounded-2xl bg-[#EA580C] p-4 text-white">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
                     <svg
                       viewBox="0 0 24 24"
@@ -289,11 +289,11 @@ export default function ServicesPage() {
                 </div>
               </div>
 
-              <div className="absolute -right-3 top-16 hidden rounded-xl border border-[#E5E7EB] bg-white px-4 py-3 shadow-lg sm:block">
-                <p className="text-xs font-medium text-[#6B7280]">
+              <div className="absolute -right-3 top-16 hidden rounded-xl border border-[#BFDBFE] bg-white px-4 py-3 shadow-lg sm:block">
+                <p className="text-xs font-medium text-[#2563EB]">
                   Built for businesses
                 </p>
-                <p className="mt-1 text-sm font-bold text-[#4F46E5]">
+                <p className="mt-1 text-sm font-bold text-[#EA580C]">
                   One marketplace
                 </p>
               </div>
@@ -305,7 +305,7 @@ export default function ServicesPage() {
         <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
           <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
-              <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#4F46E5]">
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#EA580C]">
                 What you can explore
               </p>
 
@@ -313,7 +313,7 @@ export default function ServicesPage() {
                 Services for every business need
               </h2>
 
-              <p className="mt-4 max-w-2xl leading-7 text-[#6B7280]">
+              <p className="mt-4 max-w-2xl leading-7 text-[#2563EB]">
                 Explore key service categories and discover solutions that can
                 help your business operate, grow, and scale.
               </p>
@@ -321,7 +321,7 @@ export default function ServicesPage() {
 
             <Link
               href="/products"
-              className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#4F46E5] transition hover:text-[#4338CA]"
+              className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#EA580C] transition hover:text-[#EA580C]"
             >
               Browse marketplace
               <span aria-hidden="true">→</span>
@@ -332,17 +332,17 @@ export default function ServicesPage() {
             {services.map((service) => (
               <article
                 key={service.number}
-                className="group flex h-full flex-col rounded-2xl border border-[#E5E7EB] bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50 sm:p-7"
+                className="group flex h-full flex-col rounded-2xl border border-[#BFDBFE] bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50 sm:p-7"
               >
                 <div className="flex items-start justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#EEF0FF] text-lg font-bold text-[#4F46E5] transition group-hover:bg-[#4F46E5] group-hover:text-white">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFEDD5] text-lg font-bold text-[#EA580C] transition group-hover:bg-[#EA580C] group-hover:text-white">
                     {service.number}
                   </div>
 
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
-                    className="h-5 w-5 text-[#9CA3AF] transition group-hover:translate-x-1 group-hover:text-[#4F46E5]"
+                    className="h-5 w-5 text-[#93C5FD] transition group-hover:translate-x-1 group-hover:text-[#EA580C]"
                     aria-hidden="true"
                   >
                     <path
@@ -359,7 +359,7 @@ export default function ServicesPage() {
                   {service.title}
                 </h3>
 
-                <p className="mt-3 flex-1 text-sm leading-7 text-[#6B7280]">
+                <p className="mt-3 flex-1 text-sm leading-7 text-[#2563EB]">
                   {service.description}
                 </p>
 
@@ -367,7 +367,7 @@ export default function ServicesPage() {
                   {service.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-lg border border-[#E5E7EB] bg-[#F9F9FB] px-2.5 py-1.5 text-xs font-medium text-[#6B7280]"
+                      className="rounded-lg border border-[#BFDBFE] bg-[#FFFFFF] px-2.5 py-1.5 text-xs font-medium text-[#2563EB]"
                     >
                       {tag}
                     </span>
@@ -376,7 +376,7 @@ export default function ServicesPage() {
 
                 <Link
                   href={service.href}
-                  className="mt-6 inline-flex items-center gap-2 border-t border-[#E5E7EB] pt-5 text-sm font-semibold text-[#4F46E5] transition hover:text-[#4338CA]"
+                  className="mt-6 inline-flex items-center gap-2 border-t border-[#BFDBFE] pt-5 text-sm font-semibold text-[#EA580C] transition hover:text-[#EA580C]"
                 >
                   Explore solutions
                   <span aria-hidden="true">→</span>
@@ -385,17 +385,17 @@ export default function ServicesPage() {
             ))}
           </div>
 
-          <p className="mt-6 text-sm leading-6 text-[#6B7280]">
+          <p className="mt-6 text-sm leading-6 text-[#2563EB]">
             Note: These are illustrative service categories. Available
             providers depend on the listings published on Advixio.
           </p>
         </section>
 
         {/* How it works */}
-        <section className="border-y border-[#E5E7EB] bg-white">
+        <section className="border-y border-[#BFDBFE] bg-white">
           <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#4F46E5]">
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#EA580C]">
                 Simple process
               </p>
 
@@ -403,7 +403,7 @@ export default function ServicesPage() {
                 How Advixio helps your business
               </h2>
 
-              <p className="mt-4 leading-7 text-[#6B7280]">
+              <p className="mt-4 leading-7 text-[#2563EB]">
                 Move from discovering a requirement to finding a potential
                 business solution in three simple steps.
               </p>
@@ -412,13 +412,13 @@ export default function ServicesPage() {
             <div className="grid gap-8 md:grid-cols-3 md:gap-6">
               {benefits.map((benefit) => (
                 <div key={benefit.number} className="relative">
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#EEF0FF] text-sm font-bold text-[#4F46E5]">
+                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFEDD5] text-sm font-bold text-[#EA580C]">
                     {benefit.number}
                   </div>
 
                   <h3 className="text-lg font-bold">{benefit.title}</h3>
 
-                  <p className="mt-3 text-sm leading-7 text-[#6B7280]">
+                  <p className="mt-3 text-sm leading-7 text-[#2563EB]">
                     {benefit.description}
                   </p>
                 </div>
@@ -429,7 +429,7 @@ export default function ServicesPage() {
 
         {/* CTA */}
         <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
-          <div className="relative overflow-hidden rounded-3xl bg-[#4338CA] px-6 py-12 text-white sm:px-10 sm:py-14 lg:px-14">
+          <div className="relative overflow-hidden rounded-3xl bg-[#EA580C] px-6 py-12 text-white sm:px-10 sm:py-14 lg:px-14">
             <div className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full border-[40px] border-white/5" />
             <div className="pointer-events-none absolute -bottom-32 right-1/3 h-64 w-64 rounded-full bg-white/5 blur-2xl" />
 

@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
+import HeroSlider from "./HeroSlider";
 
 export default function Hero() {
   const firstLine = "Find the right ";
@@ -39,6 +40,12 @@ export default function Hero() {
 
   return (
     <section className="hero hero-redesign">
+
+      {/* Top image slider (full-bleed, behind the transparent navbar) */}
+      <HeroSlider />
+
+      {/* 99acres-style tabbed search card, overlapping the slider bottom */}
+      <SearchBar />
 
       {/* Moving background glow */}
       <div className="hero-decoration hero-decoration-one" />
@@ -102,8 +109,6 @@ export default function Hero() {
           suppliers. Explore products and connect directly with businesses
           across India.
         </p>
-
-        <SearchBar />
 
         <div className="hero-actions">
           <a href="#categories" className="hero-primary-action">

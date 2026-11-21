@@ -4,11 +4,35 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
 const [menuOpen, setMenuOpen] = useState(false);
 const [isLoggedIn, setIsLoggedIn] = useState(false);
 const [mounted, setMounted] = useState(false);
+
+/* ==============================
+99ACRES-STYLE: TRANSPARENT AT THE
+HOMEPAGE TOP, SOLID ON SCROLL
+============================== */
+
+const pathname = usePathname();
+const isHome = pathname === "/";
+const [scrolled, setScrolled] = useState(false);
+
+useEffect(() => {
+  if (!isHome) {
+    setScrolled(false);
+    return;
+  }
+
+  const update = () => setScrolled(window.scrollY > 10);
+
+  update();
+
+  window.addEventListener("scroll", update, { passive: true });
+  return () => window.removeEventListener("scroll", update);
+}, [isHome]);
 
 /* ==============================
 CHECK LOGIN
@@ -77,7 +101,7 @@ window.location.href = "/";
 
 };
 
-return ( <header className="navbar"> <div className="navbar-container">
+return ( <header className={`navbar${isHome && !scrolled && !menuOpen ? " navbar-over-hero" : ""}`}> <div className="navbar-container">
 
 
     {/* ==============================

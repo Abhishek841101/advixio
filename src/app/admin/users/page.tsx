@@ -317,7 +317,7 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F6FA] text-slate-800">
+    <div className="min-h-screen bg-[#FFFFFF] text-slate-800">
 
       {/* Header */}
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white px-5 py-4 sm:px-8">

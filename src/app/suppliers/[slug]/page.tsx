@@ -166,10 +166,10 @@ function InfoRow({
   value: string;
 }) {
   return (
-    <div className="flex min-w-0 items-start justify-between gap-4 border-b border-[#eee9f8] px-4 py-4 last:border-b-0">
-      <span className="shrink-0 text-sm text-[#777181]">{label}</span>
+    <div className="flex min-w-0 items-start justify-between gap-4 border-b border-[#BFDBFE] px-4 py-4 last:border-b-0">
+      <span className="shrink-0 text-sm text-[#1D4ED8]">{label}</span>
 
-      <strong className="break-words text-right text-sm font-semibold text-[#292333]">
+      <strong className="break-words text-right text-sm font-semibold text-[#1E3A8A]">
         {value || "Not provided"}
       </strong>
     </div>
@@ -187,27 +187,27 @@ export default async function SupplierProfilePage({ params }: Props) {
       <>
         <Navbar />
 
-        <main className="min-h-[65vh] bg-[#f8f7fb] px-5 py-20">
-          <div className="mx-auto max-w-2xl rounded-3xl border border-red-100 bg-white p-8 shadow-[0_20px_60px_rgba(31,20,54,0.07)]">
+        <main className="min-h-[65vh] bg-[#FFFFFF] px-5 py-20">
+          <div className="mx-auto max-w-2xl rounded-3xl border border-red-100 bg-white p-8 shadow-[0_20px_60px_rgba(23, 37, 84, 0.07)]">
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 text-2xl text-red-600">
               !
             </div>
 
-            <h1 className="text-2xl font-bold text-[#211a30]">
+            <h1 className="text-2xl font-bold text-[#1E3A8A]">
               Unable to load supplier
             </h1>
 
-            <p className="mt-3 leading-7 text-[#6e687a]">
+            <p className="mt-3 leading-7 text-[#1D4ED8]">
               {result.error}
             </p>
 
-            <p className="mt-4 break-all rounded-xl bg-[#f8f6fc] p-3 text-xs text-[#817a8d]">
+            <p className="mt-4 break-all rounded-xl bg-[#FFFFFF] p-3 text-xs text-[#2563EB]">
               API: {API_URL}/suppliers/{slug}
             </p>
 
             <Link
               href="/suppliers"
-              className="mt-6 inline-flex rounded-xl bg-gradient-to-r from-[#5e2cd3] to-[#8257e8] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-xl"
+              className="mt-6 inline-flex rounded-xl bg-gradient-to-r from-[#2563EB] to-[#3B82F6] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-xl"
             >
               ← Back to suppliers
             </Link>
@@ -242,14 +242,14 @@ export default async function SupplierProfilePage({ params }: Props) {
     <>
       <Navbar />
 
-      <main className="supplier-profile-page min-h-screen bg-[#f7f6fa] text-[#211b2b]">
+      <main className="supplier-profile-page min-h-screen bg-[#FFFFFF] text-[#1E3A8A]">
         {/* Breadcrumb */}
-        <div className="border-b border-[#ece8f3] bg-white">
+        <div className="border-b border-[#BFDBFE] bg-white">
           <nav
             aria-label="Breadcrumb"
-            className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-5 py-4 text-sm text-[#8a8495]"
+            className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-5 py-4 text-sm text-[#3B82F6]"
           >
-            <Link href="/" className="transition hover:text-[#5e2cd3]">
+            <Link href="/" className="transition hover:text-[#2563EB]">
               Home
             </Link>
 
@@ -257,32 +257,32 @@ export default async function SupplierProfilePage({ params }: Props) {
 
             <Link
               href="/products"
-              className="transition hover:text-[#5e2cd3]"
+              className="transition hover:text-[#2563EB]"
             >
               Products
             </Link>
 
             <span>/</span>
 
-            <span className="max-w-[260px] truncate font-medium text-[#3a3148]">
+            <span className="max-w-[260px] truncate font-medium text-[#172554]">
               {companyName}
             </span>
           </nav>
         </div>
 
         {/* Hero */}
-        <section className="relative overflow-hidden border-b border-[#eae4f5] bg-white">
-          <div className="pointer-events-none absolute -right-28 -top-36 h-96 w-96 rounded-full bg-[#eee5ff] blur-3xl" />
+        <section className="relative overflow-hidden border-b border-[#BFDBFE] bg-white">
+          <div className="pointer-events-none absolute -right-28 -top-36 h-96 w-96 rounded-full bg-[#FFEDD5] blur-3xl" />
 
-          <div className="pointer-events-none absolute -left-28 bottom-0 h-72 w-72 rounded-full bg-[#f6eefe] blur-3xl" />
+          <div className="pointer-events-none absolute -left-28 bottom-0 h-72 w-72 rounded-full bg-[#93C5FD] blur-3xl" />
 
           <div className="relative mx-auto max-w-7xl px-5 py-9 sm:py-12">
             <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
               <div className="min-w-0">
-                <div className="rounded-[28px] border border-[#e9e2f6] bg-gradient-to-br from-white via-[#fdfbff] to-[#f3edff] p-5 shadow-[0_18px_55px_rgba(56,33,94,0.07)] sm:p-8">
+                <div className="rounded-[28px] border border-[#BFDBFE] bg-gradient-to-br from-white via-[#FFFFFF] to-[#FFEDD5] p-5 shadow-[0_18px_55px_rgba(23, 37, 84, 0.07)] sm:p-8">
                   <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
                     {/* Supplier Profile Image */}
-                    <div className="relative flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[24px] bg-gradient-to-br from-[#5e2cd3] via-[#7141df] to-[#a18af4] text-3xl font-extrabold tracking-wide text-white shadow-xl shadow-violet-200 ring-4 ring-white">
+                    <div className="relative flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[24px] bg-gradient-to-br from-[#2563EB] via-[#3B82F6] to-[#93C5FD] text-3xl font-extrabold tracking-wide text-white shadow-xl shadow-violet-200 ring-4 ring-white">
                       {profileImage ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -298,7 +298,7 @@ export default async function SupplierProfilePage({ params }: Props) {
 
                     <div className="min-w-0 flex-1">
                       <div className="mb-3 flex flex-wrap items-center gap-2">
-                        <span className="rounded-full border border-[#e2d7fa] bg-white/90 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.15em] text-[#5e2cd3]">
+                        <span className="rounded-full border border-[#93C5FD] bg-white/90 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.15em] text-[#2563EB]">
                           Supplier profile
                         </span>
 
@@ -308,20 +308,20 @@ export default async function SupplierProfilePage({ params }: Props) {
                         </span>
                       </div>
 
-                      <h1 className="break-words text-2xl font-extrabold leading-tight tracking-tight text-[#21172f] sm:text-3xl lg:text-[38px]">
+                      <h1 className="break-words text-2xl font-extrabold leading-tight tracking-tight text-[#1E3A8A] sm:text-3xl lg:text-[38px]">
                         {companyName}
                       </h1>
 
-                      <p className="mt-3 text-sm leading-6 text-[#71697f]">
+                      <p className="mt-3 text-sm leading-6 text-[#1D4ED8]">
                         Contact person:{" "}
-                        <span className="font-semibold text-[#40364f]">
+                        <span className="font-semibold text-[#172554]">
                           {supplier.name}
                         </span>
                       </p>
 
                       {location && (
-                        <p className="mt-2 flex items-center gap-2 text-sm text-[#71697f]">
-                          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white text-[#6b3ad6] shadow-sm">
+                        <p className="mt-2 flex items-center gap-2 text-sm text-[#1D4ED8]">
+                          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white text-[#2563EB] shadow-sm">
                             ⌖
                           </span>
                           {location}
@@ -332,7 +332,7 @@ export default async function SupplierProfilePage({ params }: Props) {
                         {supplier.email && (
                           <a
                             href={`mailto:${supplier.email}`}
-                            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#5e2cd3] to-[#8053e5] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-xl"
+                            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#3B82F6] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-xl"
                           >
                             <span>✉</span> Contact Supplier{" "}
                             <span aria-hidden="true">↗</span>
@@ -342,7 +342,7 @@ export default async function SupplierProfilePage({ params }: Props) {
                         {supplier.phone && (
                           <a
                             href={`tel:${supplier.phone}`}
-                            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#ded5ee] bg-white px-5 py-3 text-sm font-bold text-[#4c2a8d] transition hover:border-[#bca7ed] hover:bg-[#f8f4ff]"
+                            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#BFDBFE] bg-white px-5 py-3 text-sm font-bold text-[#1E3A8A] transition hover:border-[#93C5FD] hover:bg-[#FFFFFF]"
                           >
                             <span>☎</span> Call Supplier
                           </a>
@@ -350,7 +350,7 @@ export default async function SupplierProfilePage({ params }: Props) {
 
                         <a
                           href="#products"
-                          className="inline-flex items-center justify-center gap-2 rounded-xl border border-transparent px-4 py-3 text-sm font-bold text-[#5e2cd3] transition hover:bg-white"
+                          className="inline-flex items-center justify-center gap-2 rounded-xl border border-transparent px-4 py-3 text-sm font-bold text-[#2563EB] transition hover:bg-white"
                         >
                           Explore products ↓
                         </a>
@@ -358,30 +358,30 @@ export default async function SupplierProfilePage({ params }: Props) {
                     </div>
                   </div>
 
-                  <div className="mt-8 grid grid-cols-2 gap-3 border-t border-[#e9e2f6] pt-5 sm:grid-cols-3">
-                    <div className="rounded-2xl bg-white/90 p-4 ring-1 ring-[#eee8f7]">
-                      <p className="text-xs font-semibold text-[#8a8297]">
+                  <div className="mt-8 grid grid-cols-2 gap-3 border-t border-[#BFDBFE] pt-5 sm:grid-cols-3">
+                    <div className="rounded-2xl bg-white/90 p-4 ring-1 ring-[#BFDBFE]">
+                      <p className="text-xs font-semibold text-[#3B82F6]">
                         Products listed
                       </p>
-                      <p className="mt-1 text-2xl font-extrabold text-[#39215f]">
+                      <p className="mt-1 text-2xl font-extrabold text-[#172554]">
                         {productCount}
                       </p>
                     </div>
 
-                    <div className="rounded-2xl bg-white/90 p-4 ring-1 ring-[#eee8f7]">
-                      <p className="text-xs font-semibold text-[#8a8297]">
+                    <div className="rounded-2xl bg-white/90 p-4 ring-1 ring-[#BFDBFE]">
+                      <p className="text-xs font-semibold text-[#3B82F6]">
                         Supplier location
                       </p>
-                      <p className="mt-1 line-clamp-2 text-base font-bold text-[#39215f]">
+                      <p className="mt-1 line-clamp-2 text-base font-bold text-[#172554]">
                         {location || "Not provided"}
                       </p>
                     </div>
 
-                    <div className="col-span-2 rounded-2xl bg-white/90 p-4 ring-1 ring-[#eee8f7] sm:col-span-1">
-                      <p className="text-xs font-semibold text-[#8a8297]">
+                    <div className="col-span-2 rounded-2xl bg-white/90 p-4 ring-1 ring-[#BFDBFE] sm:col-span-1">
+                      <p className="text-xs font-semibold text-[#3B82F6]">
                         Member since
                       </p>
-                      <p className="mt-1 text-base font-bold text-[#39215f]">
+                      <p className="mt-1 text-base font-bold text-[#172554]">
                         {supplier.createdAt
                           ? new Date(supplier.createdAt).toLocaleDateString(
                               "en-IN",
@@ -414,17 +414,17 @@ export default async function SupplierProfilePage({ params }: Props) {
                   ].map((item) => (
                     <div
                       key={item.title}
-                      className="flex items-center gap-3 rounded-2xl border border-[#ebe5f4] bg-white p-4"
+                      className="flex items-center gap-3 rounded-2xl border border-[#BFDBFE] bg-white p-4"
                     >
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f1eaff] text-lg font-bold text-[#6532d2]">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FFEDD5] text-lg font-bold text-[#2563EB]">
                         {item.icon}
                       </span>
 
                       <div className="min-w-0">
-                        <p className="text-sm font-bold text-[#352943]">
+                        <p className="text-sm font-bold text-[#172554]">
                           {item.title}
                         </p>
-                        <p className="mt-0.5 truncate text-xs text-[#898193]">
+                        <p className="mt-0.5 truncate text-xs text-[#2563EB]">
                           {item.text}
                         </p>
                       </div>
@@ -434,30 +434,30 @@ export default async function SupplierProfilePage({ params }: Props) {
               </div>
 
               {/* Contact panel */}
-              <aside className="h-fit rounded-[26px] border border-[#e9e2f5] bg-white p-5 shadow-[0_18px_55px_rgba(56,33,94,0.07)] sm:p-6 xl:sticky xl:top-24">
+              <aside className="h-fit rounded-[26px] border border-[#BFDBFE] bg-white p-5 shadow-[0_18px_55px_rgba(23, 37, 84, 0.07)] sm:p-6 xl:sticky xl:top-24">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#f0e9ff] text-xl text-[#5e2cd3]">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FFEDD5] text-xl text-[#2563EB]">
                     ↗
                   </div>
 
                   <div>
-                    <h2 className="text-lg font-extrabold text-[#241b32]">
+                    <h2 className="text-lg font-extrabold text-[#1E3A8A]">
                       Get in touch
                     </h2>
-                    <p className="mt-1 text-sm leading-5 text-[#898193]">
+                    <p className="mt-1 text-sm leading-5 text-[#2563EB]">
                       Reach out to this supplier for product details and pricing.
                     </p>
                   </div>
                 </div>
 
-                <div className="my-5 rounded-2xl border border-[#e8defb] bg-gradient-to-br from-[#faf7ff] to-[#f2eaff] p-4">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#7c62a9]">
+                <div className="my-5 rounded-2xl border border-[#93C5FD] bg-gradient-to-br from-[#FFFFFF] to-[#FFEDD5] p-4">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#2563EB]">
                     Supplier
                   </p>
-                  <p className="mt-1 break-words text-sm font-extrabold text-[#382354]">
+                  <p className="mt-1 break-words text-sm font-extrabold text-[#172554]">
                     {companyName}
                   </p>
-                  <p className="mt-2 text-xs text-[#81758f]">
+                  <p className="mt-2 text-xs text-[#2563EB]">
                     Mention your product requirement when contacting the supplier.
                   </p>
                 </div>
@@ -466,13 +466,13 @@ export default async function SupplierProfilePage({ params }: Props) {
                   {supplier.email ? (
                     <a
                       href={`mailto:${supplier.email}`}
-                      className="flex w-full items-center justify-between rounded-xl bg-[#5e2cd3] px-4 py-3.5 text-sm font-bold text-white transition hover:bg-[#4c1db8]"
+                      className="flex w-full items-center justify-between rounded-xl bg-[#2563EB] px-4 py-3.5 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
                     >
                       <span>Email supplier</span>
                       <span>↗</span>
                     </a>
                   ) : (
-                    <div className="rounded-xl bg-[#f8f6fb] px-4 py-3 text-sm text-[#8b8495]">
+                    <div className="rounded-xl bg-[#FFFFFF] px-4 py-3 text-sm text-[#3B82F6]">
                       Email not provided
                     </div>
                   )}
@@ -480,19 +480,19 @@ export default async function SupplierProfilePage({ params }: Props) {
                   {supplier.phone ? (
                     <a
                       href={`tel:${supplier.phone}`}
-                      className="flex w-full items-center justify-between rounded-xl border border-[#e4dcef] px-4 py-3.5 text-sm font-bold text-[#4b2b82] transition hover:bg-[#f8f4ff]"
+                      className="flex w-full items-center justify-between rounded-xl border border-[#BFDBFE] px-4 py-3.5 text-sm font-bold text-[#1E3A8A] transition hover:bg-[#FFFFFF]"
                     >
                       <span>Call supplier</span>
                       <span>☎</span>
                     </a>
                   ) : (
-                    <div className="rounded-xl bg-[#f8f6fb] px-4 py-3 text-sm text-[#8b8495]">
+                    <div className="rounded-xl bg-[#FFFFFF] px-4 py-3 text-sm text-[#3B82F6]">
                       Phone not provided
                     </div>
                   )}
                 </div>
 
-                <p className="mt-4 text-center text-[11px] leading-5 text-[#9b94a5]">
+                <p className="mt-4 text-center text-[11px] leading-5 text-[#3B82F6]">
                   Confirm price, minimum order quantity and delivery terms directly before placing an order.
                 </p>
               </aside>
@@ -507,41 +507,41 @@ export default async function SupplierProfilePage({ params }: Props) {
               <section id="products" className="scroll-mt-28">
                 <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
                   <div>
-                    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-[#7545d7]">
+                    <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-[#3B82F6]">
                       Catalogue
                     </p>
 
-                    <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-[#261c35] sm:text-3xl">
+                    <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-[#1E3A8A] sm:text-3xl">
                       Products by {companyName}
                     </h2>
 
-                    <p className="mt-2 text-sm text-[#81798e]">
+                    <p className="mt-2 text-sm text-[#2563EB]">
                       Explore products currently listed by this supplier.
                     </p>
                   </div>
 
-                  <span className="rounded-full border border-[#e5daf8] bg-white px-4 py-2 text-sm font-bold text-[#6230ce]">
+                  <span className="rounded-full border border-[#93C5FD] bg-white px-4 py-2 text-sm font-bold text-[#2563EB]">
                     {productCount} {productCount === 1 ? "product" : "products"}
                   </span>
                 </div>
 
                 {products.length === 0 ? (
-                  <div className="rounded-3xl border border-dashed border-[#d9cbed] bg-white px-6 py-16 text-center">
-                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#f2ebff] text-2xl text-[#7542d8]">
+                  <div className="rounded-3xl border border-dashed border-[#BFDBFE] bg-white px-6 py-16 text-center">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#FFEDD5] text-2xl text-[#3B82F6]">
                       ▦
                     </div>
 
-                    <h3 className="mt-5 text-lg font-extrabold text-[#2c2239]">
+                    <h3 className="mt-5 text-lg font-extrabold text-[#1E3A8A]">
                       No active products yet
                     </h3>
 
-                    <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#898193]">
+                    <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#2563EB]">
                       This supplier has not listed any active products. Browse the full catalogue to discover more.
                     </p>
 
                     <Link
                       href="/products"
-                      className="mt-5 inline-flex rounded-xl bg-[#5e2cd3] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#4c1db8]"
+                      className="mt-5 inline-flex rounded-xl bg-[#2563EB] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
                     >
                       Browse all products →
                     </Link>
@@ -561,13 +561,13 @@ export default async function SupplierProfilePage({ params }: Props) {
                       return (
                         <article
                           key={product._id}
-                          className="group overflow-hidden rounded-[22px] border border-[#ebe5f4] bg-white shadow-[0_5px_22px_rgba(35,22,58,0.035)] transition duration-300 hover:-translate-y-1 hover:border-[#d4c2f5] hover:shadow-[0_18px_42px_rgba(70,38,128,0.12)]"
+                          className="group overflow-hidden rounded-[22px] border border-[#BFDBFE] bg-white shadow-[0_5px_22px_rgba(23, 37, 84, 0.035)] transition duration-300 hover:-translate-y-1 hover:border-[#93C5FD] hover:shadow-[0_18px_42px_rgba(30, 58, 138, 0.12)]"
                         >
                           <Link
                             href={`/products/${product.slug}`}
                             className="block"
                           >
-                            <div className="relative flex h-56 items-center justify-center overflow-hidden bg-gradient-to-br from-[#f6f2fc] to-[#eae2f8]">
+                            <div className="relative flex h-56 items-center justify-center overflow-hidden bg-gradient-to-br from-[#93C5FD] to-[#93C5FD]">
                               <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/50 blur-2xl" />
 
                               {image ? (
@@ -578,7 +578,7 @@ export default async function SupplierProfilePage({ params }: Props) {
                                   className="relative h-full w-full object-contain p-5 transition duration-500 group-hover:scale-105"
                                 />
                               ) : (
-                                <div className="relative flex flex-col items-center gap-2 text-[#9a8ab4]">
+                                <div className="relative flex flex-col items-center gap-2 text-[#3B82F6]">
                                   <span className="text-4xl">▧</span>
                                   <span className="text-xs font-semibold">
                                     Product image unavailable
@@ -587,47 +587,47 @@ export default async function SupplierProfilePage({ params }: Props) {
                               )}
 
                               {product.category?.name && (
-                                <span className="absolute left-4 top-4 max-w-[80%] truncate rounded-full border border-white/80 bg-white/90 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#6331ce] shadow-sm backdrop-blur">
+                                <span className="absolute left-4 top-4 max-w-[80%] truncate rounded-full border border-white/80 bg-white/90 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#2563EB] shadow-sm backdrop-blur">
                                   {product.category.name}
                                 </span>
                               )}
                             </div>
 
                             <div className="p-5">
-                              <h3 className="line-clamp-2 min-h-12 text-base font-extrabold leading-6 text-[#2b2238] transition group-hover:text-[#5e2cd3]">
+                              <h3 className="line-clamp-2 min-h-12 text-base font-extrabold leading-6 text-[#1E3A8A] transition group-hover:text-[#2563EB]">
                                 {product.name}
                               </h3>
 
                               {product.shortDescription && (
-                                <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-[#898193]">
+                                <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-[#2563EB]">
                                   {product.shortDescription}
                                 </p>
                               )}
 
-                              <div className="mt-4 flex items-end justify-between gap-3 border-t border-[#f0ebf6] pt-4">
+                              <div className="mt-4 flex items-end justify-between gap-3 border-t border-[#BFDBFE] pt-4">
                                 <div className="min-w-0">
-                                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#9b93a7]">
+                                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#3B82F6]">
                                     Price
                                   </p>
 
-                                  <p className="mt-1 break-words text-sm font-extrabold text-[#37234f]">
+                                  <p className="mt-1 break-words text-sm font-extrabold text-[#172554]">
                                     {formatPrice(product.price, product.unit)}
                                   </p>
                                 </div>
 
-                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f1eaff] text-lg font-bold text-[#6230ce] transition group-hover:bg-[#5e2cd3] group-hover:text-white">
+                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FFEDD5] text-lg font-bold text-[#2563EB] transition group-hover:bg-[#2563EB] group-hover:text-white">
                                   ↗
                                 </span>
                               </div>
 
                               {productLocation && (
-                                <p className="mt-4 flex items-center gap-2 text-xs text-[#898193]">
-                                  <span className="text-[#7542d8]">⌖</span>
+                                <p className="mt-4 flex items-center gap-2 text-xs text-[#2563EB]">
+                                  <span className="text-[#3B82F6]">⌖</span>
                                   {productLocation}
                                 </p>
                               )}
 
-                              <div className="mt-4 border-t border-[#f0ebf6] pt-4 text-sm font-extrabold text-[#6331ce]">
+                              <div className="mt-4 border-t border-[#BFDBFE] pt-4 text-sm font-extrabold text-[#2563EB]">
                                 View product details{" "}
                                 <span className="transition group-hover:ml-1">
                                   →
@@ -643,23 +643,23 @@ export default async function SupplierProfilePage({ params }: Props) {
               </section>
 
               {/* Supplier information */}
-              <section className="mt-8 rounded-[24px] border border-[#ebe5f4] bg-white p-5 shadow-[0_5px_22px_rgba(35,22,58,0.035)] sm:p-7">
+              <section className="mt-8 rounded-[24px] border border-[#BFDBFE] bg-white p-5 shadow-[0_5px_22px_rgba(23, 37, 84, 0.035)] sm:p-7">
                 <div className="mb-5 flex items-center gap-3">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f1eaff] text-xl text-[#6331ce]">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FFEDD5] text-xl text-[#2563EB]">
                     ▤
                   </span>
 
                   <div>
-                    <h2 className="text-xl font-extrabold text-[#2b2238]">
+                    <h2 className="text-xl font-extrabold text-[#1E3A8A]">
                       Supplier information
                     </h2>
-                    <p className="mt-1 text-sm text-[#898193]">
+                    <p className="mt-1 text-sm text-[#2563EB]">
                       Contact and location details available on this profile.
                     </p>
                   </div>
                 </div>
 
-                <div className="overflow-hidden rounded-2xl border border-[#eee8f7]">
+                <div className="overflow-hidden rounded-2xl border border-[#BFDBFE]">
                   <InfoRow label="Company name" value={companyName} />
                   <InfoRow label="Contact person" value={supplier.name} />
                   <InfoRow label="Email address" value={supplier.email || ""} />
@@ -683,40 +683,40 @@ export default async function SupplierProfilePage({ params }: Props) {
 
             {/* Sidebar */}
             <aside className="space-y-5 lg:sticky lg:top-24">
-              <div className="rounded-[22px] border border-[#ebe5f4] bg-white p-5 shadow-[0_5px_22px_rgba(35,22,58,0.035)]">
+              <div className="rounded-[22px] border border-[#BFDBFE] bg-white p-5 shadow-[0_5px_22px_rgba(23, 37, 84, 0.035)]">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f1eaff] text-lg text-[#6331ce]">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFEDD5] text-lg text-[#2563EB]">
                     ✦
                   </span>
 
-                  <h3 className="text-base font-extrabold text-[#2b2238]">
+                  <h3 className="text-base font-extrabold text-[#1E3A8A]">
                     Profile overview
                   </h3>
                 </div>
 
                 <div className="mt-4 space-y-3">
-                  <div className="flex items-center justify-between gap-3 rounded-xl bg-[#faf8fd] p-3">
-                    <span className="text-sm text-[#898193]">
+                  <div className="flex items-center justify-between gap-3 rounded-xl bg-[#FFFFFF] p-3">
+                    <span className="text-sm text-[#2563EB]">
                       Listed products
                     </span>
 
-                    <strong className="text-sm font-extrabold text-[#5e2cd3]">
+                    <strong className="text-sm font-extrabold text-[#2563EB]">
                       {productCount}
                     </strong>
                   </div>
 
-                  <div className="flex items-center justify-between gap-3 rounded-xl bg-[#faf8fd] p-3">
-                    <span className="text-sm text-[#898193]">Location</span>
+                  <div className="flex items-center justify-between gap-3 rounded-xl bg-[#FFFFFF] p-3">
+                    <span className="text-sm text-[#2563EB]">Location</span>
 
-                    <strong className="max-w-[55%] text-right text-sm font-bold text-[#3b3049]">
+                    <strong className="max-w-[55%] text-right text-sm font-bold text-[#172554]">
                       {location || "Not provided"}
                     </strong>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-[22px] border border-[#ebe5f4] bg-white p-5 shadow-[0_5px_22px_rgba(35,22,58,0.035)]">
-                <h3 className="text-base font-extrabold text-[#2b2238]">
+              <div className="rounded-[22px] border border-[#BFDBFE] bg-white p-5 shadow-[0_5px_22px_rgba(23, 37, 84, 0.035)]">
+                <h3 className="text-base font-extrabold text-[#1E3A8A]">
                   Before placing an order
                 </h3>
 
@@ -729,9 +729,9 @@ export default async function SupplierProfilePage({ params }: Props) {
                   ].map((item) => (
                     <li
                       key={item}
-                      className="flex items-start gap-2.5 text-sm leading-5 text-[#777181]"
+                      className="flex items-start gap-2.5 text-sm leading-5 text-[#1D4ED8]"
                     >
-                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f0e9ff] text-xs font-extrabold text-[#6331ce]">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#FFEDD5] text-xs font-extrabold text-[#2563EB]">
                         ✓
                       </span>
 
@@ -741,7 +741,7 @@ export default async function SupplierProfilePage({ params }: Props) {
                 </ul>
               </div>
 
-              <div className="overflow-hidden rounded-[22px] bg-gradient-to-br from-[#4d20b6] via-[#6733d2] to-[#8b60eb] p-5 text-white shadow-xl shadow-violet-200">
+              <div className="overflow-hidden rounded-[22px] bg-gradient-to-br from-[#1D4ED8] via-[#2563EB] to-[#60A5FA] p-5 text-white shadow-xl shadow-violet-200">
                 <div className="text-2xl">✉</div>
 
                 <h3 className="mt-3 text-lg font-extrabold">
@@ -755,7 +755,7 @@ export default async function SupplierProfilePage({ params }: Props) {
                 {supplier.email ? (
                   <a
                     href={`mailto:${supplier.email}`}
-                    className="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-extrabold text-[#5e2cd3] transition hover:bg-[#f4efff]"
+                    className="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-extrabold text-[#2563EB] transition hover:bg-[#FFEDD5]"
                   >
                     Contact supplier →
                   </a>
@@ -766,25 +766,25 @@ export default async function SupplierProfilePage({ params }: Props) {
                 )}
               </div>
 
-              <div className="rounded-[22px] border border-[#ebe5f4] bg-white p-5">
-                <h3 className="text-base font-extrabold text-[#2b2238]">
+              <div className="rounded-[22px] border border-[#BFDBFE] bg-white p-5">
+                <h3 className="text-base font-extrabold text-[#1E3A8A]">
                   Discover more
                 </h3>
 
-                <p className="mt-2 text-sm leading-6 text-[#898193]">
+                <p className="mt-2 text-sm leading-6 text-[#2563EB]">
                   Explore other suppliers and products listed on Advixio.
                 </p>
 
                 <Link
                   href="/suppliers"
-                  className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-[#ded2f5] px-4 py-3 text-sm font-extrabold text-[#6331ce] transition hover:bg-[#f8f4ff]"
+                  className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-[#93C5FD] px-4 py-3 text-sm font-extrabold text-[#2563EB] transition hover:bg-[#FFFFFF]"
                 >
                   Browse suppliers →
                 </Link>
 
                 <Link
                   href="/products"
-                  className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-[#f1eaff] px-4 py-3 text-sm font-extrabold text-[#6331ce] transition hover:bg-[#e8dcff]"
+                  className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-[#FFEDD5] px-4 py-3 text-sm font-extrabold text-[#2563EB] transition hover:bg-[#FFEDD5]"
                 >
                   Browse products →
                 </Link>

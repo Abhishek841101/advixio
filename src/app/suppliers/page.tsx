@@ -226,11 +226,11 @@ export default function SuppliersPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen overflow-hidden bg-[#f7f8fc] text-slate-900">
+      <main className="min-h-screen overflow-hidden bg-[#FFFFFF] text-slate-900">
 
         {/* HERO */}
-        <section className="relative isolate overflow-hidden bg-[#0b1024]">
-          <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgba(124,58,237,0.26),transparent_45%),radial-gradient(ellipse_at_bottom_left,rgba(79,70,229,0.22),transparent_45%)]" />
+        <section className="relative isolate overflow-hidden bg-[#1E3A8A]">
+          <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgba(59, 130, 246, 0.26),transparent_45%),radial-gradient(ellipse_at_bottom_left,rgba(59, 130, 246, 0.22),transparent_45%)]" />
 
           <div className="pointer-events-none absolute -right-24 top-16 -z-10 h-72 w-72 rounded-full border border-white/[0.07] sm:h-96 sm:w-96" />
           <div className="pointer-events-none absolute -right-12 top-28 -z-10 h-56 w-56 rounded-full border border-white/[0.07] sm:h-72 sm:w-72" />
@@ -240,7 +240,7 @@ export default function SuppliersPage() {
 
               <div>
                 <div className="inline-flex items-center gap-2 rounded-full border border-indigo-300/20 bg-indigo-400/10 px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-indigo-200 sm:text-xs">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]" />
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(37, 99, 235, 0.8)]" />
                   Advixio supplier network
                 </div>
 
@@ -591,7 +591,7 @@ export default function SuppliersPage() {
                 return (
                   <article
                     key={supplier._id}
-                    className="group relative flex min-w-0 flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_4px_24px_rgba(15,23,42,0.035)] transition-all duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-[0_18px_45px_rgba(79,70,229,0.10)] sm:p-6"
+                    className="group relative flex min-w-0 flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_4px_24px_rgba(23, 37, 84, 0.035)] transition-all duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-[0_18px_45px_rgba(234, 88, 12, 0.12)] sm:p-6"
                   >
                     <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
@@ -752,7 +752,7 @@ export default function SuppliersPage() {
           )}
 
           {/* BOTTOM CTA */}
-          <div className="relative mt-14 overflow-hidden rounded-[28px] bg-[#11152e] p-6 shadow-xl shadow-indigo-950/10 sm:p-9 lg:p-10">
+          <div className="relative mt-14 overflow-hidden rounded-[28px] bg-[#1E3A8A] p-6 shadow-xl shadow-indigo-950/10 sm:p-9 lg:p-10">
             <div className="pointer-events-none absolute -right-10 -top-24 h-64 w-64 rounded-full bg-violet-500/20 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 left-1/3 h-56 w-56 rounded-full bg-indigo-500/20 blur-3xl" />
 

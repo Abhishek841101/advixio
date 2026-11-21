@@ -1042,8 +1042,6 @@ const handleExcelImport = async (
       <style jsx>{`
         .product-page {
           width: 100%;
-          min-height: 100vh;
-          padding: 24px;
           box-sizing: border-box;
         }
 
@@ -1065,7 +1063,7 @@ const handleExcelImport = async (
           font-size: 12px;
           font-weight: 700;
           letter-spacing: 0.08em;
-          color: #6b7280;
+          color: #2563EB;
         }
 
         .topbar h1 {
@@ -1076,7 +1074,7 @@ const handleExcelImport = async (
 
         .topbar p {
           margin: 0;
-          color: #6b7280;
+          color: #2563EB;
         }
 
         .marketplace-button {
@@ -1085,26 +1083,26 @@ const handleExcelImport = async (
           justify-content: center;
           min-height: 42px;
           padding: 0 16px;
-          border: 1px solid #d1d5db;
+          border: 1px solid #BFDBFE;
           border-radius: 9px;
           text-decoration: none;
-          color: #111827;
-          background: #fff;
+          color: #1E3A8A;
+          background: #FFFFFF;
           font-weight: 600;
           white-space: nowrap;
         }
 
         .form-panel {
           width: 100%;
-          background: #fff;
-          border: 1px solid #e5e7eb;
+          background: #FFFFFF;
+          border: 1px solid #BFDBFE;
           border-radius: 16px;
           overflow: hidden;
         }
 
         .section {
           padding: 24px;
-          border-bottom: 1px solid #e5e7eb;
+          border-bottom: 1px solid #BFDBFE;
         }
 
         .section:last-child {
@@ -1114,12 +1112,12 @@ const handleExcelImport = async (
         .section-title {
           margin: 0 0 18px;
           font-size: 20px;
-          color: #111827;
+          color: #1E3A8A;
         }
 
         .section-description {
           margin: -10px 0 18px;
-          color: #6b7280;
+          color: #2563EB;
           font-size: 14px;
         }
 
@@ -1143,7 +1141,7 @@ const handleExcelImport = async (
           margin-bottom: 7px;
           font-size: 14px;
           font-weight: 600;
-          color: #374151;
+          color: #1E3A8A;
         }
 
         .field input,
@@ -1151,12 +1149,12 @@ const handleExcelImport = async (
         .field select {
           width: 100%;
           box-sizing: border-box;
-          border: 1px solid #d1d5db;
+          border: 1px solid #BFDBFE;
           border-radius: 9px;
           padding: 11px 12px;
           font-size: 14px;
-          background: #fff;
-          color: #111827;
+          background: #FFFFFF;
+          color: #1E3A8A;
           outline: none;
         }
 
@@ -1168,7 +1166,7 @@ const handleExcelImport = async (
         .field input:focus,
         .field textarea:focus,
         .field select:focus {
-          border-color: #111827;
+          border-color: #1E3A8A;
         }
 
         .section-head {
@@ -1186,15 +1184,15 @@ const handleExcelImport = async (
 
         .section-head p {
           margin: 6px 0 0;
-          color: #6b7280;
+          color: #2563EB;
           font-size: 14px;
         }
 
         .add-button {
           border: 0;
           border-radius: 9px;
-          background: #111827;
-          color: #fff;
+          background: #1E3A8A;
+          color: #FFFFFF;
           padding: 11px 16px;
           font-size: 14px;
           font-weight: 600;
@@ -1210,22 +1208,22 @@ const handleExcelImport = async (
         }
 
         .empty-box {
-          border: 1px dashed #d1d5db;
+          border: 1px dashed #BFDBFE;
           border-radius: 12px;
           padding: 32px 20px;
           text-align: center;
-          background: #fafafa;
+          background: #FFFFFF;
         }
 
         .empty-box p {
           margin: 0 0 16px;
-          color: #6b7280;
+          color: #2563EB;
           font-size: 14px;
         }
 
         .desktop-table {
           width: 100%;
-          border: 1px solid #e5e7eb;
+          border: 1px solid #BFDBFE;
           border-radius: 12px;
           overflow: hidden;
         }
@@ -1240,12 +1238,12 @@ const handleExcelImport = async (
         }
 
         .table-header {
-          background: #f9fafb;
-          border-bottom: 1px solid #e5e7eb;
+          background: #FFFFFF;
+          border-bottom: 1px solid #BFDBFE;
         }
 
         .table-row {
-          border-bottom: 1px solid #e5e7eb;
+          border-bottom: 1px solid #BFDBFE;
           align-items: center;
         }
 
@@ -1261,14 +1259,14 @@ const handleExcelImport = async (
           padding: 14px;
           font-size: 13px;
           font-weight: 600;
-          color: #374151;
+          color: #1E3A8A;
         }
 
         .table-cell input {
           width: 100%;
           box-sizing: border-box;
           padding: 10px 11px;
-          border: 1px solid #d1d5db;
+          border: 1px solid #BFDBFE;
           border-radius: 8px;
           font-size: 14px;
         }
@@ -1280,9 +1278,9 @@ const handleExcelImport = async (
         }
 
         .remove-button {
-          border: 1px solid #e5e7eb;
-          background: #fff;
-          color: #dc2626;
+          border: 1px solid #BFDBFE;
+          background: #FFFFFF;
+          color: #EA580C;
           border-radius: 8px;
           padding: 8px 10px;
           cursor: pointer;
@@ -1294,11 +1292,11 @@ const handleExcelImport = async (
         }
 
         .mobile-field-card {
-          border: 1px solid #e5e7eb;
+          border: 1px solid #BFDBFE;
           border-radius: 12px;
           padding: 14px;
           margin-bottom: 12px;
-          background: #fff;
+          background: #FFFFFF;
         }
 
         .mobile-field-card:last-child {
@@ -1310,14 +1308,14 @@ const handleExcelImport = async (
           margin-bottom: 6px;
           font-size: 12px;
           font-weight: 700;
-          color: #6b7280;
+          color: #2563EB;
         }
 
         .mobile-field-card input {
           width: 100%;
           box-sizing: border-box;
           padding: 11px 12px;
-          border: 1px solid #d1d5db;
+          border: 1px solid #BFDBFE;
           border-radius: 8px;
           font-size: 14px;
           margin-bottom: 12px;
@@ -1334,7 +1332,7 @@ const handleExcelImport = async (
         .image-upload small {
           display: block;
           margin-top: 7px;
-          color: #6b7280;
+          color: #2563EB;
           font-size: 12px;
         }
 
@@ -1347,10 +1345,10 @@ const handleExcelImport = async (
         }
 
         .image-preview {
-          border: 1px solid #e5e7eb;
+          border: 1px solid #BFDBFE;
           border-radius: 12px;
           overflow: hidden;
-          background: #fff;
+          background: #FFFFFF;
         }
 
         .image-preview img {
@@ -1372,7 +1370,7 @@ const handleExcelImport = async (
         .image-preview-info button {
           border: 0;
           background: transparent;
-          color: #dc2626;
+          color: #EA580C;
           cursor: pointer;
           font-size: 12px;
         }
@@ -1381,9 +1379,9 @@ const handleExcelImport = async (
           margin: 20px 24px 0;
           padding: 12px 14px;
           border-radius: 9px;
-          background: #fef2f2;
-          color: #b91c1c;
-          border: 1px solid #fecaca;
+          background: #FFFFFF;
+          color: #C2410C;
+          border: 1px solid #FFEDD5;
           font-size: 14px;
         }
 
@@ -1392,8 +1390,8 @@ const handleExcelImport = async (
           justify-content: flex-end;
           gap: 12px;
           padding: 20px 24px;
-          background: #fafafa;
-          border-top: 1px solid #e5e7eb;
+          background: #FFFFFF;
+          border-top: 1px solid #BFDBFE;
         }
 
         .cancel-button,
@@ -1410,15 +1408,15 @@ const handleExcelImport = async (
         }
 
         .cancel-button {
-          border: 1px solid #d1d5db;
-          color: #374151;
-          background: #fff;
+          border: 1px solid #BFDBFE;
+          color: #1E3A8A;
+          background: #FFFFFF;
         }
 
         .submit-button {
           border: 0;
-          background: #111827;
-          color: #fff;
+          background: #1E3A8A;
+          color: #FFFFFF;
           cursor: pointer;
         }
 
@@ -1544,80 +1542,35 @@ const handleExcelImport = async (
         }
       `}</style>
 
-      <main className="product-page">
+      <div className="product-page">
         <div className="product-container">
 
-          {/* =================================================
-              TOP BAR
-          ================================================= */}
-
-          {/* <div className="topbar">
+          <div className="sd-page-head">
             <div>
-              <span className="eyebrow">
-                PRODUCT MANAGEMENT
-              </span>
-
-              <h1>
-                Add Product
-              </h1>
-
-              <p>
-                Create a new product listing
-                for the Advixio marketplace.
-              </p>
+              <h1>Add Product</h1>
+              <p>Create a new product listing for the Advixio marketplace.</p>
             </div>
-
-            <Link
-              href="/dashboard/products"
-              className="marketplace-button"
-            >
-              My Products
-            </Link>
-          </div> */}
-<div className="topbar">
-  <div>
-    <span className="eyebrow">
-      PRODUCT MANAGEMENT
-    </span>
-
-    <h1>Add Product</h1>
-
-    <p>
-      Create a new product listing
-      for the Advixio marketplace.
-    </p>
-  </div>
-
-  <div className="header-actions">
-
-    <input
-      ref={excelInputRef}
-      type="file"
-      accept=".xlsx,.xls"
-      onChange={handleExcelImport}
-      style={{ display: "none" }}
-    />
-
-    <button
-      type="button"
-      className="import-button"
-      onClick={() => excelInputRef.current?.click()}
-      disabled={importing}
-    >
-      {importing
-        ? "Importing Excel..."
-        : "↑ Import Excel"}
-    </button>
-
-    <Link
-      href="/dashboard/products"
-      className="marketplace-button"
-    >
-      My Products
-    </Link>
-
-  </div>
-</div>
+            <div className="sd-actions">
+              <input
+                ref={excelInputRef}
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={handleExcelImport}
+                style={{ display: "none" }}
+              />
+              <button
+                type="button"
+                className="sd-btn"
+                onClick={() => excelInputRef.current?.click()}
+                disabled={importing}
+              >
+                {importing ? "Importing Excel..." : "↑ Import Excel"}
+              </button>
+              <Link href="/dashboard/products" className="sd-btn sd-btn-primary">
+                My Products
+              </Link>
+            </div>
+          </div>
           {/* =================================================
               FORM
           ================================================= */}
@@ -2582,7 +2535,7 @@ const handleExcelImport = async (
           </form>
 
         </div>
-      </main>
+      </div>
     </>
   );
 }
