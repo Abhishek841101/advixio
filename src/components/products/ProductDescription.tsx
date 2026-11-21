@@ -32,7 +32,7 @@ export default function ProductDescription({
         <button
           type="button"
           onClick={() => setExpanded((current) => !current)}
-          className="mt-2 inline-flex font-bold text-violet-700 transition hover:text-violet-900"
+          className="mt-2 inline-flex font-bold text-[var(--primary)] transition hover:text-[#C2410C]"
           aria-expanded={expanded}
         >
           {expanded ? "Read Less ↑" : "Read More ↓"}

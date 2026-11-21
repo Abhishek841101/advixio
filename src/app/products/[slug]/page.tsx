@@ -730,36 +730,51 @@ export default async function ProductDetailPage({ params }: Props) {
 
         {/* PRODUCT INFORMATION */}
 
-        <section className="product-information-layout">
+        <section className="product-information-layout product-information-layout--full">
           <div className="product-information-main">
-            {/* PRODUCT DESCRIPTION */}
+            {/* COMBINED TABS: THREE SECTIONS IN ONE CARD */}
 
-            {/* <div className="product-information-card min-w-0 max-w-full overflow-hidden">
-              <h2>Product Description</h2>
+            <ProductDetailTabs
+  description={
+    product.description?.trim() ||
+    product.shortDescription?.trim() ||
+    "No product description available."
+  }
+  customFields={customFieldData}
+  specifications={specificationData}
+  companyName={
+    product.companyName ||
+    product.seller?.companyName ||
+    "Not provided"
+  }
+  city={
+    product.location?.city ||
+    product.seller?.city ||
+    "Not provided"
+  }
+  state={
+    product.location?.state ||
+    product.seller?.state ||
+    "Not provided"
+  }
+  country={product.location?.country || "India"}
+/>
+          </div>
+        </section>
 
-              <div className="product-description-responsive">
-                <ProductDescription
-                  description={
-                    product.description?.trim() ||
-                    product.shortDescription?.trim() ||
-                    "No product description available."
-                  }
-                  maxLength={350}
-                />
-              </div>
-            </div> */}
-
+        <section className={`product-information-layout product-information-layout--catalogue${supplierProducts.length === 0 ? " no-catalogue" : ""}`}>
+          <div className="product-information-main">
             {/* MORE PRODUCTS FROM SUPPLIER */}
 
             {supplierProducts.length > 0 && (
               <section className="supplier-catalogue-section w-full min-w-0 max-w-full overflow-hidden">
                 <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#C2410C]">
                       Supplier catalogue
                     </p>
 
-                    <h2 className="mt-1 text-xl font-extrabold text-slate-900 sm:text-2xl">
+                    <h2 className="mt-1 text-xl font-extrabold text-[var(--text)] sm:text-2xl">
                       More Products From This Supplier
                     </h2>
 
@@ -773,7 +788,7 @@ export default async function ProductDetailPage({ params }: Props) {
                       href={`/suppliers/${encodeURIComponent(
                         supplierIdentifier
                       )}`}
-                      className="shrink-0 text-sm font-bold text-violet-700 hover:text-violet-900"
+                      className="shrink-0 text-sm font-bold text-[var(--primary)] hover:text-[#C2410C]"
                     >
                       View All →
                     </Link>
@@ -809,7 +824,7 @@ export default async function ProductDetailPage({ params }: Props) {
                                 className="h-full w-full object-contain p-3 transition duration-300 hover:scale-105"
                               />
                             ) : (
-                              <span className="px-4 text-center text-sm text-slate-400">
+                              <span className="supplier-product-placeholder">
                                 Product image unavailable
                               </span>
                             )}
@@ -820,7 +835,7 @@ export default async function ProductDetailPage({ params }: Props) {
                               {item.name}
                             </h3>
 
-                            <p className="mt-2 text-base font-extrabold text-slate-900">
+                            <p className="mt-2 text-base font-extrabold text-[var(--text)]">
                               {formatPrice(item.price)}
                               {item.unit && (
                                 <span className="text-xs font-semibold text-slate-500">
@@ -829,7 +844,7 @@ export default async function ProductDetailPage({ params }: Props) {
                               )}
                             </p>
 
-                            <p className="mt-3 border-t border-slate-100 pt-3 text-xs font-bold text-violet-700">
+                            <p className="mt-3 border-t border-slate-100 pt-3 text-xs font-bold text-[var(--primary)]">
                               View product details →
                             </p>
                           </div>
@@ -844,34 +859,6 @@ export default async function ProductDetailPage({ params }: Props) {
                 </p>
               </section>
             )}
-
-            {/* COMBINED TABS: THREE SECTIONS IN ONE CARD */}
-
-            <ProductDetailTabs
-  description={
-    product.description?.trim() ||
-    product.shortDescription?.trim() ||
-    "No product description available."
-  }
-  customFields={customFieldData}
-  specifications={specificationData}
-  companyName={
-    product.companyName ||
-    product.seller?.companyName ||
-    "Not provided"
-  }
-  city={
-    product.location?.city ||
-    product.seller?.city ||
-    "Not provided"
-  }
-  state={
-    product.location?.state ||
-    product.seller?.state ||
-    "Not provided"
-  }
-  country={product.location?.country || "India"}
-/>
           </div>
 
           {/* SUPPLIER SIDEBAR */}

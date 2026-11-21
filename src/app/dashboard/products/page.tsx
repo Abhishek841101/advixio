@@ -145,8 +145,7 @@ export default function MyProductsPage() {
         </div>
       </div>
 
-      <div className="sd-stats four" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
-        <div className="sd-stat-card">
+      <div className="sd-stats three">        <div className="sd-stat-card">
           <div className="sd-stat-top">
             <span className="sd-stat-label">TOTAL</span>
             <span className="sd-stat-icon">📦</span>
