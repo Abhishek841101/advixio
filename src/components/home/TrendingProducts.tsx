@@ -17,6 +17,7 @@ type Product = {
   price?: number;
   unit?: string;
   images?: string[];
+  createdAt?: string;
   category?: {
     name?: string;
   } | null;
@@ -222,7 +223,14 @@ export default function TrendingProducts() {
           );
         }
 
-        const list = (result.data || []).slice(0, 10);
+        const list = (result.data || [])
+          .slice()
+          .sort((a: Product, b: Product) => {
+            const da = a.createdAt ? new Date(a.createdAt).getTime() : Infinity;
+            const db = b.createdAt ? new Date(b.createdAt).getTime() : Infinity;
+            return da - db;
+          })
+          .slice(0, 10);
         setProducts(list);
       } catch (err) {
         console.error("Trending products API error:", err);
