@@ -393,6 +393,13 @@ export default function AdminDashboard() {
             <span className="text-lg">♙</span>
             Manage Users
           </Link>
+          <Link
+  href="/admin/enquiries"
+  className="mt-2 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
+>
+  <span className="text-lg">▤</span>
+  All Enquiries
+</Link>
 
           <a
             href="/products"
