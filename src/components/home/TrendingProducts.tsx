@@ -223,7 +223,20 @@ export default function TrendingProducts() {
           );
         }
 
+        const allowedSuppliers = ["play project", "mayur computers"];
+
         const list = (result.data || [])
+          .filter((product: Product) => {
+            const names = [
+              product.seller?.companyName,
+              product.seller?.name,
+              product.companyName,
+            ]
+              .filter(Boolean)
+              .map((value) => String(value).toLowerCase().trim());
+
+            return allowedSuppliers.some((supplier) => names.includes(supplier));
+          })
           .slice()
           .sort((a: Product, b: Product) => {
             const da = a.createdAt ? new Date(a.createdAt).getTime() : Infinity;
