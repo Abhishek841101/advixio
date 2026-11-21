@@ -9790,8 +9790,8 @@ main:has(> h1) > section > a span {
   max-width: 850px;
   margin: 0 auto;
 
-  color: #F97316 !important;
-  -webkit-text-fill-color: #F97316;
+  color: var(--text);
+  -webkit-text-fill-color: var(--text);
 
   font-size: clamp(38px, 4.5vw, 54px);
   font-weight: 850;
@@ -9806,23 +9806,16 @@ main:has(> h1) > section > a span {
 }
 
 .hero-redesign h1 .hero-highlight {
-  color: #FFFFFF !important;
-
-  background: linear-gradient(
-    90deg,
-    #F97316 0%,
-    #2563EB 100%
-  );
-
-  -webkit-background-clip: border-box;
-  background-clip: border-box;
-  -webkit-text-fill-color: #FFFFFF;
-
+  color: var(--primary);
+  background: linear-gradient(90deg, #EA580C 0%, #C2410C 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   font-weight: 850;
-  padding: 0.02em 0.18em;
-  border-radius: 0.18em;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  padding: 0;
+  border-radius: 0;
+  box-decoration-break: initial;
+  -webkit-box-decoration-break: initial;
 }
 
 /* =====================================================
@@ -11159,19 +11152,19 @@ background: #EA580C;
 }
 
 .logout-button {
-border: 1px solid #BFDBFE;
-background: #FFFFFF;
-color: #1E3A8A;
-padding: 10px 16px;
-border-radius: 8px;
-font-weight: 600;
-cursor: pointer;
-transition: 0.2s ease;
+  border: 1.5px solid var(--text);
+  background: transparent;
+  color: var(--text);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .logout-button:hover {
-background: #FFFFFF;
-border-color: #BFDBFE;
+  background: rgba(30, 58, 138, 0.06);
+  border-color: var(--text);
 }
 
 .mobile-dashboard-button {
@@ -20546,6 +20539,208 @@ html {
   transition: color 0.2s ease;
 }
 
+/* Homepage polish */
+.page-scroll {
+  scroll-snap-type: none;
+  overflow-x: clip;
+}
+
+.page-scroll > .scroll-section,
+.page-scroll > .hero {
+  min-height: auto !important; /* override legacy 100vh scroll-snap section sizing */
+  height: auto;
+}
+
+.page-scroll > .scroll-section {
+  padding-block: clamp(48px, 6vw, 88px);
+  scroll-snap-align: none;
+  scroll-snap-stop: normal;
+}
+
+.page-scroll > .scroll-section > .industry-section,
+.page-scroll > .scroll-section > .post-product-section,
+.page-scroll > .scroll-section > .why-advixio-section,
+.page-scroll > .scroll-section > .find-city-section,
+.page-scroll > .scroll-section > .faq-section,
+.page-scroll > .scroll-section > .how-advixio-section,
+.page-scroll > .scroll-section > .featured-suppliers-section,
+.page-scroll > .scroll-section > .contact-advixio-section,
+.page-scroll > .scroll-section > .top-suppliers-section {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  min-height: 0;
+  height: auto;
+}
+
+.page-scroll .section-header,
+.page-scroll .why-advixio-heading,
+.page-scroll .faq-heading,
+.page-scroll .find-city-heading,
+.page-scroll .post-panel-heading {
+  margin-bottom: clamp(24px, 3vw, 32px);
+}
+
+.page-scroll .why-advixio-container {
+  padding-top: 0;
+}
+
+.page-scroll .post-product-section,
+.page-scroll .industry-section,
+.page-scroll .featured-suppliers-section,
+.page-scroll .how-advixio-section,
+.page-scroll .contact-advixio-section {
+  padding: 0;
+}
+
+.page-scroll .post-product-container {
+  border-radius: 16px;
+}
+
+.page-scroll .find-city-section,
+.page-scroll .faq-section {
+  padding: 0 !important; /* override legacy laptop !important section padding */
+}
+
+.page-scroll .section-header h2,
+.page-scroll .why-advixio-heading h2,
+.page-scroll .faq-art h2,
+.page-scroll .faq-heading h2,
+.page-scroll .find-city-heading h2,
+.page-scroll .post-product-content h2 {
+  color: var(--text);
+}
+
+.page-scroll .industry-card,
+.page-scroll .why-advixio-card,
+.page-scroll .find-city-card,
+.page-scroll .faq-item,
+.page-scroll .post-product-container,
+.page-scroll .post-product-panel,
+.page-scroll .trending-product-card {
+  border-color: var(--border);
+  border-radius: 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.page-scroll .find-city-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.page-scroll .find-city-card {
+  min-height: 72px;
+  padding: 14px 16px;
+  gap: 12px;
+  border-radius: 14px;
+}
+
+.page-scroll .find-city-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  border-radius: 12px;
+  color: var(--primary);
+  background: #FFF7ED;
+}
+
+.page-scroll .find-city-icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.page-scroll .find-city-name {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.page-scroll .find-city-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 24px rgba(30, 58, 138, 0.1);
+}
+
+.page-scroll .faq-list {
+  gap: 12px;
+}
+
+.page-scroll .faq-item {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.page-scroll .faq-question {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.page-scroll .faq-question:focus-visible {
+  outline: 2px solid var(--secondary-text);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+.page-scroll .faq-answer p {
+  padding: 0 20px;
+  color: #475569;
+}
+
+.page-scroll .faq-item.open .faq-answer p {
+  padding: 0 20px 16px;
+}
+
+.page-scroll .faq-toggle {
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.footer {
+  padding-top: 56px !important;
+}
+
+@media (max-width: 950px) {
+  .page-scroll .find-city-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .page-scroll > .scroll-section {
+    padding-block: clamp(40px, 8vw, 56px);
+  }
+
+  .footer {
+    padding-top: 48px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-scroll .find-city-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .page-scroll .find-city-card {
+    min-height: 68px;
+    padding: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-scroll .industry-card,
+  .page-scroll .why-advixio-card,
+  .page-scroll .find-city-card,
+  .page-scroll .faq-item,
+  .page-scroll .post-product-container,
+  .page-scroll .post-product-panel,
+  .page-scroll .trending-product-card,
+  .page-scroll .faq-toggle {
+    transition: none;
+  }
+}
+
 /* =================================
    PROFILE PAGE RESPONSIVE STYLES
 ================================= */
@@ -21431,10 +21626,22 @@ html {
   background: #FFEDD5;
 }
 
-.navbar.navbar-over-hero .dashboard-button,
-.navbar.navbar-over-hero .logout-button {
+.navbar.navbar-over-hero .dashboard-button {
   color: #FFFFFF;
   text-shadow: 0 1px 5px rgba(23, 37, 84, 0.35);
+}
+
+.navbar.navbar-over-hero .logout-button {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  color: #FFFFFF;
+  text-shadow: none;
+}
+
+.navbar.navbar-over-hero .logout-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #FFFFFF;
 }
 
 .navbar.navbar-over-hero .mobile-menu-button {

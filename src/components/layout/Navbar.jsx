@@ -132,7 +132,7 @@ return ( <header className={`navbar${isHome && !scrolled && !menuOpen ? " navbar
 
 
       <span>
-        Advixio
+        Advixio360
       </span>
     </Link>
 

@@ -6,7 +6,7 @@ export default function Footer() {
     footer: {
       background: "linear-gradient(135deg, #1E3A8A 0%, #1E3A8A 100%)",
       color: "#FFFFFF",
-      paddingTop: "65px",
+      paddingTop: "56px",
       fontFamily: "inherit",
     },
 
@@ -255,10 +255,12 @@ export default function Footer() {
           <h3 style={styles.heading}>Popular Categories</h3>
 
           <div style={styles.links}>
-            {footerLink("#", "Industrial Machinery")}
-            {footerLink("#", "Chemicals")}
-            {footerLink("#", "Textiles & Apparel")}
-            {footerLink("#", "Electronics & Electrical")}
+            {footerLink("/products?category=industrial-machinery", "Industrial Machinery")}
+            {/* TODO: Add matching category slug when Chemicals category page is confirmed */}
+            {footerLink("/products", "Chemicals")}
+            {/* TODO: Add matching category slug when Textiles & Apparel category page is confirmed */}
+            {footerLink("/products", "Textiles & Apparel")}
+            {footerLink("/products?category=electrical-electronics", "Electronics & Electrical")}
           </div>
         </div>
 
