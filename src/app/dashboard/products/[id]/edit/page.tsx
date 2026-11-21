@@ -1189,6 +1189,8 @@ type Product = {
     city?: string;
     state?: string;
   };
+  specifications?: { label: string; value: string }[];
+customFields?: { name?: string; label?: string; value: string }[];
 };
 
 type Category = {
@@ -1202,7 +1204,15 @@ type ProductImage = {
   url: string;
   file?: File;
 };
+type Specification = {
+  label: string;
+  value: string;
+};
 
+type CustomField = {
+  name: string;
+  value: string;
+};
 export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
@@ -1226,7 +1236,8 @@ export default function EditProductPage() {
   const [companyName, setCompanyName] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
-
+const [specifications, setSpecifications] = useState<Specification[]>([]);
+const [customFields, setCustomFields] = useState<CustomField[]>([]);
   // Existing + newly selected images
   const [images, setImages] = useState<ProductImage[]>([]);
 
@@ -1317,7 +1328,23 @@ export default function EditProductPage() {
       setCompanyName(product.companyName || "");
       setCity(product.location?.city || "");
       setState(product.location?.state || "");
+setSpecifications(
+  Array.isArray(product.specifications)
+    ? product.specifications.map((item) => ({
+        label: item.label || "",
+        value: item.value || "",
+      }))
+    : []
+);
 
+setCustomFields(
+  Array.isArray(product.customFields)
+    ? product.customFields.map((item) => ({
+        name: item.name || item.label || "",
+        value: item.value || "",
+      }))
+    : []
+);
       const existingImages = Array.isArray(product.images)
         ? product.images.filter(
             (image) =>
@@ -1406,7 +1433,59 @@ export default function EditProductPage() {
     // Allows selecting the same file again after removing it.
     event.target.value = "";
   };
+// SPECIFICATIONS
 
+const addSpecification = () => {
+  setSpecifications((current) => [
+    ...current,
+    { label: "", value: "" },
+  ]);
+};
+
+const updateSpecification = (
+  index: number,
+  field: keyof Specification,
+  value: string
+) => {
+  setSpecifications((current) =>
+    current.map((item, i) =>
+      i === index ? { ...item, [field]: value } : item
+    )
+  );
+};
+
+const removeSpecification = (index: number) => {
+  setSpecifications((current) =>
+    current.filter((_, i) => i !== index)
+  );
+};
+
+// ADDITIONAL DETAILS
+
+const addCustomField = () => {
+  setCustomFields((current) => [
+    ...current,
+    { name: "", value: "" },
+  ]);
+};
+
+const updateCustomField = (
+  index: number,
+  field: keyof CustomField,
+  value: string
+) => {
+  setCustomFields((current) =>
+    current.map((item, i) =>
+      i === index ? { ...item, [field]: value } : item
+    )
+  );
+};
+
+const removeCustomField = (index: number) => {
+  setCustomFields((current) =>
+    current.filter((_, i) => i !== index)
+  );
+};
   // ==========================================
   // REMOVE IMAGE
   // ==========================================
@@ -1479,7 +1558,29 @@ export default function EditProductPage() {
 
       formData.append("unit", unit);
       formData.append("companyName", companyName.trim());
+const cleanedSpecifications = specifications
+  .map((item) => ({
+    label: item.label.trim(),
+    value: item.value.trim(),
+  }))
+  .filter((item) => item.label && item.value);
 
+formData.append(
+  "specifications",
+  JSON.stringify(cleanedSpecifications)
+);
+
+const cleanedCustomFields = customFields
+  .map((item) => ({
+    name: item.name.trim(),
+    value: item.value.trim(),
+  }))
+  .filter((item) => item.name && item.value);
+
+formData.append(
+  "customFields",
+  JSON.stringify(cleanedCustomFields)
+);
       formData.append(
         "location",
         JSON.stringify({
@@ -1754,6 +1855,122 @@ export default function EditProductPage() {
               </div>
             </div>
           </div>
+
+
+{/* SPECIFICATIONS */}
+
+<div className="product-form-section">
+  <h2>Specifications</h2>
+  <p className="product-form-help">
+    Add technical details such as material, power, voltage, size, etc.
+  </p>
+
+  <button
+    type="button"
+    className="sd-btn"
+    onClick={addSpecification}
+    disabled={saving}
+  >
+    + Add Specification
+  </button>
+
+  {specifications.map((item, index) => (
+    <div key={index} className="product-form-grid">
+      <div className="product-form-field">
+        <label>Specification Name</label>
+        <input
+          value={item.label}
+          onChange={(e) =>
+            updateSpecification(index, "label", e.target.value)
+          }
+          placeholder="e.g. Material"
+          disabled={saving}
+        />
+      </div>
+
+      <div className="product-form-field">
+        <label>Specification Value</label>
+        <input
+          value={item.value}
+          onChange={(e) =>
+            updateSpecification(index, "value", e.target.value)
+          }
+          placeholder="e.g. Stainless Steel"
+          disabled={saving}
+        />
+      </div>
+
+      <div className="product-form-field full">
+        <button
+          type="button"
+          className="product-cancel-button"
+          onClick={() => removeSpecification(index)}
+          disabled={saving}
+        >
+          Remove Specification
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
+{/* ADDITIONAL DETAILS */}
+
+<div className="product-form-section">
+  <h2>Additional Details</h2>
+  <p className="product-form-help">
+    Add warranty, country of origin, certifications, and other details.
+  </p>
+
+  <button
+    type="button"
+    className="sd-btn"
+    onClick={addCustomField}
+    disabled={saving}
+  >
+    + Add Additional Detail
+  </button>
+
+  {customFields.map((item, index) => (
+    <div key={index} className="product-form-grid">
+      <div className="product-form-field">
+        <label>Field Name</label>
+        <input
+          value={item.name}
+          onChange={(e) =>
+            updateCustomField(index, "name", e.target.value)
+          }
+          placeholder="e.g. Warranty"
+          disabled={saving}
+        />
+      </div>
+
+      <div className="product-form-field">
+        <label>Field Value</label>
+        <input
+          value={item.value}
+          onChange={(e) =>
+            updateCustomField(index, "value", e.target.value)
+          }
+          placeholder="e.g. 2 Years"
+          disabled={saving}
+        />
+      </div>
+
+      <div className="product-form-field full">
+        <button
+          type="button"
+          className="product-cancel-button"
+          onClick={() => removeCustomField(index)}
+          disabled={saving}
+        >
+          Remove Additional Detail
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
 
           {/* BUSINESS INFORMATION */}
 
