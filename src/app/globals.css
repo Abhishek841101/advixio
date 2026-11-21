@@ -21549,3 +21549,33 @@ html {
   transform: translateY(-7px) scale(1.07);
   box-shadow: 0 28px 54px rgba(23, 37, 84, 0.24);
 }
+.blog-rich-editor .tiptap table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.blog-rich-editor .tiptap th,
+.blog-rich-editor .tiptap td {
+  border: 1px solid #dbeafe;
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.blog-rich-editor .tiptap th {
+  background: #eff6ff;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.blog-rich-editor .tiptap td {
+  background: #ffffff;
+}
+
+.blog-rich-editor .tiptap table p {
+  margin: 0;
+}

@@ -22,6 +22,12 @@ import Color from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import {
+  Table,
+  TableRow,
+  TableHeader,
+  TableCell,
+} from "@tiptap/extension-table"; 
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
@@ -191,6 +197,13 @@ function RichTextEditor({
       Underline,
       TextStyle,
       FontFamily,
+      
+Table.configure({
+  resizable: true,
+}),
+TableRow,
+TableHeader,
+TableCell,
       FontSize,
       Color,
       Highlight.configure({ multicolor: true }),
