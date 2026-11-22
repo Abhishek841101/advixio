@@ -7026,10 +7026,20 @@ main:has(> h1) > section > a span {
     font-size: 12px;
   }
 
+  .product-information-layout--catalogue {
+    grid-template-columns: 1fr;
+  }
+
+  .product-information-layout--catalogue .product-information-main {
+    order: 1;
+  }
+
   .product-supplier-card {
     position: static;
     width: 100%;
     padding: 19px;
+    order: 2;
+    margin-top: 16px;
   }
 
   .supplier-products-scroll {
@@ -7763,7 +7773,7 @@ main:has(> h1) > section > a span {
     min-height: 0 !important;
     margin: 12px 0 0 !important;
     padding: 0 !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
 
   /* Heading */
@@ -7778,17 +7788,31 @@ main:has(> h1) > section > a span {
     height: auto !important;
     min-height: 0 !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 0 0 4px !important;
     align-items: stretch !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    gap: 12px;
+    scrollbar-width: none;
+    touch-action: pan-x pan-y;
+  }
+
+  .supplier-catalogue-section .supplier-products-scroll::-webkit-scrollbar {
+    display: none;
   }
 
   /* Individual product cards */
   .supplier-catalogue-section .supplier-product-item {
-    flex-shrink: 0;
+    flex: 0 0 min(240px, 78vw);
+    width: min(240px, 78vw);
+    min-width: 0;
     height: auto !important;
     min-height: 0 !important;
     margin: 0 !important;
     align-self: stretch !important;
+    scroll-snap-align: start;
   }
 
   /* Swipe text */

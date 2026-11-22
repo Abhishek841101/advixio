@@ -138,7 +138,7 @@ export default function AdminEnquiriesPage() {
     const token = getToken();
 
     if (!token) {
-      router.replace("/admin/login");
+      router.replace("/login");
       return;
     }
 
@@ -167,7 +167,7 @@ export default function AdminEnquiriesPage() {
       if (response.status === 401 || response.status === 403) {
         localStorage.removeItem("advixio_admin_token");
         localStorage.removeItem("advixio_admin");
-        router.replace("/admin/login");
+        router.replace("/login");
         return;
       }
 

@@ -459,52 +459,67 @@ export default function LoginPage() {
       setLoading(true);
 
       // FIRST: SUPER ADMIN LOGIN
-      const adminResponse = await fetch(
-        `${API_URL}/admin/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email.trim(),
-            password,
-          }),
-        }
-      );
+      let adminResult: AdminLoginResponse | null = null;
 
-      const adminResult =
-        (await adminResponse.json()) as AdminLoginResponse;
+      try {
+        const adminResponse = await fetch(
+          `${API_URL}/admin/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: email.trim(),
+              password,
+            }),
+          }
+        );
 
-      if (adminResponse.ok && adminResult.success) {
-        const adminToken = adminResult.token;
-        const admin = adminResult.admin;
+        adminResult = (await adminResponse.json()) as AdminLoginResponse;
 
-        if (!adminToken || !admin) {
-          throw new Error(
-            "Admin login response is incomplete."
+        if (adminResponse.ok && adminResult.success) {
+          const adminToken = adminResult.token;
+          const admin = adminResult.admin;
+
+          if (!adminToken || !admin) {
+            throw new Error(
+              "Admin login response is incomplete."
+            );
+          }
+
+          if (admin.role !== "superadmin") {
+            throw new Error("Unauthorized admin account.");
+          }
+
+          localStorage.removeItem("advixio_token");
+          localStorage.removeItem("advixio_user");
+
+          localStorage.setItem(
+            "advixio_admin_token",
+            adminToken
           );
+
+          localStorage.setItem(
+            "advixio_admin",
+            JSON.stringify(admin)
+          );
+
+          window.location.href = "/admin/dashboard";
+          return;
+        }
+      } catch (adminError) {
+        // If admin login succeeded but threw after validation, rethrow.
+        if (
+          adminError instanceof Error &&
+          (adminError.message === "Admin login response is incomplete." ||
+            adminError.message === "Unauthorized admin account.")
+        ) {
+          throw adminError;
         }
 
-        if (admin.role !== "superadmin") {
-          throw new Error("Unauthorized admin account.");
-        }
-
-        localStorage.removeItem("advixio_token");
-        localStorage.removeItem("advixio_user");
-
-        localStorage.setItem(
-          "advixio_admin_token",
-          adminToken
-        );
-
-        localStorage.setItem(
-          "advixio_admin",
-          JSON.stringify(admin)
-        );
-
-        window.location.href = "/admin/dashboard";
-        return;
+        // Otherwise, ignore admin endpoint failures and fall back to normal user login.
+        console.warn("Admin login attempt failed, falling back to user login:", adminError);
       }
 
       // SECOND: NORMAL USER LOGIN
@@ -528,7 +543,7 @@ export default function LoginPage() {
       if (!userResponse.ok || !userResult.success) {
         throw new Error(
           userResult.message ||
-            adminResult.message ||
+            adminResult?.message ||
             "Invalid email or password."
         );
       }

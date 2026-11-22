@@ -94,7 +94,7 @@ export default function AdminDashboard() {
   const logout = () => {
     localStorage.removeItem("advixio_admin_token");
     localStorage.removeItem("advixio_admin");
-    router.replace("/admin/login");
+    router.replace("/login");
   };
 
   // ==========================================
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
       const token = getToken();
 
       if (!token) {
-        router.replace("/admin/login");
+        router.replace("/login");
         return;
       }
 
