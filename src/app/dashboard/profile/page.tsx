@@ -295,16 +295,16 @@ export default function ProfilePage() {
       setError("");
       setSuccess("");
 
-      const fields: Record<ProfileSection, (keyof Profile)[]> = {
-        personal: ["name", "phone"],
-        business: [
-          "companyName",
-          "businessType",
-          "gstNumber",
-          "businessDescription",
-        ],
-        address: ["address", "city", "state", "pincode"],
-      };
+     const fields: Record<ProfileSection, (keyof Profile)[]> = {
+  personal: ["name", "email", "phone"],
+  business: [
+    "companyName",
+    "businessType",
+    "gstNumber",
+    "businessDescription",
+  ],
+  address: ["address", "city", "state", "pincode"],
+};
 
       const payload: Record<string, string> = {};
       fields[editing].forEach((field) => {
@@ -648,13 +648,15 @@ export default function ProfilePage() {
                   onChange={updateField}
                 />
                 <ProfileField
-                  label="Email Address"
-                  value={profile.email}
-                  disabled
-                  editing={editing}
-                  form={form}
-                  onChange={updateField}
-                />
+  label="Email Address"
+  value={profile.email}
+  field="email"
+  type="email"
+  placeholder="Enter your email address"
+  editing={editing}
+  form={form}
+  onChange={updateField}
+/>
                 <ProfileField
                   label="Phone Number"
                   value={profile.phone}
@@ -666,8 +668,9 @@ export default function ProfilePage() {
                 />
               </div>
               <p className="sd-inline-help">
-                Email address cannot be edited here. Email changes require verification.
-              </p>
+  You can update your name, email address, and phone number here.
+  Your new email address will replace your existing email.
+</p>
             </form>
           </section>
 
