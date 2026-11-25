@@ -9,14 +9,6 @@ const API_URL = (
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
 ).replace(/\/+$/, "");
 
-type SupplierRef = {
-  slug?: string;
-  companyName?: string;
-  name?: string;
-  _id?: string;
-  id?: string;
-};
-
 type SitemapItem = {
   slug?: string;
   _id?: string;
@@ -27,10 +19,6 @@ type SitemapItem = {
   status?: string;
   published?: boolean;
   isPublished?: boolean;
-  supplier?: SupplierRef | string | null;
-  seller?: SupplierRef | string | null;
-  supplierSlug?: string;
-  sellerSlug?: string;
 };
 
 function getLastModified(item?: SitemapItem): Date {
@@ -62,8 +50,13 @@ function isPublicItem(item: SitemapItem): boolean {
 }
 
 function extractItems(result: unknown): SitemapItem[] {
-  if (Array.isArray(result)) return result as SitemapItem[];
-  if (!result || typeof result !== "object") return [];
+  if (Array.isArray(result)) {
+    return result as SitemapItem[];
+  }
+
+  if (!result || typeof result !== "object") {
+    return [];
+  }
 
   const data = result as Record<string, unknown>;
 
@@ -77,7 +70,9 @@ function extractItems(result: unknown): SitemapItem[] {
   ];
 
   for (const key of keys) {
-    if (Array.isArray(data[key])) return data[key] as SitemapItem[];
+    if (Array.isArray(data[key])) {
+      return data[key] as SitemapItem[];
+    }
   }
 
   if (Array.isArray(data.data)) {
@@ -97,7 +92,9 @@ function extractItems(result: unknown): SitemapItem[] {
   return [];
 }
 
-async function fetchItems(endpoint: string): Promise<SitemapItem[]> {
+async function fetchItems(
+  endpoint: string
+): Promise<SitemapItem[]> {
   try {
     const response = await fetch(`${API_URL}${endpoint}`, {
       next: { revalidate: 3600 },
@@ -124,49 +121,10 @@ async function fetchItems(endpoint: string): Promise<SitemapItem[]> {
   }
 }
 
-function makeSlug(value: string): string {
-  return value
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-function getSupplierSlug(product: SitemapItem): string | undefined {
-  if (product.supplierSlug?.trim()) {
-    return product.supplierSlug.trim();
-  }
-
-  if (product.sellerSlug?.trim()) {
-    return product.sellerSlug.trim();
-  }
-
-  for (const key of ["supplier", "seller"] as const) {
-    const value = product[key];
-
-    if (value && typeof value === "object") {
-      const seller = value as SupplierRef;
-
-      if (seller.slug?.trim()) return seller.slug.trim();
-
-      if (seller.companyName?.trim()) {
-        return makeSlug(seller.companyName);
-      }
-
-      if (seller.name?.trim()) {
-        return makeSlug(seller.name);
-      }
-    }
-  }
-
-  return undefined;
-}
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
+  // STATIC ROUTES
   const staticRoutes = [
     { route: "", priority: 1.0 },
     { route: "/about", priority: 0.6 },
@@ -174,88 +132,85 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { route: "/products", priority: 0.9 },
     { route: "/categories", priority: 0.8 },
     { route: "/suppliers", priority: 0.8 },
-    
     { route: "/blogs", priority: 0.8 },
   ];
 
-  const staticPages: MetadataRoute.Sitemap = staticRoutes.map(
-    ({ route, priority }) => ({
+  const staticPages: MetadataRoute.Sitemap =
+    staticRoutes.map(({ route, priority }) => ({
       url: `${SITE_URL}${route}`,
       lastModified: now,
       changeFrequency: "weekly",
       priority,
-    })
-  );
+    }));
 
+  // FETCH DYNAMIC DATA
   const [products, categories, suppliers, blogs] =
     await Promise.all([
       fetchItems("/products"),
       fetchItems("/categories"),
       fetchItems("/suppliers"),
       fetchItems("/blogs"),
-      
     ]);
 
-  const productPages: MetadataRoute.Sitemap = products.map((product) => ({
-    url: `${SITE_URL}/products/${encodeURIComponent(product.slug!)}`,
-    lastModified: getLastModified(product),
-    changeFrequency: "daily",
-    priority: 0.8,
-  }));
+  // PRODUCT PAGES
+  const productPages: MetadataRoute.Sitemap =
+    products.map((product) => ({
+      url: `${SITE_URL}/products/${encodeURIComponent(
+        product.slug!
+      )}`,
+      lastModified: getLastModified(product),
+      changeFrequency: "daily",
+      priority: 0.8,
+    }));
 
-  const categoryPages: MetadataRoute.Sitemap = categories.map((category) => ({
-    url: `${SITE_URL}/categories/${encodeURIComponent(category.slug!)}`,
-    lastModified: getLastModified(category),
-    changeFrequency: "weekly",
-    priority: 0.7,
-  }));
+  // CATEGORY PAGES
+  const categoryPages: MetadataRoute.Sitemap =
+    categories.map((category) => ({
+      url: `${SITE_URL}/categories/${encodeURIComponent(
+        category.slug!
+      )}`,
+      lastModified: getLastModified(category),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }));
 
-  const supplierPages: MetadataRoute.Sitemap = suppliers.map((supplier) => ({
-    url: `${SITE_URL}/suppliers/${encodeURIComponent(supplier.slug!)}`,
-    lastModified: getLastModified(supplier),
-    changeFrequency: "weekly",
-    priority: 0.6,
-  }));
+  // SUPPLIER PROFILE PAGES
+  // New URL: /suppliers/khushi-enterprises
+  const supplierPages: MetadataRoute.Sitemap =
+    suppliers.map((supplier) => ({
+      url: `${SITE_URL}/suppliers/${encodeURIComponent(
+        supplier.slug!
+      )}`,
+      lastModified: getLastModified(supplier),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }));
 
-  const blogPages: MetadataRoute.Sitemap = blogs.map((blog) => ({
-    url: `${SITE_URL}/blogs/${encodeURIComponent(blog.slug!)}`,
-    lastModified: getLastModified(blog),
-    changeFrequency: "weekly",
-    priority: 0.7,
-  }));
+  // BLOG PAGES
+  const blogPages: MetadataRoute.Sitemap =
+    blogs.map((blog) => ({
+      url: `${SITE_URL}/blogs/${encodeURIComponent(
+        blog.slug!
+      )}`,
+      lastModified: getLastModified(blog),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }));
 
-  
-
-  const nestedSupplierPages: MetadataRoute.Sitemap = products.flatMap(
-    (product) => {
-      const supplierSlug = getSupplierSlug(product);
-
-      if (!supplierSlug || !product.slug) return [];
-
-      return [
-        {
-          url: `${SITE_URL}/products/${encodeURIComponent(
-            product.slug
-          )}/supplier/${encodeURIComponent(supplierSlug)}`,
-          lastModified: getLastModified(product),
-          changeFrequency: "weekly" as const,
-          priority: 0.5,
-        },
-      ];
-    }
-  );
-
+  // COMBINE ALL URLS
+  // Old nested supplier URLs are intentionally removed.
   const allPages = [
     ...staticPages,
     ...productPages,
     ...categoryPages,
     ...supplierPages,
     ...blogPages,
-    
-    ...nestedSupplierPages,
   ];
 
+  // REMOVE DUPLICATE URLS
   return Array.from(
-    new Map(allPages.map((page) => [page.url, page])).values()
+    new Map(
+      allPages.map((page) => [page.url, page])
+    ).values()
   );
 }
