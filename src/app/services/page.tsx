@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -77,6 +78,23 @@ const benefits = [
 ];
 
 export default function ServicesPage() {
+  const [searchQuery] = useState(() => {
+    if (typeof window === "undefined") return "";
+    return (new URLSearchParams(window.location.search).get("search") || "").trim();
+  });
+
+  const filteredServices = useMemo(() => {
+    const q = searchQuery.toLowerCase();
+    if (!q) return services;
+    return services.filter((service) => {
+      return (
+        service.title.toLowerCase().includes(q) ||
+        service.description.toLowerCase().includes(q) ||
+        service.tags.some((tag) => tag.toLowerCase().includes(q))
+      );
+    });
+  }, [searchQuery]);
+
   return (
     <>
       <Navbar />
@@ -329,7 +347,11 @@ export default function ServicesPage() {
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => (
+            {filteredServices.length === 0 ? (
+              <div className="col-span-full rounded-2xl border border-[#BFDBFE] bg-white p-8 text-center text-[#2563EB]">
+                No services found for &quot;{searchQuery}&quot;.
+              </div>
+            ) : filteredServices.map((service) => (
               <article
                 key={service.number}
                 className="group flex h-full flex-col rounded-2xl border border-[#BFDBFE] bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50 sm:p-7"

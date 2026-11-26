@@ -131,9 +131,17 @@ function ArrowIcon({ className = "h-4 w-4" }: { className?: string }) {
 }
 
 export default function SuppliersPage() {
+  const initialParams =
+    typeof window === "undefined"
+      ? new URLSearchParams()
+      : new URLSearchParams(window.location.search);
+  const initialSearch = (initialParams.get("search") || "").trim();
+  const initialLocation = (initialParams.get("location") || "").trim();
+
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState(initialSearch);
+  const [search, setSearch] = useState(initialSearch);
+  const [locationFilter] = useState(initialLocation);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -191,26 +199,44 @@ export default function SuppliersPage() {
   }, [page, search]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch sets state after await
     void fetchSuppliers();
   }, [fetchSuppliers]);
 
+  const filteredSuppliers = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const loc = locationFilter.trim().toLowerCase();
+    return suppliers.filter((supplier) => {
+      const matchesSearch =
+        !q ||
+        [supplier.name, supplier.companyName, supplier.city, supplier.state].some((v) =>
+          String(v || "").toLowerCase().includes(q)
+        );
+      const matchesLocation =
+        !loc ||
+        String(supplier.city || "").toLowerCase().includes(loc) ||
+        String(supplier.state || "").toLowerCase().includes(loc);
+      return matchesSearch && matchesLocation;
+    });
+  }, [suppliers, search, locationFilter]);
+
   const activeProducts = useMemo(
     () =>
-      suppliers.reduce(
+      filteredSuppliers.reduce(
         (sum, supplier) => sum + (supplier.productCount || 0),
         0
       ),
-    [suppliers]
+    [filteredSuppliers]
   );
 
   const locations = useMemo(
     () =>
       new Set(
-        suppliers
+        filteredSuppliers
           .map((supplier) => supplier.state?.trim().toLowerCase())
           .filter(Boolean)
       ).size,
-    [suppliers]
+    [filteredSuppliers]
   );
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
@@ -484,7 +510,7 @@ export default function SuppliersPage() {
                 <p className="mt-1 text-xs text-slate-500">
                   {loading
                     ? "Finding suppliers..."
-                    : `Showing ${suppliers.length} supplier${suppliers.length === 1 ? "" : "s"} on this page`}
+                    : `Showing ${filteredSuppliers.length} supplier${filteredSuppliers.length === 1 ? "" : "s"} on this page`}
                 </p>
               </div>
             </div>
@@ -545,7 +571,7 @@ export default function SuppliersPage() {
                 </div>
               ))}
             </div>
-          ) : suppliers.length === 0 ? (
+          ) : filteredSuppliers.length === 0 ? (
             /* EMPTY STATE */
             <div className="mt-6 rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center sm:py-20">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-100 text-indigo-600">
@@ -575,7 +601,7 @@ export default function SuppliersPage() {
           ) : (
             /* SUPPLIER CARDS */
             <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
-              {suppliers.map((supplier, index) => {
+              {filteredSuppliers.map((supplier, index) => {
                 const companyName =
                   supplier.companyName?.trim() ||
                   supplier.name ||

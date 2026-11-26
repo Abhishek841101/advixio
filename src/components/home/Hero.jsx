@@ -5,6 +5,7 @@
 import { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
 import HeroSlider from "./HeroSlider";
+import SearchHowItWorks from "./SearchHowItWorks";
 
 export default function Hero() {
   const firstLine = "Find the right ";
@@ -46,6 +47,7 @@ export default function Hero() {
 
       {/* 99acres-style tabbed search card, overlapping the slider bottom */}
       <SearchBar />
+      <SearchHowItWorks />
 
       {/* Moving background glow */}
       <div className="hero-decoration hero-decoration-one" />

@@ -100,6 +100,7 @@ export default function ProductsPage() {
   const [error, setError] = useState("");
 
   const [search, setSearch] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   
   const [selectedSuppliers, setSelectedSuppliers] = useState<string[]>([]);
@@ -109,20 +110,25 @@ export default function ProductsPage() {
   // PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Apply category from URL on first load and browser back/forward.
+  // Apply search/category/location from URL on first load and browser back/forward.
   useEffect(() => {
-    const applyUrlCategory = () => {
-      const slug = new URLSearchParams(window.location.search).get("category") || "";
+    const applyUrlFilters = () => {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get("category") || "";
+      const searchParam = params.get("search") || "";
+      const locationParam = params.get("location") || "";
       const matchedCategory = categories.find((category) => category.slug === slug);
 
       setSelectedCategories(matchedCategory ? [matchedCategory.name] : []);
+      setSearch(searchParam);
+      setLocationFilter(locationParam);
       setCurrentPage(1);
     };
 
-    applyUrlCategory();
-    window.addEventListener("popstate", applyUrlCategory);
+    applyUrlFilters();
+    window.addEventListener("popstate", applyUrlFilters);
 
-    return () => window.removeEventListener("popstate", applyUrlCategory);
+    return () => window.removeEventListener("popstate", applyUrlFilters);
   }, []);
 
   /* =========================================
@@ -245,11 +251,14 @@ const toggleCategory = (categoryName: string) => {
     setSelectedCategories([]);
     setSelectedSuppliers([]);
     setSearch("");
+    setLocationFilter("");
     setSort("relevance");
     setCurrentPage(1);
 
     const url = new URL(window.location.href);
     url.searchParams.delete("category");
+    url.searchParams.delete("search");
+    url.searchParams.delete("location");
     window.history.replaceState(null, "", url.toString());
   };
 
@@ -288,6 +297,19 @@ const toggleCategory = (categoryName: string) => {
             product.category?.slug?.toLowerCase() ===
               categories.find((item) => item.name === category)?.slug?.toLowerCase() ||
             product.subcategory?.toLowerCase() === category.toLowerCase()
+        );
+      });
+    }
+
+    // LOCATION (city or state)
+    if (locationFilter.trim()) {
+      const loc = locationFilter.toLowerCase().trim();
+      result = result.filter((product) => {
+        return (
+          product.location?.city?.toLowerCase().includes(loc) ||
+          product.location?.state?.toLowerCase().includes(loc) ||
+          product.seller?.city?.toLowerCase().includes(loc) ||
+          product.seller?.state?.toLowerCase().includes(loc)
         );
       });
     }
@@ -335,6 +357,7 @@ const toggleCategory = (categoryName: string) => {
   }, [
     products,
     search,
+    locationFilter,
     selectedCategories,
     selectedSuppliers,
     sort,
@@ -361,7 +384,7 @@ const toggleCategory = (categoryName: string) => {
   // Reset to page 1 when filters or sorting change
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, selectedCategories, selectedSuppliers, sort]);
+  }, [search, locationFilter, selectedCategories, selectedSuppliers, sort]);
 
   // Keep page valid if products change
   useEffect(() => {
