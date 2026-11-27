@@ -1,16 +1,31 @@
 
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useSyncExternalStore } from "react";
+
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 export default function ScrollReveal({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Wait until React has finished hydrating before touching the DOM.
+  // Mutating classes during the first effect can race with streamed
+  // server components and produce a hydration mismatch.
+  const hydrated = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  );
+
   useEffect(() => {
+    if (!hydrated) return;
+
     const elements = document.querySelectorAll<HTMLElement>(
-      "main section, main article, main [data-reveal]"
+      "main section:not([data-no-reveal]), main article:not([data-no-reveal]), main [data-reveal]"
     );
 
     const reduceMotion = window.matchMedia(
@@ -45,7 +60,7 @@ export default function ScrollReveal({
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [hydrated]);
 
   return <>{children}</>;
 }

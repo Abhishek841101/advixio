@@ -2339,14 +2339,40 @@ img {
   }
 
   .footer .footer-main {
-    grid-template-columns: 1fr !important;
-    gap: 28px !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 28px 20px !important;
     padding-top: 0 !important;
     padding-bottom: 32px !important;
   }
 
-  .footer .footer-brand,
-  .footer .footer-column {
+  .footer .footer-brand {
+    grid-column: 1 / -1 !important;
+  }
+
+  .footer .footer-column:last-child {
+    grid-column: 1 / -1 !important;
+    transform: translateX(-6px); /* slight visual centering adjustment */
+  }
+
+  .footer .footer-column:last-child h3 {
+    text-align: center !important;
+  }
+
+  .footer .footer-column:last-child > div {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 12px 16px !important;
+  }
+
+  .footer .footer-column:last-child > a {
+    display: flex !important;
+    width: fit-content !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .footer .footer-column:not(:last-child) {
     grid-column: auto !important;
   }
 
@@ -7557,10 +7583,9 @@ main:has(> h1) > section > a span {
     pointer-events: none;
   }
 
-  /* Prevent footer/page content from hiding behind fixed bar */
-
-  body {
-    padding-bottom: 72px;
+  /* Prevent page content from hiding behind fixed mobile product action bar. */
+  body:has(.mobile-product-action-bar) {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
   }
 }
 
@@ -7693,11 +7718,6 @@ main:has(> h1) > section > a span {
     bottom: 0;
     left: 0;
     z-index: 9999;
-  }
-
-  /* Keep page content visible above fixed action bar */
-  body {
-    padding-bottom: 75px !important;
   }
 }
 /* FIX: Product Details extra bottom gap on mobile */
@@ -21541,6 +21561,13 @@ html {
   border-radius: 16px 16px 0 0;
 }
 
+.hero-search-card .hs-tabs::after,
+.hero-search-tabs::after {
+  content: "";
+  flex: 0 0 4px;
+  align-self: stretch;
+}
+
 .hero-search-card .hs-tab {
   position: relative;
   display: inline-flex;
@@ -21553,6 +21580,7 @@ html {
   font-size: 13px;
   font-weight: 650;
   white-space: nowrap;
+  text-decoration: none;
   cursor: pointer;
   border-radius: 10px 10px 0 0;
   transition: color 0.2s ease, background-color 0.2s ease;
@@ -21564,7 +21592,7 @@ html {
 }
 
 .hero-search-card .hs-tab:focus-visible {
-  outline: 2px solid var(--primary, #EA580C);
+  outline: 2px solid var(--secondary-text, #2563EB);
   outline-offset: 2px;
 }
 
@@ -21680,7 +21708,7 @@ html {
 }
 
 .hero-search-card .hs-clear:focus-visible {
-  outline: 2px solid var(--primary, #EA580C);
+  outline: 2px solid var(--secondary-text, #2563EB);
   outline-offset: 2px;
 }
 
@@ -21756,7 +21784,7 @@ html {
 }
 
 .hero-search-card .hs-suggest-item:focus-visible {
-  outline: 2px solid var(--primary, #EA580C);
+  outline: 2px solid var(--secondary-text, #2563EB);
   outline-offset: -2px;
 }
 
@@ -21817,11 +21845,13 @@ html {
   border-color: #93C5FD;
 }
 
-.hero-search-card .hs-dropdown-trigger:focus-visible,
+.hero-search-card .hs-dropdown-trigger:focus-visible {
+  outline: 2px solid var(--secondary-text, #2563EB);
+  outline-offset: 2px;
+}
 .hero-search-card .hs-dropdown-trigger[aria-expanded="true"] {
   border-color: var(--primary, #EA580C);
   box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12);
-  outline: none;
 }
 
 .hero-search-card .hs-trigger-icon,
@@ -21907,7 +21937,7 @@ html {
 }
 
 .hero-search-card .hs-dropdown-option:focus-visible {
-  outline: 2px solid var(--primary, #EA580C);
+  outline: 2px solid var(--secondary-text, #2563EB);
   outline-offset: -2px;
 }
 
@@ -21944,7 +21974,7 @@ html {
 }
 
 .hero-search-card .hs-submit:focus-visible {
-  outline: 2px solid #1E3A8A;
+  outline: 2px solid var(--secondary-text, #2563EB);
   outline-offset: 2px;
 }
 
@@ -21990,8 +22020,24 @@ html {
 }
 
 .hero-search-card .hs-chip:focus-visible {
-  outline: 2px solid var(--primary, #EA580C);
+  outline: 2px solid var(--secondary-text, #2563EB);
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-search-card .hs-tab,
+  .hero-search-card .hs-input,
+  .hero-search-card .hs-clear,
+  .hero-search-card .hs-suggest-item,
+  .hero-search-card .hs-dropdown-trigger,
+  .hero-search-card .hs-dropdown-option,
+  .hero-search-card .hs-submit,
+  .hero-search-card .hs-chip,
+  .hero-search-card .hs-spin {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
 }
 
 /* --- Transparent navbar at the homepage top, over the image:
@@ -22080,6 +22126,7 @@ html {
 
 @media (max-width: 768px) {
   .hero-search-card {
+    width: calc(100% - 24px);
     margin-top: -44px;
     margin-bottom: 34px;
     border-radius: 14px;
@@ -22087,18 +22134,15 @@ html {
 
   .hero-search-card .hs-tabs,
   .hero-search-tabs {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    flex-wrap: nowrap;
-  }
-
-  .hero-search-card .hs-tabs::-webkit-scrollbar,
-  .hero-search-tabs::-webkit-scrollbar {
-    display: none;
+    padding: 8px 10px 0;
+    gap: 4px 2px;
+    overflow-x: visible;
+    flex-wrap: wrap;
+    border-radius: 14px 14px 0 0;
   }
 
   .hero-search-card .hs-tab {
+    flex: 0 0 auto;
     padding: 10px 12px;
     font-size: 12px;
     min-height: 44px;
@@ -22108,29 +22152,6 @@ html {
     padding: 12px;
   }
 
-  .hero-search-card .hs-popular-chips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-  }
-
-  .hero-search-card .hs-popular-chips::-webkit-scrollbar {
-    display: none;
-  }
-
-  .hero-search-card .hs-chip {
-    flex: 0 0 auto;
-    white-space: nowrap;
-  }
-
-  .hero-slider-dots {
-    bottom: 66px;
-  }
-}
-
-@media (max-width: 700px) {
   .hero-search-card .hs-row {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -22150,10 +22171,29 @@ html {
     font-size: 14px;
   }
 
+  .hero-search-card .hs-suggest,
+  .hero-search-card .hs-dropdown-panel {
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: min(320px, 45vh);
+  }
+
+  .hero-search-card .hs-dropdown-option,
+  .hero-search-card .hs-suggest-item {
+    min-height: 44px;
+  }
+
+  .hero-search-card .hs-suggest-item {
+    align-items: flex-start;
+  }
+
   .hero-search-card .hs-popular {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
+    padding: 0 12px 12px;
   }
 
   .hero-search-card .hs-popular-label {
@@ -22161,15 +22201,9 @@ html {
   }
 
   .hero-search-card .hs-popular-chips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-  }
-
-  .hero-search-card .hs-popular-chips::-webkit-scrollbar {
-    display: none;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    padding-bottom: 0;
   }
 
   .hero-search-card .hs-chip {
@@ -22178,17 +22212,8 @@ html {
     white-space: nowrap;
   }
 
-  .hero-search-card .hs-suggest,
-  .hero-search-card .hs-dropdown-panel {
-    left: 0;
-    right: 0;
-    max-width: 100%;
-    max-height: min(320px, 45vh);
-  }
-
-  .hero-search-card .hs-dropdown-option,
-  .hero-search-card .hs-suggest-item {
-    min-height: 44px;
+  .hero-slider-dots {
+    bottom: 66px;
   }
 }
 
@@ -22203,7 +22228,8 @@ html {
   .hero-search-card .hs-tabs,
   .hero-search-tabs {
     padding: 8px 8px 0;
-    gap: 2px;
+    gap: 4px 2px;
+    border-radius: 12px 12px 0 0;
   }
 
   .hero-search-card .hs-tab {
@@ -22232,19 +22258,34 @@ html {
     font-size: 14px;
   }
 
-  .hero-search-card .hs-suggest-item,
-  .hero-search-card .hs-dropdown-option {
-    min-height: 44px;
-    display: flex;
-    align-items: center;
+  .hero-search-card .hs-popular {
+    padding: 0 10px 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-search-card {
+    width: calc(100% - 16px);
+    margin-top: -32px;
   }
 
-  .hero-search-card .hs-suggest-item {
-    align-items: flex-start;
+  .hero-search-card .hs-tab {
+    padding: 9px 8px;
+    font-size: 11px;
+    gap: 5px;
+  }
+
+  .hero-search-card .hs-tab-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .hero-search-card .hs-form {
+    padding: 8px;
   }
 
   .hero-search-card .hs-popular {
-    padding: 0 10px 12px;
+    padding: 0 8px 10px;
   }
 }
 

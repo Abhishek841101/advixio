@@ -1,7 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type KeyboardEvent,
+} from "react";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Search,
   X,
@@ -15,113 +26,103 @@ import {
   Loader2,
 } from "lucide-react";
 import { categories as fallbackCategories } from "@/data/categories";
+import {
+  CATEGORY_PARAM,
+  LOCATION_PARAM,
+  SEARCH_MAX_LENGTH,
+  SEARCH_PARAM,
+  SEARCH_TABS,
+  POPULAR_SEARCHES,
+  buildSearchUrl,
+  normalizeCategoryValue,
+  normalizeLocationValue,
+  normalizeSearchKeyword,
+  type SearchTab,
+} from "@/lib/search";
 
 const API_URL = (
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
 ).replace(/\/+$/, "");
 
-const TABS = [
-  {
-    id: "products",
-    label: "Products",
-    placeholder: "Search products, suppliers or services...",
-    Icon: Package,
-    type: "search",
-  },
-  {
-    id: "suppliers",
-    label: "Suppliers",
-    placeholder: "Search suppliers or companies...",
-    Icon: Building2,
-    type: "search",
-  },
-  {
-    id: "services",
-    label: "Services",
-    placeholder: "Search services...",
-    Icon: Wrench,
-    type: "search",
-  },
-  {
-    id: "requirement",
-    label: "Post Buy Requirement",
-    placeholder: "",
-    Icon: FileText,
-    type: "navigate",
-    href: "/requirements",
-  },
-];
-
-// Popular search chips: static fallback. Replace with a dynamic endpoint later if one exists.
-const POPULAR_SEARCHES = [
-  "Industrial Machinery",
-  "Auto Parts",
-  "Electrical Components",
-  "Packaging Materials",
-  "Safety Equipment",
-  "Pumps & Valves",
-];
-
 const MAX_PER_GROUP = 5;
 const DEBOUNCE_MS = 250;
 const MIN_CHARS = 2;
+const SUGGESTION_CACHE_MAX = 50;
 
-function normalize(value) {
+type CategoryOption = { slug: string; name: string };
+type SuggestionItem = { id: string; label: string; sublabel: string; href: string };
+type SuggestionGroups = { products: SuggestionItem[]; categories: SuggestionItem[]; suppliers: SuggestionItem[] };
+type ProductLike = {
+  _id?: string;
+  slug?: string;
+  name?: string;
+  brand?: string;
+  model?: string;
+  subcategory?: string;
+  category?: { name?: string; slug?: string } | null;
+  seller?: { companyName?: string; name?: string; city?: string; state?: string } | null;
+  location?: { city?: string; state?: string } | null;
+};
+type SupplierLike = {
+  _id?: string;
+  slug?: string;
+  name?: string;
+  companyName?: string;
+  city?: string;
+  state?: string;
+};
+type DataCache = { products: ProductLike[] | null; suppliers: SupplierLike[] | null };
+
+const suggestionCache = new Map<string, SuggestionGroups>();
+let categoriesCache: CategoryOption[] | null = null;
+let categoriesPromise: Promise<CategoryOption[]> | null = null;
+const dataCache: DataCache = { products: null, suppliers: null };
+const dataPromises: { products: Promise<ProductLike[]> | null; suppliers: Promise<SupplierLike[]> | null } = {
+  products: null,
+  suppliers: null,
+};
+
+function normalize(value: unknown): string {
   return String(value || "").trim().toLowerCase();
 }
 
-function includesQuery(value, query) {
+function includesQuery(value: unknown, query: string): boolean {
   return normalize(value).includes(query);
 }
 
-function escapeRegExp(value) {
+function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function Highlight({ text, query }) {
+function Highlight({ text, query }: { text: string; query: string }) {
   const raw = String(text || "");
   const q = String(query || "").trim();
-  if (!q) return raw;
+  if (!q) return <>{raw}</>;
   const parts = raw.split(new RegExp(`(${escapeRegExp(q)})`, "ig"));
-  return parts.map((part, i) =>
-    normalize(part) === normalize(q) ? (
-      <mark key={i} className="hs-mark">
-        {part}
-      </mark>
-    ) : (
-      <span key={i}>{part}</span>
-    )
+  return (
+    <>
+      {parts.map((part, i) =>
+        normalize(part) === normalize(q) ? (
+          <mark key={i} className="hs-mark">
+            {part}
+          </mark>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
   );
 }
 
-function buildSearchUrl(tab, { keyword, category, location }) {
-  const params = new URLSearchParams();
-  const q = keyword.trim();
-  if (q) params.set("search", q);
-  if (category && category !== "all") params.set("category", category);
-  if (location && location !== "all-india") params.set("location", location);
-  const qs = params.toString();
-
-  if (tab === "products") return `/products${qs ? `?${qs}` : ""}`;
-  if (tab === "suppliers") {
-    const sp = new URLSearchParams();
-    if (q) sp.set("search", q);
-    if (location && location !== "all-india") sp.set("location", location);
-    const s = sp.toString();
-    return `/suppliers${s ? `?${s}` : ""}`;
-  }
-  if (tab === "services") return `/services${qs ? `?${qs}` : ""}`;
-  return "/products";
-}
-
-function useOutsideClick(refs, onOutside) {
+function useOutsideClick(refs: Array<{ current: HTMLElement | null }>, onOutside: () => void) {
   useEffect(() => {
-    const handler = (e) => {
-      const inside = refs.some((r) => r.current && r.current.contains(e.target));
+    const handler = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      const inside = refs.some((r) => r.current && r.current.contains(target));
       if (!inside) onOutside();
     };
     document.addEventListener("mousedown", handler);
-    document.addEventListener("touchstart", handler);
+    document.addEventListener("touchstart", handler, { passive: true });
     return () => {
       document.removeEventListener("mousedown", handler);
       document.removeEventListener("touchstart", handler);
@@ -129,19 +130,91 @@ function useOutsideClick(refs, onOutside) {
   }, [refs, onOutside]);
 }
 
-export default function SearchBar() {
+async function loadCategoriesOnce(): Promise<CategoryOption[]> {
+  if (categoriesCache) return categoriesCache;
+  if (categoriesPromise) return categoriesPromise;
+  categoriesPromise = (async () => {
+    try {
+      const res = await fetch(`${API_URL}/categories`, { cache: "no-store" });
+      const result = await res.json();
+      const list = Array.isArray(result?.data) ? (result.data as Array<Record<string, unknown>>) : [];
+      const normalized = list
+        .map((c) => ({
+          slug: String(c?.slug || normalize(c?.name).replace(/\s+/g, "-")),
+          name: String(c?.name || c?.slug || "Category"),
+        }))
+        .filter((c: CategoryOption) => c.name && c.slug);
+      if (normalized.length > 0) {
+        categoriesCache = normalized;
+        return normalized;
+      }
+    } catch {
+      // fallback below
+    }
+    categoriesCache = fallbackCategories.map((c: { slug: string; name: string }) => ({ slug: c.slug, name: c.name }));
+    return categoriesCache;
+  })().finally(() => {
+    categoriesPromise = null;
+  });
+  return categoriesPromise;
+}
+
+async function loadDataOnce(kind: "products"): Promise<ProductLike[]>;
+async function loadDataOnce(kind: "suppliers"): Promise<SupplierLike[]>;
+async function loadDataOnce(kind: "products" | "suppliers"): Promise<ProductLike[] | SupplierLike[]> {
+  if (dataCache[kind]) return dataCache[kind] as ProductLike[] | SupplierLike[];
+  if (dataPromises[kind]) return dataPromises[kind] as Promise<ProductLike[] | SupplierLike[]>;
+  const promise = (async () => {
+    try {
+      const endpoint = kind === "products" ? "/products" : "/suppliers";
+      const res = await fetch(`${API_URL}${endpoint}`, { cache: "no-store" });
+      const result = await res.json();
+      const list = Array.isArray(result?.data) ? (result.data as Array<Record<string, unknown>>) : [];
+      if (kind === "products") {
+        dataCache.products = list as ProductLike[];
+        return dataCache.products;
+      }
+      dataCache.suppliers = list as SupplierLike[];
+      return dataCache.suppliers;
+    } catch {
+      if (kind === "products") dataCache.products = [];
+      else dataCache.suppliers = [];
+      return [];
+    } finally {
+      dataPromises[kind] = null;
+    }
+  })();
+  dataPromises[kind] = promise as Promise<ProductLike[]> & Promise<SupplierLike[]>;
+  return promise;
+}
+
+function tabFromPathname(pathname: string): SearchTab {
+  if (pathname.startsWith("/suppliers")) return "suppliers";
+  if (pathname.startsWith("/services")) return "services";
+  return "products";
+}
+
+function SearchBarInner() {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const uid = useId();
 
-  const [activeTab, setActiveTab] = useState("products");
-  const [keyword, setKeyword] = useState("");
-  const [category, setCategory] = useState({ slug: "all", name: "All Categories" });
-  const [location, setLocation] = useState({ value: "all-india", label: "All India" });
+  const pathTab = tabFromPathname(pathname || "/");
+  const urlSearch = normalizeSearchKeyword(searchParams.get(SEARCH_PARAM));
 
-  const [categories, setCategories] = useState([]);
-  const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<SearchTab>(pathTab);
+  const [keyword, setKeyword] = useState(urlSearch);
+  const [category, setCategory] = useState<CategoryOption>({ slug: "all", name: "All Categories" });
+  const [location, setLocation] = useState<{ value: string; label: string }>({
+    value: "all-india",
+    label: "All India",
+  });
 
-  const [suggestions, setSuggestions] = useState({ products: [], categories: [], suppliers: [] });
+  const [categories, setCategories] = useState<CategoryOption[]>(categoriesCache || []);
+  const [categoriesLoading, setCategoriesLoading] = useState(!categoriesCache);
+
+  const [suggestions, setSuggestions] = useState<SuggestionGroups>({ products: [], categories: [], suppliers: [] });
   const [suggestOpen, setSuggestOpen] = useState(false);
   const [suggestLoading, setSuggestLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -150,18 +223,16 @@ export default function SearchBar() {
   const [catQuery, setCatQuery] = useState("");
   const [locOpen, setLocOpen] = useState(false);
   const [locQuery, setLocQuery] = useState("");
+  const [dataVersion, setDataVersion] = useState(0);
 
-  const [dataCache, setDataCache] = useState({ products: null, suppliers: null });
-  const dataFetchRef = useRef({ products: false, suppliers: false });
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const catRef = useRef<HTMLDivElement | null>(null);
+  const locRef = useRef<HTMLDivElement | null>(null);
+  const suggestAbortRef = useRef<AbortController | null>(null);
+  const suggestTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const rootRef = useRef(null);
-  const inputRef = useRef(null);
-  const catRef = useRef(null);
-  const locRef = useRef(null);
-  const suggestAbortRef = useRef(null);
-  const suggestTimerRef = useRef(null);
-
-  const currentTab = TABS.find((t) => t.id === activeTab) || TABS[0];
+  const currentTab = SEARCH_TABS.find((t) => t.id === activeTab) || SEARCH_TABS[0];
 
   const closeAllDropdowns = useCallback(() => {
     setSuggestOpen(false);
@@ -170,71 +241,58 @@ export default function SearchBar() {
     setActiveIndex(-1);
   }, []);
 
-  useOutsideClick([rootRef], closeAllDropdowns);
+  useOutsideClick([rootRef, catRef, locRef], closeAllDropdowns);
 
-  // Load categories once (API, fallback to static data).
+  // Sync form state from URL on results pages / back-forward.
+  useEffect(() => {
+    const nextTab = tabFromPathname(pathname || "/");
+    const nextKeyword = normalizeSearchKeyword(searchParams.get(SEARCH_PARAM));
+    const loc = normalizeLocationValue(searchParams.get(LOCATION_PARAM));
+    /* eslint-disable react-hooks/set-state-in-effect -- intentional URL -> form sync */
+    setActiveTab(nextTab);
+    setKeyword(nextKeyword);
+    setLocation(loc ? { value: loc, label: loc } : { value: "all-india", label: "All India" });
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [pathname, searchParams]);
+
+  // Sync category after categories load. Unknown/invalid slug is ignored gracefully.
+  useEffect(() => {
+    const slug = normalizeCategoryValue(searchParams.get(CATEGORY_PARAM));
+    if (!slug) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional URL -> form sync
+      setCategory({ slug: "all", name: "All Categories" });
+      return;
+    }
+    const match = categories.find((c) => c.slug === slug);
+    setCategory(match ? { slug: match.slug, name: match.name } : { slug: "all", name: "All Categories" });
+  }, [searchParams, categories]);
+
   useEffect(() => {
     let alive = true;
-    const load = async () => {
-      try {
-        const res = await fetch(`${API_URL}/categories`, { cache: "no-store" });
-        const result = await res.json();
-        const list = Array.isArray(result?.data) ? result.data : [];
-        const normalized = list
-          .map((c) => ({
-            slug: c.slug || normalize(c.name).replace(/\s+/g, "-"),
-            name: c.name || c.slug || "Category",
-          }))
-          .filter((c) => c.name);
-        if (alive && normalized.length > 0) {
-          setCategories(normalized);
-          return;
-        }
-      } catch {
-        // fall back below
-      }
-      if (alive) {
-        setCategories(
-          fallbackCategories.map((c) => ({ slug: c.slug, name: c.name }))
-        );
-      }
+    loadCategoriesOnce()
+      .then((list) => {
+        if (alive) setCategories(list);
+      })
+      .finally(() => {
+        if (alive) setCategoriesLoading(false);
+      });
+    return () => {
+      alive = false;
     };
-    load().finally(() => {
-      if (alive) setCategoriesLoading(false);
+  }, []);
+
+  useEffect(() => {
+    let alive = true;
+    Promise.all([loadDataOnce("products"), loadDataOnce("suppliers")]).then(() => {
+      if (alive) setDataVersion((v) => v + 1);
     });
     return () => {
       alive = false;
     };
   }, []);
 
-  // Lazy data fetch for autocomplete/locations (client-side fallback; no dedicated endpoint).
-
-  useEffect(() => {
-    let alive = true;
-    const load = async (kind) => {
-      if (dataFetchRef.current[kind]) return;
-      dataFetchRef.current[kind] = true;
-      try {
-        const endpoint = kind === "products" ? "/products" : "/suppliers";
-        const res = await fetch(`${API_URL}${endpoint}`, { cache: "no-store" });
-        const result = await res.json();
-        const list = Array.isArray(result?.data) ? result.data : [];
-        if (alive) setDataCache((prev) => (prev[kind] ? prev : { ...prev, [kind]: list }));
-      } catch {
-        if (alive) setDataCache((prev) => (prev[kind] ? prev : { ...prev, [kind]: [] }));
-      } finally {
-        dataFetchRef.current[kind] = false;
-      }
-    };
-    void load("products");
-    void load("suppliers");
-    return () => {
-      alive = false;
-    };
-  }, []);
-
   const locationOptions = useMemo(() => {
-    const set = new Set();
+    const set = new Set<string>();
     (dataCache.products || []).forEach((p) => {
       const city = String(p?.location?.city || p?.seller?.city || "").trim();
       const state = String(p?.location?.state || p?.seller?.state || "").trim();
@@ -250,7 +308,8 @@ export default function SearchBar() {
     return Array.from(set)
       .filter((v) => v && v.toLowerCase() !== "india")
       .sort((a, b) => a.localeCompare(b));
-  }, [dataCache.products, dataCache.suppliers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- dataVersion invalidates module cache reads
+  }, [dataVersion]);
 
   const filteredCategories = useMemo(() => {
     const q = normalize(catQuery);
@@ -265,7 +324,7 @@ export default function SearchBar() {
   }, [locationOptions, locQuery]);
 
   const suggestionItems = useMemo(() => {
-    const items = [];
+    const items: Array<SuggestionItem & { group: string }> = [];
     suggestions.products.forEach((item) => items.push({ ...item, group: "Products" }));
     suggestions.categories.forEach((item) => items.push({ ...item, group: "Categories" }));
     suggestions.suppliers.forEach((item) => items.push({ ...item, group: "Suppliers" }));
@@ -277,47 +336,42 @@ export default function SearchBar() {
     suggestions.categories.length > 0 ||
     suggestions.suppliers.length > 0;
 
-  // Autocomplete (debounced, min 2 chars, AbortController for stale requests).
   useEffect(() => {
     if (suggestTimerRef.current) clearTimeout(suggestTimerRef.current);
     if (suggestAbortRef.current) suggestAbortRef.current.abort();
 
     const q = normalize(keyword);
-    if (q.length < MIN_CHARS) {
-      return () => {
-        if (suggestTimerRef.current) clearTimeout(suggestTimerRef.current);
-        if (suggestAbortRef.current) suggestAbortRef.current.abort();
-      };
-    }
+    if (q.length < MIN_CHARS) return () => undefined;
 
     suggestTimerRef.current = setTimeout(async () => {
       const controller = new AbortController();
       suggestAbortRef.current = controller;
+      const cacheKey = `${activeTab}|${q}`;
+      const cached = suggestionCache.get(cacheKey);
+      if (cached) {
+        setSuggestions(cached);
+        setSuggestOpen(true);
+        setActiveIndex(-1);
+        setSuggestLoading(false);
+        return;
+      }
+
       setSuggestLoading(true);
       try {
-        // Client-side filtering fallback from existing endpoints/data.
-        const prodSource = dataCache.products || [];
-        const supSource = dataCache.suppliers || [];
-        const catSource = categories || [];
+        const [prodSource, supSource] = await Promise.all([loadDataOnce("products"), loadDataOnce("suppliers")]);
+        const catSource = categoriesCache || categories || [];
 
-        const productMatches = prodSource
-          .filter((p) => {
-            return [
-              p?.name,
-              p?.brand,
-              p?.model,
-              p?.category?.name,
-              p?.subcategory,
-              p?.seller?.companyName,
-              p?.seller?.name,
-            ].some((v) => includesQuery(v, q));
-          })
+        const productMatches = (prodSource || [])
+          .filter((p) =>
+            [p?.name, p?.brand, p?.model, p?.category?.name, p?.subcategory, p?.seller?.companyName, p?.seller?.name]
+              .some((v) => includesQuery(v, q))
+          )
           .slice(0, MAX_PER_GROUP)
           .map((p) => ({
             id: `p-${p._id || p.slug || p.name}`,
-            label: p.name || "Product",
-            sublabel: p?.category?.name || p?.seller?.companyName || "Product",
-            href: p.slug ? `/products/${p.slug}` : `/products?search=${encodeURIComponent(p.name || q)}`,
+            label: String(p.name || "Product"),
+            sublabel: String(p?.category?.name || p?.seller?.companyName || "Product"),
+            href: p.slug ? `/products/${p.slug}` : buildSearchUrl("products", { search: p.name || q }),
           }));
 
         const categoryMatches = catSource
@@ -327,27 +381,32 @@ export default function SearchBar() {
             id: `c-${c.slug}`,
             label: c.name,
             sublabel: "Category",
-            href: `/products?category=${encodeURIComponent(c.slug)}`,
+            href: buildSearchUrl("products", { category: c.slug }),
           }));
 
-        const supplierMatches = supSource
-          .filter((s) =>
-            [s?.companyName, s?.name, s?.city, s?.state].some((v) => includesQuery(v, q))
-          )
+        const supplierMatches = (supSource || [])
+          .filter((s) => [s?.companyName, s?.name, s?.city, s?.state].some((v) => includesQuery(v, q)))
           .slice(0, MAX_PER_GROUP)
           .map((s) => ({
             id: `s-${s._id || s.slug || s.name}`,
-            label: s.companyName || s.name || "Supplier",
+            label: String(s.companyName || s.name || "Supplier"),
             sublabel: [s?.city, s?.state].filter(Boolean).join(", ") || "Supplier",
-            href: s.slug || s._id ? `/suppliers/${s.slug || s._id}` : `/suppliers?search=${encodeURIComponent(s.companyName || s.name || q)}`,
+            href: s.slug || s._id ? `/suppliers/${s.slug || s._id}` : buildSearchUrl("suppliers", { search: s.companyName || s.name || q }),
           }));
 
         if (controller.signal.aborted) return;
-        setSuggestions({
+        const next: SuggestionGroups = {
           products: activeTab === "suppliers" ? [] : productMatches,
           categories: activeTab === "suppliers" ? [] : categoryMatches,
           suppliers: activeTab === "services" ? [] : supplierMatches,
-        });
+        };
+        suggestionCache.set(cacheKey, next);
+        while (suggestionCache.size > SUGGESTION_CACHE_MAX) {
+          const first = suggestionCache.keys().next().value;
+          if (!first) break;
+          suggestionCache.delete(first);
+        }
+        setSuggestions(next);
         setSuggestOpen(true);
         setActiveIndex(-1);
       } finally {
@@ -359,10 +418,10 @@ export default function SearchBar() {
       if (suggestTimerRef.current) clearTimeout(suggestTimerRef.current);
       if (suggestAbortRef.current) suggestAbortRef.current.abort();
     };
-  }, [keyword, categories, dataCache.products, dataCache.suppliers, activeTab]);
+  }, [keyword, categories, activeTab, dataVersion]);
 
   const navigate = useCallback(
-    (href) => {
+    (href: string) => {
       closeAllDropdowns();
       router.push(href);
     },
@@ -370,11 +429,11 @@ export default function SearchBar() {
   );
 
   const submitSearch = useCallback(
-    (e) => {
+    (e?: FormEvent) => {
       e?.preventDefault?.();
       const href = buildSearchUrl(activeTab, {
-        keyword,
-        category: category.slug,
+        search: keyword,
+        category: activeTab === "suppliers" ? undefined : category.slug,
         location: location.value,
       });
       navigate(href);
@@ -382,7 +441,7 @@ export default function SearchBar() {
     [activeTab, keyword, category.slug, location.value, navigate]
   );
 
-  const onInputKeyDown = (e) => {
+  const onInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (!suggestOpen && (e.key === "ArrowDown" || e.key === "ArrowUp") && suggestionItems.length) {
       setSuggestOpen(true);
       return;
@@ -395,9 +454,7 @@ export default function SearchBar() {
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSuggestOpen(true);
-      setActiveIndex((i) =>
-        suggestionItems.length ? (i <= 0 ? suggestionItems.length - 1 : i - 1) : -1
-      );
+      setActiveIndex((i) => (suggestionItems.length ? (i <= 0 ? suggestionItems.length - 1 : i - 1) : -1));
     } else if (e.key === "Enter") {
       if (suggestOpen && activeIndex >= 0 && suggestionItems[activeIndex]) {
         e.preventDefault();
@@ -412,40 +469,43 @@ export default function SearchBar() {
     }
   };
 
-  const onTabKeyDown = (e, index) => {
-    const searchableTabs = TABS;
+  const focusTab = (index: number) => {
+    const nextTab = SEARCH_TABS[index];
+    const el = rootRef.current?.querySelector(`[data-tab-id="${nextTab.id}"]`) as HTMLElement | null;
+    el?.focus();
+  };
+
+  const onTabKeyDown = (e: KeyboardEvent<HTMLElement>, index: number) => {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
     const dir = e.key === "ArrowRight" ? 1 : -1;
-    const next = (index + dir + searchableTabs.length) % searchableTabs.length;
-    const nextTab = searchableTabs[next];
-    handleTabClick(nextTab);
-    const btn = rootRef.current?.querySelector(`[data-tab-id="${nextTab.id}"]`);
-    btn?.focus();
+    const next = (index + dir + SEARCH_TABS.length) % SEARCH_TABS.length;
+    const nextTab = SEARCH_TABS[next];
+    if (nextTab.type === "search") {
+      // Keep keyword/location, drop category when target tab doesn't use it.
+      setActiveTab(nextTab.id as SearchTab);
+      if (nextTab.id === "suppliers") setCategory({ slug: "all", name: "All Categories" });
+      setActiveIndex(-1);
+      setSuggestOpen(false);
+    }
+    focusTab(next);
   };
 
-  const handleTabClick = (tab) => {
-    if (tab.type === "navigate") {
-      router.push(tab.href);
-      return;
-    }
-    setActiveTab(tab.id);
+  const handleSearchTabClick = (tabId: SearchTab) => {
+    setActiveTab(tabId);
+    if (tabId === "suppliers") setCategory({ slug: "all", name: "All Categories" });
     setActiveIndex(-1);
     setSuggestOpen(false);
   };
 
-  const selectCategory = (c) => {
+  const selectCategory = (c: CategoryOption | null) => {
     setCategory(c ? { slug: c.slug, name: c.name } : { slug: "all", name: "All Categories" });
     setCatOpen(false);
     setCatQuery("");
   };
 
-  const selectLocation = (value) => {
-    setLocation(
-      value && value !== "all-india"
-        ? { value, label: value }
-        : { value: "all-india", label: "All India" }
-    );
+  const selectLocation = (value: string) => {
+    setLocation(value && value !== "all-india" ? { value, label: value } : { value: "all-india", label: "All India" });
     setLocOpen(false);
     setLocQuery("");
   };
@@ -453,16 +513,39 @@ export default function SearchBar() {
   const showCategory = activeTab !== "suppliers";
   const suggestListId = `${uid}-suggest-list`;
   const activeDescendant =
-    activeIndex >= 0 && suggestionItems[activeIndex]
-      ? `${uid}-opt-${suggestionItems[activeIndex].id}`
-      : undefined;
+    activeIndex >= 0 && suggestionItems[activeIndex] ? `${uid}-opt-${suggestionItems[activeIndex].id}` : undefined;
+  const suggestionsCount = suggestionItems.length;
+  const liveMessage =
+    keyword.trim().length >= MIN_CHARS && suggestOpen && !suggestLoading
+      ? suggestionsCount > 0
+        ? `${suggestionsCount} suggestions available`
+        : "No suggestions"
+      : "";
 
   return (
-    <div className="hero-search-card hs-root" ref={rootRef}>
-      <div className="hero-search-tabs hs-tabs" role="tablist" aria-label="Search type">
-        {TABS.map((tab, index) => {
+    <section className="hero-search-card hs-root adv-search" ref={rootRef} aria-labelledby={`${uid}-search-heading`} data-no-reveal>
+      <h2 id={`${uid}-search-heading`} className="hs-sr-only">Search Advixio marketplace</h2>
+      <div className="hero-search-tabs hs-tabs adv-search__tabs" role="tablist" aria-label="Search type">
+        {SEARCH_TABS.map((tab, index) => {
           const isActive = tab.type === "search" && tab.id === activeTab;
-          const Icon = tab.Icon;
+          const Icon = tab.id === "products" ? Package : tab.id === "suppliers" ? Building2 : tab.id === "services" ? Wrench : FileText;
+          if (tab.type === "navigate") {
+            return (
+              <Link
+                key={tab.id}
+                href={tab.href || "/requirements"}
+                role="tab"
+                data-tab-id={tab.id}
+                aria-selected={false}
+                tabIndex={-1}
+                className="hs-tab adv-search__tab"
+                onKeyDown={(e) => onTabKeyDown(e, index)}
+              >
+                <Icon className="hs-tab-icon" width={16} height={16} aria-hidden="true" />
+                <span>{tab.label}</span>
+              </Link>
+            );
+          }
           return (
             <button
               key={tab.id}
@@ -470,33 +553,43 @@ export default function SearchBar() {
               role="tab"
               data-tab-id={tab.id}
               aria-selected={isActive}
-              tabIndex={isActive || (activeTab === "products" && tab.id === "products") ? 0 : -1}
-              className={`hs-tab ${isActive ? "active" : ""}`}
-              onClick={() => handleTabClick(tab)}
+              aria-controls={`${uid}-search-panel`}
+              tabIndex={isActive ? 0 : -1}
+              className={`hs-tab adv-search__tab ${isActive ? "active" : ""}`}
+              onClick={() => handleSearchTabClick(tab.id as SearchTab)}
               onKeyDown={(e) => onTabKeyDown(e, index)}
             >
-              <Icon className="hs-tab-icon" aria-hidden="true" />
+              <Icon className="hs-tab-icon" width={16} height={16} aria-hidden="true" />
               <span>{tab.label}</span>
             </button>
           );
         })}
       </div>
 
-      <form className="hs-form" onSubmit={submitSearch} role="search">
+      <form
+        id={`${uid}-search-panel`}
+        className="hs-form adv-search__form"
+        role="search"
+        action="/products"
+        method="get"
+        onSubmit={submitSearch}
+      >
         <div className="hs-row">
           <div className="hs-keyword">
             <label className="hs-sr-only" htmlFor={`${uid}-keyword`}>
               Search keyword
             </label>
             <span className="hs-leading-icon" aria-hidden="true">
-              <Search size={18} />
+              <Search size={18} width={18} height={18} />
             </span>
             <input
               ref={inputRef}
               id={`${uid}-keyword`}
+              name={SEARCH_PARAM}
               type="text"
               className="hs-input"
               value={keyword}
+              maxLength={SEARCH_MAX_LENGTH}
               placeholder={currentTab.placeholder}
               autoComplete="off"
               role="combobox"
@@ -505,7 +598,7 @@ export default function SearchBar() {
               aria-activedescendant={activeDescendant}
               aria-autocomplete="list"
               onChange={(e) => {
-                const next = e.target.value;
+                const next = normalizeSearchKeyword(e.target.value);
                 setKeyword(next);
                 if (normalize(next).length < MIN_CHARS) {
                   setSuggestions({ products: [], categories: [], suppliers: [] });
@@ -534,22 +627,24 @@ export default function SearchBar() {
                   inputRef.current?.focus();
                 }}
               >
-                <X size={16} />
+                <X size={16} width={16} height={16} />
               </button>
             )}
+
+            <div className="hs-sr-only" aria-live="polite" aria-atomic="true">
+              {liveMessage}
+            </div>
 
             {suggestOpen && (keyword.trim().length >= MIN_CHARS || suggestLoading) && (
               <div className="hs-suggest" id={suggestListId} role="listbox" aria-label="Search suggestions">
                 {suggestLoading && (
-                  <div className="hs-suggest-state" aria-live="polite">
-                    <Loader2 size={16} className="hs-spin" aria-hidden="true" />
+                  <div className="hs-suggest-state">
+                    <Loader2 size={16} width={16} height={16} className="hs-spin" aria-hidden="true" />
                     <span>Loading suggestions...</span>
                   </div>
                 )}
                 {!suggestLoading && !hasSuggestions && (
-                  <div className="hs-suggest-state" aria-live="polite">
-                    No suggestions found
-                  </div>
+                  <div className="hs-suggest-state">No suggestions</div>
                 )}
                 {!suggestLoading && hasSuggestions && (
                   <>
@@ -561,7 +656,7 @@ export default function SearchBar() {
                       items.length ? (
                         <div className="hs-suggest-group" key={key}>
                           <div className="hs-suggest-group-label">
-                            <Icon size={14} aria-hidden="true" />
+                            <Icon size={14} width={14} height={14} aria-hidden="true" />
                             <span>{label}</span>
                           </div>
                           {items.map((item) => {
@@ -599,10 +694,12 @@ export default function SearchBar() {
 
           {showCategory && (
             <div className="hs-dropdown" ref={catRef}>
-              <label className="hs-sr-only" id={`${uid}-cat-label`}>
+              <label className="hs-sr-only" id={`${uid}-cat-label`} htmlFor={`${uid}-cat-trigger`}>
                 Category
               </label>
+              <input type="hidden" name={CATEGORY_PARAM} value={category.slug !== "all" ? category.slug : ""} />
               <button
+                id={`${uid}-cat-trigger`}
                 type="button"
                 className="hs-dropdown-trigger"
                 aria-labelledby={`${uid}-cat-label`}
@@ -614,14 +711,14 @@ export default function SearchBar() {
                   setSuggestOpen(false);
                 }}
               >
-                <Tag size={16} className="hs-trigger-icon" aria-hidden="true" />
+                <Tag size={16} width={16} height={16} className="hs-trigger-icon" aria-hidden="true" />
                 <span className="hs-trigger-text">{category.name}</span>
-                <ChevronDown size={16} className="hs-trigger-caret" aria-hidden="true" />
+                <ChevronDown size={16} width={16} height={16} className="hs-trigger-caret" aria-hidden="true" />
               </button>
               {catOpen && (
                 <div className="hs-dropdown-panel">
                   <div className="hs-dropdown-search">
-                    <Search size={14} aria-hidden="true" />
+                    <Search size={14} width={14} height={14} aria-hidden="true" />
                     <input
                       type="text"
                       value={catQuery}
@@ -643,9 +740,7 @@ export default function SearchBar() {
                         All Categories
                       </button>
                     </li>
-                    {categoriesLoading && (
-                      <li className="hs-dropdown-empty">Loading categories...</li>
-                    )}
+                    {categoriesLoading && <li className="hs-dropdown-empty">Loading categories...</li>}
                     {!categoriesLoading && filteredCategories.length === 0 && (
                       <li className="hs-dropdown-empty">No categories found</li>
                     )}
@@ -670,10 +765,12 @@ export default function SearchBar() {
           )}
 
           <div className="hs-dropdown" ref={locRef}>
-            <label className="hs-sr-only" id={`${uid}-loc-label`}>
+            <label className="hs-sr-only" id={`${uid}-loc-label`} htmlFor={`${uid}-loc-trigger`}>
               Location
             </label>
+            <input type="hidden" name={LOCATION_PARAM} value={location.value !== "all-india" ? location.value : ""} />
             <button
+              id={`${uid}-loc-trigger`}
               type="button"
               className="hs-dropdown-trigger"
               aria-labelledby={`${uid}-loc-label`}
@@ -685,14 +782,14 @@ export default function SearchBar() {
                 setSuggestOpen(false);
               }}
             >
-              <MapPin size={16} className="hs-trigger-icon" aria-hidden="true" />
+              <MapPin size={16} width={16} height={16} className="hs-trigger-icon" aria-hidden="true" />
               <span className="hs-trigger-text">{location.label}</span>
-              <ChevronDown size={16} className="hs-trigger-caret" aria-hidden="true" />
+              <ChevronDown size={16} width={16} height={16} className="hs-trigger-caret" aria-hidden="true" />
             </button>
             {locOpen && (
               <div className="hs-dropdown-panel">
                 <div className="hs-dropdown-search">
-                  <Search size={14} aria-hidden="true" />
+                  <Search size={14} width={14} height={14} aria-hidden="true" />
                   <input
                     type="text"
                     value={locQuery}
@@ -735,8 +832,8 @@ export default function SearchBar() {
             )}
           </div>
 
-          <button type="submit" className="hs-submit">
-            <Search size={18} aria-hidden="true" />
+          <button type="submit" className="hs-submit" aria-label="Search">
+            <Search size={18} width={18} height={18} aria-hidden="true" />
             <span>Search</span>
           </button>
         </div>
@@ -744,19 +841,30 @@ export default function SearchBar() {
 
       <div className="hs-popular">
         <span className="hs-popular-label">Popular:</span>
-        <div className="hs-popular-chips">
+        <ul className="hs-popular-chips" aria-label="Popular searches">
           {POPULAR_SEARCHES.map((term) => (
-            <button
-              key={term}
-              type="button"
-              className="hs-chip"
-              onClick={() => navigate(`/products?search=${encodeURIComponent(term)}`)}
-            >
-              {term}
-            </button>
+            <li key={term}>
+              <Link className="hs-chip" href={buildSearchUrl("products", { search: term })}>
+                {term}
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
-    </div>
+    </section>
+  );
+}
+
+export default function SearchBar() {
+  return (
+    <Suspense
+      fallback={
+        <div className="hero-search-card hs-root adv-search" aria-hidden="true">
+          <div className="hs-form" style={{ minHeight: 132 }} />
+        </div>
+      }
+    >
+      <SearchBarInner />
+    </Suspense>
   );
 }
