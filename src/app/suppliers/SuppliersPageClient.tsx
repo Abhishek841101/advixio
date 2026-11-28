@@ -332,15 +332,10 @@ export default function SuppliersPageClient() {
             <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
 
               <div>
-                <a
-                  href="https://advixio.in/login"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-indigo-300/20 bg-indigo-400/10 px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-indigo-200 transition hover:border-indigo-300/50 hover:bg-indigo-400/20 hover:text-white sm:text-xs"
-                >
+                <div className="inline-flex items-center gap-2 rounded-full border border-indigo-300/20 bg-indigo-400/10 px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-indigo-200 sm:text-xs">
                   <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(37, 99, 235, 0.8)]" />
                   Advixio supplier network
-                </a>
+                </div>
 
                 <h1 className="mt-7 max-w-3xl text-4xl font-black leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-[62px]">
                   Discover suppliers.

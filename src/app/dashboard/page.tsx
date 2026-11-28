@@ -263,6 +263,17 @@ export default function DashboardPage() {
   <span>View buyer enquiries</span>
 </Link>
 
+<a
+  href="https://advixio.in/login"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="sd-quick"
+>
+  <div className="sd-quick-icon">📇</div>
+  <strong>CRM</strong>
+  <span>Open CRM</span>
+</a>
+
             </div>
           </section>
 
