@@ -257,12 +257,6 @@ export default function DashboardPage() {
                 <span>Buyer requests</span>
               </Link>
 
-<Link href="/dashboard/enquiries" className="sd-quick">
-  <div className="sd-quick-icon">📋</div>
-  <strong>All Enquiries</strong>
-  <span>View buyer enquiries</span>
-</Link>
-
 <a
   href="https://advixio.in/login"
   target="_blank"

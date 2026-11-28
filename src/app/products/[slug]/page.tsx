@@ -1161,7 +1161,6 @@ export async function generateMetadata({
 
   const rawDescription =
     product.shortDescription?.trim() ||
-    product.description?.trim() ||
     `Explore ${productName} and connect with suppliers on Advixio360.`;
 
   const description =
@@ -1360,7 +1359,6 @@ export default async function ProductDetailPage({ params }: Props) {
   /* PRODUCT JSON-LD */
 
   const productDescription =
-    product.description?.trim() ||
     product.shortDescription?.trim();
 
   const productSchema = {
@@ -1723,7 +1721,6 @@ export default async function ProductDetailPage({ params }: Props) {
 
             <ProductDetailTabs
   description={
-    product.description?.trim() ||
     product.shortDescription?.trim() ||
     "No product description available."
   }
